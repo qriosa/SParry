@@ -40,7 +40,7 @@ def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRec
     # 跳转到 dispatch 函数进行分发
     
     result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist)
-    showLogger(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
+    logger.info(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
     
     return result
     

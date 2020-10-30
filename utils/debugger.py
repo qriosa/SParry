@@ -7,86 +7,86 @@ class Logger(object):
     
     parameters: 
         name: the '__name__' of the caller.
-	
-	attributes:
-		logger: a logging object.
-	
-	method:
-		notset: the 'notset' of the logging.
-		debug: the 'debug' of the logging.
-		info: the 'info' of the logging.
-		warning: the 'warning' of the logging.
-		error: the 'error' of the logging.
-		critical: the 'critical' of the logging.
     
-    return: Logger object.  	
+    attributes:
+        logger: a logging object.
+    
+    method:
+        notset: the 'notset' of the logging.
+        debug: the 'debug' of the logging.
+        info: the 'info' of the logging.
+        warning: the 'warning' of the logging.
+        error: the 'error' of the logging.
+        critical: the 'critical' of the logging.
+    
+    return: Logger object.      
     """
 
-	def __init__(self, name):
-	    self.logger = logging.getLogger(name)
+    def __init__(self, name):
+        self.logger = logging.getLogger(name)
     
-    def notset(strings):
+    def notset(self, strings):
         """
-		function: the 'notset' of the logging.
+        function: the 'notset' of the logging.
 
-		parameters:
-			strings: what you want to notset.
+        parameters:
+            strings: what you want to notset.
 
-		return None. 
+        return None. 
         """
         self.logger.notset(strings)
 
-    def debug(strings):
+    def debug(self, strings):
         """
-		function: the 'debug' of the logging.
+        function: the 'debug' of the logging.
 
-		parameters:
-			strings: what you want to debug.
+        parameters:
+            strings: what you want to debug.
 
-		return None. 
+        return None. 
         """
         self.logger.debug(strings)
 
-    def info(strings):
+    def info(self, strings):
         """
-		function: the 'info' of the logging.
+        function: the 'info' of the logging.
 
-		parameters:
-			strings: what you want to info.
+        parameters:
+            strings: what you want to info.
 
-		return None. 
+        return None. 
         """
         self.logger.info(strings)
 
-    def warning(strings):
+    def warning(self, strings):
         """
-		function: the 'warning' of the logging.
+        function: the 'warning' of the logging.
 
-		parameters:
-			strings: what you want to warning.
+        parameters:
+            strings: what you want to warning.
 
-		return None. 
+        return None. 
         """
         self.logger.warning(strings)
 
-    def error(strings):
+    def error(self, strings):
         """
-		function: the 'error' of the logging.
+        function: the 'error' of the logging.
 
-		parameters:
-			strings: what you want to error.
+        parameters:
+            strings: what you want to error.
 
-		return None. 
+        return None. 
         """
         self.logger.error(strings)
 
-    def critical(strings):
+    def critical(self, strings):
         """
-		function: the 'critical' of the logging.
+        function: the 'critical' of the logging.
 
-		parameters:
-			strings: what you want to critical.
+        parameters:
+            strings: what you want to critical.
 
-		return None. 
+        return None. 
         """
         self.logger.critical(strings)

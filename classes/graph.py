@@ -124,8 +124,6 @@ class Graph(object):
 			self.degree[self.src[-1]] += 1
 			self.degree[self.des[-1]] += 1
 
-			self.avgW += int(line[2])
-
 		last = 0
 		for key in e:
 			self.CSR[0].append(last)
