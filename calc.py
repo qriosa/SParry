@@ -1,5 +1,6 @@
 #encoding=utf-8
 from utils.dispatcher import dispatch
+from utils.readGraph import read
 from utils.debugger import Logger
 
 # set logging
