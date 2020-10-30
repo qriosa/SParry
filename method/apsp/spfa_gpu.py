@@ -20,7 +20,7 @@ GRID=(4096,1,1)
 
 def spfa(CSR,n,pathRecording = False):
     """
-	function: use Bellman-Ford algorithm in GPU to solve the APSP. 
+	function: use Bellman-Ford algorithm in GPU to solve the APSP . 
 	
 	parameters:  
 		CSR: CSR graph data. (more info please see the developer documentation) .
