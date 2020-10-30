@@ -3,7 +3,7 @@ from utils.dispatcher import dispatch
 from utils.readGraph import read
 from utils.debugger import Logger
 
-# set logging test update --lcx
+# set logging test update lcx added by wenake
 logger = Logger(__name__)
 
 def INF():
