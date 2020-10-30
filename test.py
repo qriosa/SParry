@@ -1,6 +1,8 @@
 from utils.debugger import Logger
 import sys
 
+# test update different file
+
 def PRINT(chars = None):
 	if chars == None:
 		print("\033[0;36;40m" + '\n' + "\033[0m")
