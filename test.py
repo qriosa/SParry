@@ -1,91 +1,15 @@
 from utils.debugger import Logger
+import sys
 
+def PRINT(chars = None):
+	if chars == None:
+		print("\033[0;36;40m" + '\n' + "\033[0m")
+	else:
+		print("\033[0;36;40m" + chars + "\033[0m")
 
-def test_delta_cpu(filename = None, n = 1000, m = 5000, l = 1, r = 20):
+def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	'''
-	this test for delta_stepping CPU SSSP.
-	'''
-	# set logging
-	logger = Logger(__name__)
-
-	if filename == None:
-		# set the graph file name
-		filename = 'test.txt'
-
-
-		# import the generate func to generate a graph.
-		from genAGraph import generate 
-
-		# logger.info(f'generate filename = {filename}, n = {n}, m = {m}')
-		# generate a graph with n vertexs and m (undirected) edges, save it the the file
-		generate(filename = filename, n = n, m = m, l = l, r = r) 
-
-
-
-	# import the read func to read a graph from file
-	from readGraph import read 
-
-	# logger.info(f'read filename = {filename}')
-	# read the graph
-	g = read(filename)
-
-	# print some infomation
-	print(g.msg)
-
-
-
-
-	import numpy as np 
-
-	# logger.info(f'drive data to CSR')
-	# generate the data to CSR type
-	CSR = np.array([g.V, g.E, g.W])
-	# print(CSR)
-
-
-
-
-	# import the calc interface
-	from calc import main
-
-	# show the help info
-	help(main)
-
-
-
-	# begin to calc 
-	method1, method2, method3 = 'dij', 'delta', 'delta'
-	useCUDA1, useCUDA2, useCUDA3 = True, True, True
-	srclist = 5
-
-	# logger.info(f'begin to calc. method = {method1}, useCUDA = {useCUDA1}, pathRecordBool = False, srclist = 1')
-
-	# check the dijkstra and delta_stepping is same or not.
-	r1 = main(graph = CSR, graphType = 'CSR', method = method1, useCUDA = useCUDA1, pathRecordBool = False, srclist = srclist) 
-	r2 = main(graph = CSR, graphType = 'CSR', method = method2, useCUDA = useCUDA2, pathRecordBool = False, srclist = srclist) 
-
-
-
-	# logger.info(f'begin to check')
-	# import the check ans to check the ans.
-	from check import check 
-	print(check(r1.dist, r2.dist, method1, method2)) # 检测两个答案是否相等
-	
-	useCUDATrue = 'useCUDA'
-	useCUDAFalse = 'noUseCUDA'
-
-	print(f'{method1}_{useCUDATrue if useCUDA1 else useCUDAFalse} time cost = ', r1.timeCost) # 并行计算用时
-	print(f'{method2}_{useCUDATrue if useCUDA2 else useCUDAFalse} time cost = ', r2.timeCost) # 串行计算用时
-	# print("speedup: " + str(r2.timeCostNum / (r1.timeCostNum * 1000)  * 100000 // 100)) # 显示两者的用时加速比
-
-	r3 = main(graph = CSR, graphType = 'CSR', method = method3, useCUDA = useCUDA3, pathRecordBool = False, srclist = srclist) 
-	print(check(r1.dist, r3.dist, method1, method3)) # 检测两个答案是否相等
-	print(f'{method3}_{useCUDATrue if useCUDA3 else useCUDAFalse} time cost = ', r3.timeCost) # 串行计算用时
-
-
-def test_edge_gpu(filename = None, n = 1000, m = 5000, l = 1, r = 20):
-	'''
-	this test for edge GPU SSSP.
+	for test.
 	'''
 	# set logging
 	logger = Logger(__name__)
@@ -98,7 +22,7 @@ def test_edge_gpu(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 		# import the generate func to generate a graph.
 		from utils.genAGraph import generate 
 
-		logger.info(f'generate filename = {filename}, n = {n}, m = {m}')
+		logger.info(f'func:generate, filename = {filename}, n = {n}, m = {m}')
 		# generate a graph with n vertexs and m (undirected) edges, save it the the file
 		generate(filename = filename, n = n, m = m, l = l, r = r) 
 
@@ -113,6 +37,9 @@ def test_edge_gpu(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 
 	# print some infomation
 	print(g.msg)
+
+	n = g.n
+	m = g.m
 
 
 
@@ -136,34 +63,36 @@ def test_edge_gpu(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 
 
 	# begin to calc 
-	method1, method2, method3 = 'dij', 'edge', 'edge'
-	useCUDA1, useCUDA2, useCUDA3 = True, True, False
-	srclist = None
-
-	logger.info(f'begin to calc. method = {method1}, useCUDA = {useCUDA1}, pathRecordBool = False, srclist = 1')
-
-	# check the dijkstra and delta_stepping is same or not.
-	r1 = main(graph = CSR, graphType = 'CSR', method = method1, useCUDA = useCUDA1, pathRecordBool = False, srclist = srclist) 
-	r2 = main(graph = CSR, graphType = 'CSR', method = method2, useCUDA = useCUDA2, pathRecordBool = False, srclist = srclist) 
-
-
-
-	# logger.info(f'begin to check')
-	# import the check ans to check the ans.
-	from utils.check import check 
-	print(check(r1.dist, r2.dist, method1, method2)) # 检测两个答案是否相等
-	
+	method = ['dij', 'edge', 'delta']
+	useCUDA = [True, True, True]
 	useCUDATrue = 'useCUDA'
 	useCUDAFalse = 'noUseCUDA'
+	ans = []
+	# srclist = [i for i in range(n)]
+	srclist = None
+	# srclist = 23
+	# srclist = [2, 5, 12, 45, 45, 23, 87, 145, 567, 368, 325, 463, 168, 1276, 2416, 1567, 23, 4567, 2352, 3456, 2878, 2978, 1983]
+	# srclist = [i for i in range(200, 1000, 4)]
 
-	print(f'{method1}_{useCUDATrue if useCUDA1 else useCUDAFalse} time cost = ', r1.timeCost) # 并行计算用时
-	print(f'{method2}_{useCUDATrue if useCUDA2 else useCUDAFalse} time cost = ', r2.timeCost) # 串行计算用时
-	# print("speedup: " + str(r2.timeCostNum / (r1.timeCostNum * 1000)  * 100000 // 100)) # 显示两者的用时加速比
+	from utils.check import check 
 
-	r3 = main(graph = CSR, graphType = 'CSR', method = method3, useCUDA = useCUDA3, pathRecordBool = False, srclist = srclist) 
-	print(check(r1.dist, r3.dist, method1, method3)) # 检测两个答案是否相等
-	print(f'{method3}_{useCUDATrue if useCUDA3 else useCUDAFalse} time cost = ', r3.timeCost) # 串行计算用时
+	for i in range(len(method)):
+		logger.info(f'begin to calc. method = {method[i]}, useCUDA = {useCUDA[i]}, pathRecordBool = False, srclist = {np.array(srclist)}')
+		ans.append(main(graph = CSR, graphType = 'CSR', method = method[i], useCUDA = useCUDA[i], pathRecordBool = False, srclist = srclist))
+		
+		logger.info(f'begin to check')
+		
+		PRINT(check(ans[0].dist, ans[i].dist, method[0], method[i])) # 检测两个答案是否相等
+		PRINT(f'{method[i]}_{useCUDATrue if useCUDA[i] else useCUDAFalse} time cost = ' + str(ans[i].timeCost)) # 计算用时
+
+	
+		print(ans[i].dist.reshape(100,100))
 
 
 if __name__ == '__main__':
-	test_edge_gpu(n = 2000, m = 10000, l = 3, r = 100)
+	if len(sys.argv) == 2:
+		filename = sys.argv[1]
+	else:
+		filename = None
+
+	test(filename = filename, n = 3000, m = 15000, l = 3, r = 1000)
