@@ -49,6 +49,7 @@ class Graph(object):
 		self.src = []
 		self.des = []
 		self.w = []
+		self.edgeSet = []
 
 		self.MAXW = -1 # 最大边权
 		self.MINW = INF # 最小边权
@@ -70,9 +71,11 @@ class Graph(object):
 		"""
 		function: 
 			read the graph from file.
+			only accept graphic data in edgeSet format and store it in memory in CSR/edgeSet format
+			by the way, we wanna to specify the edgeSet format as a variable with 3 array src/des/weight which are consistent with every edge in graph
 
 		parameters: 
-			the graph data file. (more info please see the developer documentation).
+			filename : the graph data file. (more info please see the developer documentation).
 
 		return:
 			None.
@@ -168,6 +171,7 @@ class Graph(object):
 		self.src = np.copy(self.src).astype(np.int32) # 每个边的起点
 		self.des = np.copy(self.des).astype(np.int32) # 每个边的终点
 		self.w = np.copy(self.w).astype(np.int32) # 每个边的边权
+		self.edgeSet = [self.src, self.des, self.w]
 
 		self.MAXW = np.int32(self.MAXW) # 最大边权
 		self.MINW = np.int32(self.MINW) # 最小边权
