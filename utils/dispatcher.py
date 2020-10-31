@@ -5,7 +5,7 @@ from utils.getIndex import getIndex
 import numpy as np
 
 
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
+def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, block):
     """
     function: schedule the program by passing in parameters.
     
@@ -39,8 +39,11 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
 
 
     # 实例化一个 parameter
-    para = parameter()
+    para = Parameter()
 
+    # 填入指定的grid和block参数，未指定则为空
+    para.grid = grid
+    para.block = block
     # 依据图的类型将图写入类中
     if graphType == 'CSR' or graphType == None:
         graphType = 'CSR'
@@ -92,16 +95,12 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
         if useCUDA == True:
             # 打印警告 此方法仅仅提供全源计算 其余的计算没有优势可言 可以利用其他方法
             from method.apsp.matrix_gpu import matrix
-            return matrix(para.matrix,
-                            para.n,
-                            para.pathRecordingBool) 
+            return matrix(para) 
         # 使用CPU跑 
         else:
             # 打印警告 此方法仅仅提供全源计算 其余的计算没有优势可言 可以利用其他方法
             from method.apsp.matrix_cpu import matrix
-            return matrix(para.matrix,
-                            para.n,
-                            para.pathRecordingBool)
+            return matrix(para)
     
     # 边细粒度
     elif method == 'edge':
@@ -135,7 +134,6 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
             elif para.sourceType == 'MSSP':
                 from method.mssp.edge_cpu import edge
                 return edge(para)
-
 
             else:
                 from method.sssp.edge_cpu import edge
@@ -208,45 +206,28 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
             if useCUDA == True:
                 if para.sourceType == 'APSP':
                     from method.apsp.spfa_gpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.pathRecordingBool)
+                    return spfa(para)
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.spfa_gpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                len(para.srclist),
-                                para.pathRecordingBool)
+                    return spfa(para)
                 elif para.sourceType == "SSSP":
                     from method.sssp.spfa_gpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.pathRecordingBool)
+                    return spfa(para)
                 else:
                     raise Exception("can not run calculation by undefined calcType")
             # CPU SPFA
             else:
                 if para.sourceType == 'APSP':
                     from method.apsp.spfa_cpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.pathRecordingBool)
+                    return spfa(para)
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.spfa_cpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.pathRecordingBool)
+                    return spfa(para)
                 elif para.sourceType == "SSSP":
                     from method.sssp.spfa_cpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.pathRecordingBool)
+                    return spfa(para)
                 else:
                     raise Exception("can not run calculation by undefined calcType")
         # delta

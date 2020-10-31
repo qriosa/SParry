@@ -34,10 +34,17 @@ def CSR2edgeSet(CSR):
 	E = CSR[1]
 	W = CSR[2]
 	n = len(V)-1
+	src = []
+	des = []
+	val = []
 	edgeSet=[]
 	for u in range(n):
 		for ind in range(V[u],V[u+1]):
-			edgeSet.append((u,E[ind],W[ind]))
+			# edgeSet.append((u,E[ind],W[ind]))
+			src.append(u)
+			des.append(E[ind])
+			val.append(W[ind])
+	edgeSet = [src, des, val]
 	return np.int32(n), np.int32(len(E)), np.array(edgeSet,dtype=np.int32)
 
 def matrix2CSR(mat):
@@ -69,14 +76,21 @@ def matrix2edgeSet(mat):
 	
 	return: edgeSet graph.
 	"""
+	src = []
+	des = []
+	val = []
+	edgeSet=[]
 	n = len(mat)
 	edgeSet = []
 	for u in range(n):
 		for v in range(n):
 			w=mat[u][v]
 			if(w < INF):
-				edgeSet.append([u,v,w])
-				
+				# edgeSet.append([u,v,w])
+				src.append(u)
+				des.append(v)
+				val.append(w)
+	edgeSet = [src, des, val]				
 	return np.int32(n),np.int32(len(edgeSet)),np.array(edgeSet,np.int32)
 
 def edgeSet2Matrix(edgeSet):
@@ -88,13 +102,13 @@ def edgeSet2Matrix(edgeSet):
 	return: matrix graph.	
 	"""
 	m = len(edgeSet)
-	for item in edgeSet:
-		u,v,w=item[0],item[1],item[2]
-		n=max(n,u)
-		n=max(n,v)
+	n = 0
+	for ind in range(len(edgeSet)):
+		n=max(n,edgeSet[0][ind])
+		n=max(n,edgeSet[1][ind])
 	mat = [ [INF for i in range(n)] for i in range(n)]
 	for item in edgeSet:
-		u,v,w=item[0],item[1],item[2]
+		u, v, w=edgeSet[0][ind], edgeSet[1][ind], edgeSet[2][ind]
 		mat[u][v]=w
 	return np.int32(n),np.int32(m),np.array(mat,dtype=np.int32)
 
