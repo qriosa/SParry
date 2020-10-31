@@ -4,7 +4,7 @@ import numpy as np
 from method.sssp.delta_cpu import delta_stepping as delta_sssp
 from classes.result import Result
 
-def delta_stepping(CSR, n, srclist, delta, MAXN, pathRecordingBool = False):
+def delta_stepping(para):
     """
 	function: use delta_stepping algorithm in CPU to solve the MSSP. 
 	
@@ -21,12 +21,16 @@ def delta_stepping(CSR, n, srclist, delta, MAXN, pathRecordingBool = False):
 
     t1 = time()
 
+    CSR, n, srclist, delta, MAXN, pathRecordingBool = para.CSR, para.n, para.srclist.copy(), para.delta, para.MAXN, para.pathRecordingBool
+
     dist = []
 
     for s in srclist:
-        resulti = delta_sssp(CSR, n, s, delta, MAXN, False)
+        para.srclist = s
+        resulti = delta_sssp(para)
         dist.append(resulti.dist)    
     
+    para.srclist = srclist
     dist = np.array(dist)
 
     timeCost = time() - t1

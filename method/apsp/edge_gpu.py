@@ -8,7 +8,7 @@ import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
-def edge(edgeSet, n, m, pathRecordingBool = False):
+def edge(para):
     """
 	function: use edge free in GPU to solve the APSP. 
         (more info please see the developer documentation) .
@@ -26,6 +26,8 @@ def edge(edgeSet, n, m, pathRecordingBool = False):
         cuf = f.read()
     mod = SourceModule(cuf)
 
+    edgeSet, n, m, pathRecordingBool = para.edgeSet, para.n, para.m, para.pathRecordingBool
+    
     # 将 edgeSet 转化为 三个列表
     src = np.array([item[0] for item in edgeSet], dtype = np.int32)
     des = np.array([item[1] for item in edgeSet], dtype = np.int32)
@@ -34,8 +36,15 @@ def edge(edgeSet, n, m, pathRecordingBool = False):
     # 开始计时
     t1 = time()
 
-    BLOCK = (32, 1, 1)
-    GRID = (32, 1, 1)    
+    if para.BLOCK != None:
+        BLOCK = para.BLOCK
+    else:
+        BLOCK = (1024, 1, 1)
+    
+    if para.GRID != None:
+        GRID = para.GRID
+    else:
+        GRID = (512, 1) 
 
     # 申请变量空间
     dist = np.full((n * n, ), INF).astype(np.int32)

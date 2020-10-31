@@ -1,5 +1,8 @@
+from utils.settings import debugger
+
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 
 class Logger(object):
     """
@@ -24,6 +27,7 @@ class Logger(object):
 
     def __init__(self, name):
         self.logger = logging.getLogger(name)
+        self.debugger = debugger
     
     def notset(self, strings):
         """
@@ -34,6 +38,8 @@ class Logger(object):
 
         return None. 
         """
+        if self.debugger == False:
+            return
         self.logger.notset(strings)
 
     def debug(self, strings):
@@ -45,6 +51,8 @@ class Logger(object):
 
         return None. 
         """
+        if self.debugger == False:
+            return
         self.logger.debug(strings)
 
     def info(self, strings):
@@ -56,6 +64,8 @@ class Logger(object):
 
         return None. 
         """
+        if self.debugger == False:
+            return
         self.logger.info(strings)
 
     def warning(self, strings):
@@ -67,6 +77,8 @@ class Logger(object):
 
         return None. 
         """
+        if self.debugger == False:
+            return
         self.logger.warning(strings)
 
     def error(self, strings):
@@ -78,6 +90,8 @@ class Logger(object):
 
         return None. 
         """
+        if self.debugger == False:
+            return
         self.logger.error(strings)
 
     def critical(self, strings):
@@ -89,4 +103,6 @@ class Logger(object):
 
         return None. 
         """
+        if self.debugger == False:
+            return
         self.logger.critical(strings)

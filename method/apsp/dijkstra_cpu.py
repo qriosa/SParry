@@ -4,7 +4,7 @@ import numpy as np
 from classes.result import Result
 from method.sssp.dijkstra_cpu import dijkstra as dij_sssp
 
-def dijkstra(CSR, n, pathRecordingBool = False):
+def dijkstra(para):
     """
 	function: use dijkstra algorithm in CPU to solve the APSP. 
 	
@@ -18,12 +18,16 @@ def dijkstra(CSR, n, pathRecordingBool = False):
 
     t1 = time()
 
+    CSR, n, pathRecordingBool = para.CSR, para.n, para.pathRecordingBool
+
     dist = []
 
     for s in range(n):
-        resulti = dij_sssp(CSR, n, s, False) 
+        para.srclist = s
+        resulti = dij_sssp(para) 
         dist.append(resulti.dist)    
     
+    para.srclist = None
     dist = np.array(dist)
 
     timeCost = time() - t1

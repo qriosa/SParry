@@ -5,7 +5,7 @@ import numpy as np
 from utils.settings import INF
 from classes.result import Result
 
-def dijkstra(CSR, n, s, pathRecordingBool = False):
+def dijkstra(para):
     """
 	function: use dijkstra algorithm in CPU to solve the SSSP. 
 	
@@ -19,6 +19,8 @@ def dijkstra(CSR, n, s, pathRecordingBool = False):
     """
 
     t1 = time()
+
+    CSR, n, s, pathRecordingBool = para.CSR, para.n, para.srclist, para.pathRecordingBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 

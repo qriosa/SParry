@@ -4,7 +4,7 @@ import numpy as np
 from classes.result import Result
 from method.sssp.edge_cpu import edge as edge_sssp
 
-def edge(edgeSet, n, m, srclist, pathRecordingBool = False):
+def edge(para):
     """
 	function: use edge free in CPU to solve the MSSP. 
         (more info please see the developer documentation) .
@@ -21,12 +21,16 @@ def edge(edgeSet, n, m, srclist, pathRecordingBool = False):
 
     t1 = time()
 
+    edgeSet, n, m, srclist, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist.copy(), para.pathRecordingBool
+
     dist = []
 
     for s in srclist:
-        resulti = edge_sssp(edgeSet, n, m, s, pathRecordingBool)
+        para.srclist = s
+        resulti = edge_sssp(para)
         dist.append(resulti.dist)    
     
+    para.srclist = srclist
     dist = np.array(dist)
 
     timeCost = time() - t1

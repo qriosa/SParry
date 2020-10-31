@@ -5,7 +5,7 @@ from utils.settings import INF
 from classes.result import Result
 
 # CSR 结点数 源点 delta 最大边权
-def delta_stepping(CSR, n, s, delta, MAXN, pathRecordingBool = False):
+def delta_stepping(para):
     """
 	function: use delta_stepping algorithm in CPU to solve the SSSP. 
 	
@@ -23,6 +23,8 @@ def delta_stepping(CSR, n, s, delta, MAXN, pathRecordingBool = False):
 
     # 起始时间
     t1 = time()
+
+    CSR, n, s, delta, MAXN, pathRecordingBool = para.CSR, para.n, para.srclist, para.delta, para.MAXN, para.pathRecordingBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
     

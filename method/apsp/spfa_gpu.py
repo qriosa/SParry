@@ -16,7 +16,7 @@ fr.close()
 mod=SourceModule(kernelCode)
 KERNEL=mod.get_function(kernelName)
 BLOCK=(1024,1,1)
-GRID=(4096,1,1)
+GRID=(512,1)
 
 def spfa(CSR,n,pathRecording = False):
     """

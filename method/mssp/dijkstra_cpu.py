@@ -4,7 +4,7 @@ import numpy as np
 from method.sssp.dijkstra_cpu import dijkstra as dij_sssp
 from classes.result import Result
 
-def dijkstra(CSR, n, srclist, pathRecordingBool = False):
+def dijkstra(para):
     """
 	function: use dijkstra algorithm in CPU to solve the MSSP. 
 	
@@ -19,12 +19,16 @@ def dijkstra(CSR, n, srclist, pathRecordingBool = False):
 
     t1 = time()
 
+    CSR, n, srclist, pathRecordingBool = para.CSR, para.n, para.srclist.copy(), para.pathRecordingBool
+
     dist = []
 
     for s in srclist:
-        resulti = dij_sssp(CSR, n, s, False) 
+        para.srclist = s
+        resulti = dij_sssp(para) 
         dist.append(resulti.dist)    
     
+    para.srclist = srclist
     dist = np.array(dist)
 
     timeCost = time() - t1

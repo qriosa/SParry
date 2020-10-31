@@ -4,7 +4,7 @@ import numpy as np
 from classes.result import Result
 from utils.settings import INF
 
-def edge(edgeSet, n, m, s, pathRecordingBool = False):
+def edge(para):
     """
 	function: use edge free in CPU to solve the SSSP. 
         (more info please see the developer documentation) .
@@ -20,6 +20,9 @@ def edge(edgeSet, n, m, s, pathRecordingBool = False):
     """
 
     t1 = time()
+
+    edgeSet, n, m, s, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordingBool
+
     # 退出标识
     flag = 1
 

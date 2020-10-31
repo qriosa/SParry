@@ -1,4 +1,4 @@
-class parameter(object):
+class Parameter(object):
 	"""
 	function: to transfer the parameters in the functions.
 
@@ -24,6 +24,9 @@ class parameter(object):
 	return parameter object.
 	"""
 	def __init__(self):
+
+		self.BLOCK = None
+		self.GRID = None
 		
 		self.n = None # 结点数量
 		self.m = None # 边的数量（为了兼容有向边的数量，无向边应自动乘2）
@@ -42,7 +45,7 @@ class parameter(object):
 		self.srclist = None # 源点的集合 单个源点的[数字编号]、全源的[无]、多源的[list] 
 		self.sourceType = None # SSSP APSP MSSP
 
-		self.pathRecordingBool = None # 是否记录路径
+		self.pathRecordingBool = False # 是否记录路径
 		self.output = None # 输出结果的文件路径（默认生成三个文件？dist、path？）
 		self.logBool = None # 是否打印调试日志
 
@@ -53,6 +56,7 @@ class parameter(object):
 
 		# 以下是分块的参数
 		self.part = None # 分块中一次拷贝的边的数目
+		self.sNum = None # 多源中一次解决多少个问题
 
 		# 以下是多流的属性参数
 		self.streamNum = None # 指定流的数量

@@ -12,16 +12,27 @@ from classes.device import Device
 from math import sqrt
 cuFilepath = './method/apsp/cu/dijkstra.cu'
 
-def dijkstra(CSR, n, pathRecordingBool = False):
+def dijkstra(para):
+    from utils.judgeDivide import judge
+    
+    if judge(para):
+        return divide(para.CSR, para.n, para.m, para.srclist, para.part, para.sNum, para.pathRecordingBool, para.BLOCK, para.GRID)
+    else:
+        return nodivide(para.CSR, para.n, para.pathRecordingBool, para.BLOCK, para.GRID)
+
+# 整个图拷贝
+def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
     """
-	function: use dijkstra algorithm in GPU to solve the APSP. 
+	function: 
+        use dijkstra algorithm in GPU to solve the APSP. 
 	
 	parameters:  
 		CSR: CSR graph data. (more info please see the developer documentation) .
         n: the number of the vertexs in the graph.
         pathRecordingBool: record the path or not.
 	
-	return: Result(class).(more info please see the developer documentation) .
+	return: 
+        Result(class).(more info please see the developer documentation) .
     """
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
@@ -32,8 +43,11 @@ def dijkstra(CSR, n, pathRecordingBool = False):
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
-    BLOCK = (1024, 1, 1)
-    GRID = (512, 1, 1)    
+    if BLOCK == None:
+        BLOCK = (1024, 1, 1)
+    
+    if GRID == None:
+        GRID = (512, 1)  
 
     # 申请变量空间
     dist = np.full((n * n, ), INF).astype(np.int32)
@@ -46,8 +60,6 @@ def dijkstra(CSR, n, pathRecordingBool = False):
         dist[i * n + i] = np.int32(0)
         vis[i * n + i] = np.int32(0)    
 
-
-       
     dij_apsp_cuda_fuc = mod.get_function('dijkstra')
 
     # 开始跑
@@ -72,10 +84,15 @@ def dijkstra(CSR, n, pathRecordingBool = False):
     return result
 
 
-def noStream(CSR, n, m, part = None, pathRecordingBool = False):
+# 多源就不给其分图了 就通过多次调用一次一个单源来解决吧
+# 更进一步可以根据实际的数据：
+# 一次多个源，一次一个源但是都是拷贝了全图，
+# 一次多个源，一次一个源但是都是使用了分图。
+# 这还没有实现
+def multi_sssp(CSR, n, m, pathRecordingBool):
     """
-	function: use dijkstra algorithm in GPU to solve the APSP, but this func can
-        devide the graph if it's too large to put it in GPU memory. 
+	function: 
+        use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
 	
 	parameters:  
 		CSR: CSR graph data. (more info please see the developer documentation) .
@@ -84,7 +101,8 @@ def noStream(CSR, n, m, part = None, pathRecordingBool = False):
         part: the number of the edges that will put to GPU at a time.
         pathRecordingBool: record the path or not.
 	
-	return: Result(class).(more info please see the developer documentation) .
+	return: 
+        Result(class).(more info please see the developer documentation) .
     """
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -95,8 +113,11 @@ def noStream(CSR, n, m, part = None, pathRecordingBool = False):
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
-    BLOCK = (1024, 1, 1)
-    GRID = (32, 1, 1)
+    if BLOCK == None:
+        BLOCK = (1024, 1, 1)
+    
+    if GRID == None:
+        GRID = (512, 1)
 
     # 这里的 m 无需再乘 2 因为传入的数据必须针对无向边用两条有向边来表示了
     partNum = (m + part - 1) // part # 计算一共有多少边的块数据需要拷贝
@@ -131,7 +152,7 @@ def noStream(CSR, n, m, part = None, pathRecordingBool = False):
     for i in range(n):
         # i为源点的情况下 
         dist[i * n + i] = np.int32(0)
-        vis[i * n + i] = np.int32((V[i + 1] + part - 1) // part - (V[ + i]) // part)
+        vis[i * n + i] = np.int32((V[i + 1] + part - 1) // part - (V[i]) // part)
 
     # copy to device
     dist_gpu = drv.mem_alloc(dist.nbytes)

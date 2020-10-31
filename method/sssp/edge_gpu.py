@@ -8,24 +8,26 @@ import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
-def edge(edgeSet, n, m, s, pathRecordingBool = False):    
+def edge(para):    
     """
-	function: use edge free in GPU to solve the SSSP. 
+    function: use edge free in GPU to solve the SSSP. 
         (more info please see the developer documentation) .
-	
-	parameters:  
-		edgeSet: edgeSet graph data. (more info please see the developer documentation) .
+    
+    parameters:  
+        edgeSet: edgeSet graph data. (more info please see the developer documentation) .
         n: the number of the vertexs in the graph.
         m: the number of the edges in the graph.
         srclist: the source list, can be number.(more info please see the developer documentation).
         pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) . 
+    
+    return: Result(class).(more info please see the developer documentation) . 
     """
 
     with open('./method/sssp/cu/edge.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)
+
+    edgeSet, n, m, s, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordingBool
 
     # 将 edgeSet 转化为 三个列表
     src = np.array([item[0] for item in edgeSet], dtype = np.int32)
@@ -34,10 +36,17 @@ def edge(edgeSet, n, m, s, pathRecordingBool = False):
 
     # 起始时间
     t1 = time()
-
+    
     # 线程开启全局变量 
-    BLOCK = (1024, 1, 1)
-    GRID = (1, 1, 1)
+    if para.BLOCK != None:
+        BLOCK = para.BLOCK
+    else:
+        BLOCK = (1024, 1, 1)
+    
+    if para.GRID != None:
+        GRID = para.GRID
+    else:
+        GRID = (1, 1)
 
     dist = np.full((n, ), INF).astype(np.int32)
     dist[s] = np.int32(0)

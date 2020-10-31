@@ -1,24 +1,12 @@
 # 该模块是为了判断是否要进行大图分割跳转
-
+# 同时如果需要则进行相应的参数的计算
+from utils.debugger import Logger
 from classes.device import Device
 from math import sqrt
+import numpy as np
 
-def judge(para):
-    """
-    function: determine whether the current graph needs to use graph segmentation.
-    
-    parameters: 
-        a parameters class. (more info please see the developer documentation) .
-    
-    return: bool.
-    """
 
-    # 获取设备的显卡信息
-    device = Device()
-    freeGpuMem = device.free
-    print(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
-    
-
+def judge_sssp(para):
     """
     SSSP 情况下的拷贝 
     会拷贝进入的东西有: 
@@ -39,6 +27,16 @@ def judge(para):
             根据单调性 part 显然是往大于 sqrt(2*n) 的方向去取 因此应该取大根 并向下取整
             part = ((3.6*free - 3*n - 4) + sqrt((3.6*free - 3*n - 4)² - 4 * (2*n))) / 2 / 2 * 10 // 10 # 向下取整
     """
+    
+    # logger
+    logger = Logger(__name__)
+
+    # 获取设备的显卡信息
+    device = Device()
+    freeGpuMem = device.free
+    logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
+    
+
     # 判断是否满足
     lowLimit = lambda PART, N, FREE: 2*PART + (2*N)/(2*PART) <= 3.6*FREE - 3*N - 4
     getPart = lambda FREE, N: ((3.6*FREE - 3*N - 4) + sqrt((3.6*FREE - 3*N - 4) ** 2 - 4 * (2*N))) / 2 / 2 * 10 // 10
@@ -57,7 +55,7 @@ def judge(para):
         para.part = np.int32(min(para.m, para.part))
         if lowLimit(0.5 * sqrt(2*para.n), para.n, device.free) == False:
             para.part = getPart(device.free, para.n)
-            print(f"WARNNING 你给的 part 不行 我已经给你修正为一个可以的了 part = {para.part}")
+            logger.warnning(f"你给的 part 不行 我已经给你修正为一个可以的了 part = {para.part}")
     else:
         # 如果整个能进去就可以直接整个放进去
         if lowLimit(para.m, para.n, device.free):
@@ -70,4 +68,74 @@ def judge(para):
     print(f'part = {para.part}, m = {para.m}') 
     
     return True # 需要分图跳转
+
+
+def judge_mssp(para):
     
+    # logger
+    logger = Logger(__name__)
+
+    # 获取设备的显卡信息
+    device = Device()
+    freeGpuMem = device.free
+    logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
+    
+    if 4 * (3 * para.n * len(para.srclist) + 2 * para.m) < 0.9 * device.free:
+        return False # 不需要跳转 
+
+    # 若 part 都没有指定则是需要自己计算一个可行的，那我们就一次解决 10 个吧
+    if para.part == None:
+        sNum = 10 # 一次拷贝解决的问题数量
+        para.part = np.int32((0.3*device.free) / (4 * sNum * para.n))
+        if para.part <= 100:
+            # 跳转到一次只解决一个源
+            return judge_sssp(para)
+        else:
+            return True
+
+    elif para.part != None and para.sNum == None:
+        sNum = np.int32((0.3*device.free) / (4 * para.part * para.n))
+        if sNum < 1:
+            sNum = 1
+            return judge_sssp(para)
+        else:
+            return True
+            
+
+    elif para.part == None and para.sNum != None:
+        para.part = np.int32((0.3*device.free) / (4 * sNum * para.n))
+        if para.part <= 100:
+            return judge_sssp(para)
+        else:
+            return True
+
+    elif para.part != None and para.sNum != None:
+        if 4 * sNum * para.n * para.part > 0.3 * device.free:
+            sNum = 10 # 一次拷贝解决的问题数量
+            para.part = np.int32((0.3*device.free) / (4 * sNum * para.n))
+            if para.part <= 100:
+                # 跳转到一次只解决一个源
+                return judge_sssp(para)
+        else:
+            # para.part para.sNum
+            return True
+
+
+def judge(para):
+    """
+    function: 
+        determine whether the current graph needs to use graph segmentation.
+    
+    parameters: 
+        a parameters class. (more info please see the developer documentation) .
+    
+    return: 
+        bool.
+    """
+
+    if para.sourceType == "SSSP":
+        return judge_sssp(para)
+
+    elif para.sourceType == "MSSP":
+        return judge_mssp(para)
+        

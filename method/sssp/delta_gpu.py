@@ -8,7 +8,7 @@ import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
-def delta_stepping(CSR, n, s, delta, pathRecordingBool = False):
+def delta_stepping(para):
     """
 	function: use delta_stepping algorithm in GPU to solve the SSSP. 
 	
@@ -29,9 +29,18 @@ def delta_stepping(CSR, n, s, delta, pathRecordingBool = False):
     # 起始时间
     t1 = time()
 
+    CSR, n, s, delta, pathRecordingBool = para.CSR, para.n, para.srclist, para.delta, para.pathRecordingBool
+
     # 线程开启全局变量 
-    BLOCK = (1024, 1, 1)
-    GRID = (1, 1, 1)
+    if para.BLOCK != None:
+        BLOCK = para.BLOCK
+    else:
+        BLOCK = (1024, 1, 1)
+    
+    if para.GRID != None:
+        GRID = para.GRID
+    else:
+        GRID = (1, 1)
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 

@@ -4,7 +4,7 @@ import numpy as np
 from classes.result import Result
 from method.sssp.delta_cpu import delta_stepping as delta_sssp
 
-def delta_stepping(CSR, n, delta, MAXN, pathRecordingBool = False):
+def delta_stepping(para):
     """
 	function: use delta_stepping algorithm in CPU to solve the APSP. 
 	
@@ -19,13 +19,17 @@ def delta_stepping(CSR, n, delta, MAXN, pathRecordingBool = False):
     """
 
     t1 = time()
+    
+    CSR, n, delta, MAXN, pathRecordingBool = para.CSR, para.n, para.delta, para.MAXN, para.pathRecordingBool
 
     dist = []
 
     for s in range(n):
-        resulti = delta_sssp(CSR, n, s, delta, MAXN, False)
+        para.srclist = s
+        resulti = delta_sssp(para)
         dist.append(resulti.dist)    
     
+    para.srclist = None
     dist = np.array(dist)
 
     timeCost = time() - t1

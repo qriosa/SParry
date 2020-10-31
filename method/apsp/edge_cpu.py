@@ -4,7 +4,7 @@ import numpy as np
 from classes.result import Result
 from method.sssp.edge_cpu import edge as edge_sssp
 
-def edge(edgeSet, n, m, pathRecordingBool = False):
+def edge(para):
     """
 	function: use edge free in CPU to solve the APSP. 
         (more info please see the developer documentation) .
@@ -20,12 +20,16 @@ def edge(edgeSet, n, m, pathRecordingBool = False):
 
     t1 = time()
 
+    edgeSet, n, m, pathRecordingBool = para.edgeSet, para.n, para.m, para.pathRecordingBool
+
     dist = []
 
     for s in range(n):
-        resulti = edge_sssp(edgeSet, n, m, s, False)
+        para.srclist = s
+        resulti = edge_sssp(para)
         dist.append(resulti.dist)    
     
+    para.srclist = None
     dist = np.array(dist)
 
     timeCost = time() - t1
