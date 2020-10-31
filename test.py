@@ -1,14 +1,9 @@
 from utils.debugger import Logger
+from utils.settings import PRINT
+
 import sys
 
 # test update different file
-
-def PRINT(chars = None):
-	if chars == None:
-		print("\033[0;36;40m" + '\n' + "\033[0m")
-	else:
-		print("\033[0;36;40m" + chars + "\033[0m")
-
 def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	'''
 	for test.
@@ -60,12 +55,13 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	from calc import main
 
 	# show the help info
-	help(main)
+	# help(main)
 
 
 
 	# begin to calc 
-	method = ['dij', 'edge', 'delta']
+	# method = ['dij']
+	method = ['dij', 'delta', 'spfa', 'edge']
 	useCUDA = [True, True, True, True]
 	# useCUDA = [False, False, False, False]
 	useCUDATrue = 'useCUDA'
@@ -76,7 +72,7 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	# srclist = 232
 	# srclist = [20,123,1114,5098,6111,9914,23,345,123,345,435,67,234,124,456,768,34,234,456,78,234,56,678,89,123,456,678,423,576,8964,6489,1999,2437,1031,5436,6522,1456,2345]
 	# srclist = [2, 5, 12, 45, 45, 23, 87, 145, 567, 368, 325, 463, 168, 1276, 2416, 1567, 23, 4567, 2352, 3456, 2878, 2978, 1983]
-	# srclist = [i for i in range(200, 1000, 4)]
+	# srclist = [i for i in range(200, 1000, 40)]
 
 	from utils.check import check 
 
@@ -88,8 +84,8 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 		
 		PRINT(check(ans[0].dist, ans[i].dist, method[0], method[i])) # 检测两个答案是否相等
 		PRINT(f'{method[i]}_{useCUDATrue if useCUDA[i] else useCUDAFalse} time cost = ' + str(ans[i].timeCost)) # 计算用时
-
-	
+		
+		np.array(ans[0].dist).flatten().tofile("./data/std.bin")
 		# print(ans[i].dist.reshape(100,100))
 
 
@@ -99,4 +95,4 @@ if __name__ == '__main__':
 	else:
 		filename = None
 
-	test(filename = filename, n = 4000, m = 98950, l = 3, r = 60)
+	test(filename = filename, n = 100, m = 4000, l = 3, r = 60)

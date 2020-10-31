@@ -22,14 +22,15 @@ def edge(para):
     t1 = time()
 
     edgeSet, n, m, s, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordingBool
-    src, des, w = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2]
+    src, des, val = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2]
 
     # 退出标识
     flag = 1
 
     # dist
     dist = np.full((n, ), INF).astype(np.int32)
-    dist[s] = 0   
+    dist[s] = 0 
+    # print(dist.shape)  
     while True:
         # 如果没有点的距离发生改变，则退出遍历
         if flag == 0:
@@ -39,7 +40,7 @@ def edge(para):
 
         # edge = (u, v, w): u -> v = w
         for i in range(len(src)):
-            u, v, w = src[i], des[i], w[i]
+            u, v, w = src[i], des[i], val[i]
             if dist[v] > dist[u] + w:
                 dist[v] = dist[u] + w
                 flag = 1

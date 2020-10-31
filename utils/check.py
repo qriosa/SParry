@@ -9,6 +9,6 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
 	m2.update(str(np.array(data2).flatten()).encode('utf-8'))
 
 	if m1.hexdigest() == m2.hexdigest():
-		return f"{name1} 和 {name2} 一样"
+		return f"{name1} and {name2} are equal"
 	else:
-		return f"{name1} 和 {name2} 不一样"
+		return f"{name1} and {name2} are not equal"

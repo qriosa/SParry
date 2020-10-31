@@ -7,7 +7,7 @@ from method.sssp.spfa_cpu import spfa as spfa_sssp
 
 
 
-def spfa(CSR,n,srclist,pathRecordingBool):
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in CPU to solve the MSSP. 
 	

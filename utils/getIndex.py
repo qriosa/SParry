@@ -43,35 +43,19 @@ def getIndex(para):
 		para.n = 0
 		
 		# 全是有向边
-		if para.directed == True:
-			para.m = np.int32(len(para.edgeSet))
+		# if para.directed == True:
+		para.m = np.int32(len(para.edgeSet[0]))
 
-			para.src = np.zeros(para.m, dtype=np.int32)
-			para.des = np.zeros(para.m, dtype=np.int32)
-			para.w = np.zeros(para.m, dtype=np.int32)
-
-			for i in range(para.m):
-				para.src[i] = para.edgeSet[i][0]
-				para.des[i] = para.edgeSet[i][1]
-				para.w[i] = para.edgeSet[i][2]
-				para.n = max(para.n, para.src[i], para.des[i])
+		para.n = max(para.edgeSet[0].max(), para.edgeSet[1].max()) +1
 
 		
-		else:
-			para.m = np.int32(len(para.edgeSet)) # 全是无向边就 * 2 
+		# else:
+		# 	para.m = np.int32(len(para.edgeSet[0]))
 
-			para.src = np.zeros(para.m * 2, dtype=np.int32)
-			para.des = np.zeros(para.m * 2, dtype=np.int32)
-			para.w = np.zeros(para.m * 2, dtype=np.int32)
-
-			for i in range(para.m):
-				para.des[i * 2 + 1] = para.src[i * 2] = para.edgeSet[i][0]
-				para.src[i * 2 + 1] = para.des[i * 2] = para.edgeSet[i][1]
-				para.w[i * 2 + 1] = para.w[i * 2] = para.edgeSet[i][2]
-				para.n = max(para.n, para.src[i*2], para.des[i*2])
-
-		# 以最大的结点来判定结点的个数 n = maxId + 1 因为统一考虑有0号点 端点保证左闭右开
-		para.n = np.int32(para.n + 1)	
+		# 	para.src = para.edgeSet[0] 
+		# 	para.des = para.edgeSet[1]
+		# 	para.w = para.edgeSet[2]
+		# 	para.n = max(para.src.max(), para.des.max()) +1
 
 
 	elif para.graphType == 'CSR' or para.graphType == None:

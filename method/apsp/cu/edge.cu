@@ -23,20 +23,11 @@ __global__ void edge(int* src, int* des, int* w, int *n, int* m, int* dist){ // 
             
             while(e < (*m)){
                 
-                if (dist[src[e] + sn] > dist[des[e] + sn] + w[e]){
-                    old = atomicMin(&dist[src[e] + sn], dist[des[e] + sn] + w[e]);
+            old = atomicMin(&dist[des[e] + sn], dist[src[e] + sn] + w[e]);
 
-                    if(dist[src[e] + sn] < old){
-                        quickBreak[0] = 1;
-                    }
-                }
-                else if(dist[des[e] + sn] > dist[src[e] + sn] + w[e]){
-                    old = atomicMin(&dist[des[e] + sn], dist[src[e] + sn] + w[e]);
-
-                    if(dist[des[e] + sn] < old){
-                        quickBreak[0] = 1;
-                    }
-                }
+            if(dist[des[e] + sn] < old){
+                quickBreak[0] = 1;
+            }
                 e += offset;
             }
             

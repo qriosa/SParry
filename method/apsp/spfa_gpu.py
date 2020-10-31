@@ -35,8 +35,12 @@ def spfa(para):
 
     if(para.GRID is not None):
         GRID = para.GRID
+    else:
+        GRID=(512,1,1)
     if(para.BLOCK is not None):
         BLOCK = para.BLOCK
+    else:
+        BLOCK=(1024,1,1)
 
     start_time = time.process_time()
     V_np32 = CSR[0]

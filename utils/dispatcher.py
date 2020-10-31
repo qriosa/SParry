@@ -1,9 +1,11 @@
 from classes.parameter import Parameter 
 from utils.transfer import transfer as tf
 from utils.getIndex import getIndex
+from utils.debugger import Logger
 
 import numpy as np
 
+logger = Logger(__name__)
 
 def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, block):
     """
@@ -20,6 +22,8 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, b
     return:
         this func will return a Result(class). (more info please see the developer documentation) .  
     """
+
+    logger.info(f"begin to dispatch ... ")
 
     ## 输入变量判断是否合法 ##
     graph = np.array(graph)
@@ -110,6 +114,8 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, b
         # 若未进入transfer则需要自动计算一些必要的参数值
         if para.n == None or para.m == None:
             getIndex(para)
+
+        # print(para.n,para.m)
         
         # 进入 cuda 的函数 的 edge
         if useCUDA == True:

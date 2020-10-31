@@ -10,8 +10,7 @@ import os
 from classes.result import Result
 from utils.settings import INF
 
-BLOCK=(1024,1,1)
-GRID=(1,1,1)
+
 
 
 kernelName='spfaKernelForSSSP'
@@ -40,9 +39,13 @@ def spfa(para):
 
     if(para.GRID is not None):
         GRID = para.GRID
+    else:
+        GRID=(1,1,1)
     if(para.BLOCK is not None):
         BLOCK = para.BLOCK
-
+    else:
+        BLOCK=(1024,1,1)
+    # print(BLOCK,GRID)
     start_time = time.process_time()
     RST_V_np32 = CSR[0]
     RST_E_np32 = CSR[1]

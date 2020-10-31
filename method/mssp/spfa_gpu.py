@@ -15,8 +15,6 @@ kernelCode=fr.read()
 fr.close()
 mod=SourceModule(kernelCode)
 KERNEL=mod.get_function(kernelName)
-BLOCK=(1024,1,1)
-GRID=(4096,1,1)
 
 def spfa(para):
     """
@@ -38,8 +36,12 @@ def spfa(para):
 
     if(para.GRID is not None):
         GRID = para.GRID
+    else:
+        GRID=(512,1,1)
     if(para.BLOCK is not None):
         BLOCK = para.BLOCK
+    else:
+        BLOCK=(1024,1,1)
 
     start_time = time.process_time()
     V_np32 = CSR[0]

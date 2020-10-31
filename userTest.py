@@ -3,26 +3,12 @@ from utils.dispatcher import dispatch
 from utils.readGraph import read
 from utils.debugger import Logger
 from utils.check import check
+from utils.settings import PRINT
+
+import numpy as np
 
 # set logging test update lcx added by wenake
 logger = Logger(__name__)
-
-def INF():
-    """
-    function: return the INF of this tool.
-    
-    parameters: None.
-    
-    return:
-        the INF in this tools.
-    """
-
-    from utils.settings import INF as inf
-
-    return inf
-
-
-def readAnsMatrix(filename):
 
 
 def main(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
@@ -44,12 +30,15 @@ def main(inputGraph = None, graphType = None, outputGraph=None, method=None, use
     return:
         no return but print the result of proving 
     """
-    assert (inputGraph == None or outputGraph==None or graphType==None), "必须指定输入数据和标准输出，以及数据格式"
+    
+    logger.info(f"begin to test: inputGraph={inputGraph}, graphType={graphType}, outputGraph={outputGraph}, method={method}, useCUDA={useCUDA}")
+
+    assert (inputGraph != None and outputGraph!=None and graphType!=None), "必须指定输入数据和标准输出、以及数据格式"
 
     # 跳转到 dispatch 函数进行分发
     # we only accept inputGraph data in edgeSet format 
     if(type(inputGraph) == str):
-        graphObj=read(graph)
+        graphObj=read(inputGraph)
         if(graphType=='CSR'):
             inputGraph = graphObj.CSR
         else:
@@ -57,21 +46,24 @@ def main(inputGraph = None, graphType = None, outputGraph=None, method=None, use
             graphType = "edgeSet"
     
     if(type(outputGraph) == str):
-        outputGraph=readAnsMatrix(outputGraph)
-    
-    pltform=['cpu','GPU']
+        outputGraph=np.fromfile(outputGraph, dtype=np.int32)
+    # print(graphObj.CSR[0])
+    # print(inputGraph)
+    pltform=['cpu','gpu']
     # if define method as None , we will test all calculating path we have
     if(method == None):
         methods=['dij','spfa','delta','edge']
-        usage = [True, False]
+        usage = [ True,False]
         for msz in methods:
             for use in usage:
                 result = dispatch(inputGraph, graphType, msz, use, False, None, None, None)
-                print(check(result.matrix, outputGraph, f'answer[{msz} {pltform[use]}]','stdout'))
+                PRINT(check(result.dist, outputGraph, f'answer[{msz} {pltform[use]}]','stdout'))
+                # print(result.dist,outputGraph)
     else:
         result = dispatch(inputGraph, graphType, method, useCUDA, False, None, None, None)
-        print(check(result.matrix, outputGraph, f'answer[{methods} {pltform[useCUDA]}]','stdout'))
+        PRINT(check(result.dist, outputGraph, f'answer[{methods} {pltform[useCUDA]}]','stdout'))
+        # print(result.dist,outputGraph)
 
 
 if __name__ == "__main__":
-    main()
+    main(inputGraph='./data/test.txt',graphType='edgeSet',outputGraph='./data/std.bin')

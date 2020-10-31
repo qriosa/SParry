@@ -117,6 +117,10 @@ class Graph(object):
 			self.des.append(int(line[1]))
 			self.w.append(int(line[2]))
 
+			self.src.append(int(line[1]))
+			self.des.append(int(line[0]))
+			self.w.append(int(line[2]))
+
 			if int(line[2]) > self.MAXW:
 				self.MAXW = int(line[2])
 
