@@ -6,7 +6,7 @@ from method.sssp.spfa_cpu import spfa as spfa_sssp
 
 
 
-def spfa(CSR,n,pathRecordingBool):
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in CPU to solve the APSP. 
 	
@@ -17,16 +17,20 @@ def spfa(CSR,n,pathRecordingBool):
 	
 	return: Result(class).(more info please see the developer documentation) .    
     """
-    global Va,Ea,Wa
+    CSR = para.CSR
+    n = para.n 
+    pathRecording = para.pathRecordingBool
+    
     start_time = time()
     Va=CSR[0]
     Ea=CSR[1]
     Wa=CSR[2]
     dist=[]
     for st in range(n):
-        resi = spfa_sssp(CSR,n,st)
+        para.srclist = st
+        resi = spfa_sssp(para)
         dist.append(resi.dist)
-    
+    para.srclist = None
     dist = np.array(dist)
     end_time = time()
     timeCost = end_time - start_time

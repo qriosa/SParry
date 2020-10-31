@@ -4,7 +4,7 @@ import numpy as np
 from utils.settings import INF
 from classes.result import Result
 
-def spfa(CSR,n,s,pathRecording=False):
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in CPU to solve the SSSP. 
 	
@@ -16,6 +16,10 @@ def spfa(CSR,n,s,pathRecording=False):
 	
 	return: Result(class).(more info please see the developer documentation) .     
     """
+    CSR = para.CSR
+    n = para.n 
+    s = para.srclist
+    pathRecording = para.pathRecordingBool
     start_time = time()
     Va=CSR[0]
     Ea=CSR[1]

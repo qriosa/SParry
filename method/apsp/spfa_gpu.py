@@ -18,7 +18,7 @@ KERNEL=mod.get_function(kernelName)
 BLOCK=(1024,1,1)
 GRID=(512,1)
 
-def spfa(CSR,n,pathRecording = False):
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in GPU to solve the APSP . 
 	
@@ -29,6 +29,10 @@ def spfa(CSR,n,pathRecording = False):
 	
 	return: Result(class).(more info please see the developer documentation) .      
     """
+    CSR = para.CSR
+    n = para.n 
+    pathRecording = para.pathRecordingBool
+
     start_time = time.process_time()
     V_np32 = CSR[0]
     E_np32 = CSR[1]

@@ -18,7 +18,7 @@ KERNEL=mod.get_function(kernelName)
 BLOCK=(1024,1,1)
 GRID=(4096,1,1)
 
-def spfa(CSR,n,srclist,sn,pathRecording = False):
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in GPU to solve the MSSP. 
 	
@@ -30,6 +30,12 @@ def spfa(CSR,n,srclist,sn,pathRecording = False):
 	
 	return: Result(class).(more info please see the developer documentation) .        
     """
+    CSR = para.CSR
+    n = para.n
+    srclist = para.srclist
+    sn = len(para.srclist)
+    pathRecording = para.pathRecordingBool
+
     start_time = time.process_time()
     V_np32 = CSR[0]
     E_np32 = CSR[1]

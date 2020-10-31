@@ -1,5 +1,6 @@
 from time import time
 import numpy as np
+import copy
 
 from classes.result import Result
 from method.sssp.spfa_cpu import spfa as spfa_sssp
@@ -18,15 +19,21 @@ def spfa(CSR,n,srclist,pathRecordingBool):
 	
 	return: Result(class).(more info please see the developer documentation) .      
     """
-    global Va,Ea,Wa
+    CSR = para.CSR
+    n = para.n 
+    srclist = copy.deepcopy(para.srclist)
+    pathRecording = para.pathRecordingBool
+
     start_time = time()
     Va=CSR[0]
     Ea=CSR[1]
     Wa=CSR[2]
     dist=[]
     for st in srclist:
-        resi = spfa_sssp(CSR,n,st)
+        para.srclist = st
+        resi = spfa_sssp(para)
         dist.append(resi.dist)
+    para.srclist = srclist
     end_time = time()
     timeCost = end_time - start_time
     result = Result(dist = dist, timeCost = timeCost)

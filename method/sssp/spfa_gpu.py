@@ -21,7 +21,7 @@ fr.close()
 mod=SourceModule(kernelCode)
 KERNEL=mod.get_function(kernelName)
 
-def spfa(CSR,n,st,pathRecording = False):
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in GPU to solve the SSSP. 
 	
@@ -33,6 +33,11 @@ def spfa(CSR,n,st,pathRecording = False):
 	
 	return: Result(class).(more info please see the developer documentation) .     
     """
+    CSR = para.CSR
+    n = para.n 
+    st = para.srclist
+    pathRecording = para.pathRecordingBool
+
     start_time = time.process_time()
     RST_V_np32 = CSR[0]
     RST_E_np32 = CSR[1]

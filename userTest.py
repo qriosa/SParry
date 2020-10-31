@@ -44,6 +44,8 @@ def main(inputGraph = None, graphType = None, outputGraph=None, method=None, use
     return:
         no return but print the result of proving 
     """
+    assert (inputGraph == None or outputGraph==None or graphType==None), "必须指定输入数据和标准输出，以及数据格式"
+
     # 跳转到 dispatch 函数进行分发
     # we only accept inputGraph data in edgeSet format 
     if(type(inputGraph) == str):
