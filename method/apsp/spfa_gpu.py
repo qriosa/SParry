@@ -33,6 +33,11 @@ def spfa(para):
     n = para.n 
     pathRecording = para.pathRecordingBool
 
+    if(para.GRID is not None):
+        GRID = para.GRID
+    if(para.BLOCK is not None):
+        BLOCK = para.BLOCK
+
     start_time = time.process_time()
     V_np32 = CSR[0]
     E_np32 = CSR[1]
