@@ -21,7 +21,7 @@ def INF():
     return inf
 
 
-def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRecordBool = False, srclist = None):
+def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRecordBool = False, srclist = None, grid=None, block=None):
     
     """
     function: 
@@ -43,11 +43,11 @@ def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRec
     if(type(graph) == str):
         graphObj=read(graph)
         if(graphType=='edgeSet'):
-            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist)
+            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, grid, block)
         else:
-            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist)
+            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist, grid, block)
     else:
-        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist)
+        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, block)
     
     logger.info(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
     

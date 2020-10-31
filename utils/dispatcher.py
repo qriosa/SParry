@@ -5,7 +5,7 @@ from utils.getIndex import getIndex
 import numpy as np
 
 
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
+def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, block):
     """
     function: schedule the program by passing in parameters.
     
@@ -39,8 +39,11 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
 
 
     # 实例化一个 parameter
-    para = parameter()
+    para = Parameter()
 
+    # 填入指定的grid和block参数，未指定则为空
+    para.grid = grid
+    para.block = block
     # 依据图的类型将图写入类中
     if graphType == 'CSR' or graphType == None:
         graphType = 'CSR'
@@ -109,16 +112,12 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
         if useCUDA == True:
             # 打印警告 此方法仅仅提供全源计算 其余的计算没有优势可言 可以利用其他方法
             from method.apsp.matrix_gpu import matrix
-            return matrix(para.matrix,
-                            para.n,
-                            para.pathRecordingBool) 
+            return matrix(para) 
         # 使用CPU跑 
         else:
             # 打印警告 此方法仅仅提供全源计算 其余的计算没有优势可言 可以利用其他方法
             from method.apsp.matrix_cpu import matrix
-            return matrix(para.matrix,
-                            para.n,
-                            para.pathRecordingBool)
+            return matrix(para)
     
     # 边细粒度
     elif method == 'edge':
@@ -133,52 +132,29 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
         if useCUDA == True:
             if para.sourceType == 'APSP':
                 from method.apsp.edge_gpu import edge
-                return edge(para.edgeSet,
-                            para.n,
-                            para.m,
-                            para.pathRecordingBool)
+                return edge(para)
 
             elif para.sourceType == 'MSSP':
                 from method.mssp.edge_gpu import edge
-                return edge(para.edgeSet,
-                            para.n,
-                            para.m,
-                            para.srclist,
-                            para.pathRecordingBool)
+                return edge(para)
             else:
                 from method.sssp.edge_gpu import edge
-                return edge(para.edgeSet,
-                            para.n,
-                            para.m,
-                            para.srclist,
-                            para.pathRecordingBool)
+                return edge(para)
                 
         # 只是使用 CPU 的 edge
         else:
             if para.sourceType == 'APSP':
                 from method.apsp.edge_cpu import edge
-                return edge(para.edgeSet,
-                            para.n,
-                            para.m,
-                            para.pathRecordingBool)
+                return edge(para)
                 
 
             elif para.sourceType == 'MSSP':
                 from method.mssp.edge_cpu import edge
-                return edge(para.edgeSet,
-                            para.n,
-                            para.m,
-                            para.srclist,
-                            para.pathRecordingBool)
-
+                return edge(para)
 
             else:
                 from method.sssp.edge_cpu import edge
-                return edge(para.edgeSet,
-                            para.n,
-                            para.m,
-                            para.srclist,
-                            para.pathRecordingBool)
+                return edge(para)
 
 
     # dij spfa delta
@@ -246,70 +222,45 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
             else:
                 if para.sourceType == 'APSP':
                     from method.apsp.dijkstra_cpu import dijkstra as dij
-                    return dij(para.CSR, 
-                                para.n, 
-                                para.pathRecordingBool)
+                    return dij(para)
         
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.dijkstra_cpu import dijkstra as dij
-                    return dij(para.CSR, 
-                                para.n, 
-                                para.srclist, 
-                                para.pathRecordingBool)
+                    return dij(para)
         
                 
                 else:
                     from method.sssp.dijkstra_cpu import dijkstra as dij
-                    return dij(para.CSR, 
-                                para.n, 
-                                para.srclist, 
-                                para.pathRecordingBool)
+                    return dij(para)
         
         elif method == 'spfa':
             # GPU SPFA
             if useCUDA == True:
                 if para.sourceType == 'APSP':
                     from method.apsp.spfa_gpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.pathRecordingBool)
+                    return spfa(para)
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.spfa_gpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                len(para.srclist),
-                                para.pathRecordingBool)
+                    return spfa(para)
                 elif para.sourceType == "SSSP":
                     from method.sssp.spfa_gpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.pathRecordingBool)
+                    return spfa(para)
                 else:
                     raise Exception("can not run calculation by undefined calcType")
             # CPU SPFA
             else:
                 if para.sourceType == 'APSP':
                     from method.apsp.spfa_cpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.pathRecordingBool)
+                    return spfa(para)
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.spfa_cpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.pathRecordingBool)
+                    return spfa(para)
                 elif para.sourceType == "SSSP":
                     from method.sssp.spfa_cpu import spfa as spfa
-                    return spfa(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.pathRecordingBool)
+                    return spfa(para)
                 else:
                     raise Exception("can not run calculation by undefined calcType")
         # delta
@@ -321,54 +272,29 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist):
             if useCUDA == True:
                 if para.sourceType == 'APSP':
                     from method.apsp.delta_gpu import delta_stepping as delta
-                    return delta(para.CSR,
-                                para.n,
-                                para.delta,
-                                para.pathRecordingBool)
+                    return delta(para)
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.delta_gpu import delta_stepping as delta
-                    return delta(para.CSR,
-								para.n,
-								para.srclist,                                
-								para.delta,
-								para.pathRecordingBool)
+                    return delta(para)
                             
                 else:
                     from method.sssp.delta_gpu import delta_stepping as delta
-                    return delta(para.CSR,
-                                para.n,
-                                para.srclist,
-                                para.delta,
-                                para.pathRecordingBool)
+                    return delta(para)
 
             # CPU delta
             else:
                 if para.sourceType == 'APSP':
                     from method.apsp.delta_cpu import delta_stepping as delta
-                    return delta(para.CSR,
-                                para.n,
-                                para.delta,
-                                para.MAXN,
-                                para.pathRecordingBool)
+                    return delta(para)
 
                 elif para.sourceType == 'MSSP':
                     from method.mssp.delta_cpu import delta_stepping as delta
-                    return delta(para.CSR, 
-                                para.n, 
-                                para.srclist, 
-                                para.delta, 
-                                para.MAXN, 
-                                para.pathRecordingBool)
+                    return delta(para)
     
                 else:
                     from method.sssp.delta_cpu import delta_stepping as delta
-                    return delta(para.CSR, 
-                                para.n, 
-                                para.srclist, 
-                                para.delta, 
-                                para.MAXN, 
-                                para.pathRecordingBool)
+                    return delta(para)
 
 
 

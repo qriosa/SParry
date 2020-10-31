@@ -30,6 +30,10 @@ class parameter(object):
 		self.directed = None # 指定图是否有向
 		self.valueType = None # 边权数据类型 int float
 
+		# 指定kernel使用的grid block
+		self.grid = None
+		self.block = None
+
 		self.useCUDA = True # 是否使用 CUDA
 
 		self.CSR = None # 压缩邻接矩阵
