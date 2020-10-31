@@ -1,9 +1,15 @@
 // 也就是那样 普通的并行的 delta_stepping 算法 
 __global__ void delta_stepping(int* V, int* E, int* W, int* n, int* srcNum, int* srclist, int* delta, int* dist, int* predist){
-    const int u0 = (const int) threadIdx.x;
-    const int s0 = (const int) blockIdx.x; // block 的id
-    const int offset = (const int) blockDim.x; // block 的宽度
-    const int blockNum = (const int) gridDim.x; // block 的数量
+    // const int u0 = (const int) threadIdx.x;
+    // const int s0 = (const int) blockIdx.x; // block 的id
+    // const int offset = (const int) blockDim.x; // block 的宽度
+    // const int blockNum = (const int) gridDim.x; // block 的数量
+    // const int localSize = 100;
+
+    const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x ; // 每个thread有自己的编号 
+    const int s0 = gridDim.x * blockIdx.y + blockIdx.x;
+    const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
+    const int blockNum = (const int) gridDim.x * gridDim.y; // block 的数量
     const int localSize = 100;
 
     // nowIsNull 全局变量 用于标记当前轮的桶是否是空的 1就是非空

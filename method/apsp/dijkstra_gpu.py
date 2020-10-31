@@ -1,15 +1,15 @@
 from time import process_time as time
 import numpy as np
+from math import sqrt
 
 from classes.result import Result
 from utils.settings import INF
+from classes.device import Device
 
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
-from classes.device import Device
-from math import sqrt
 cuFilepath = './method/apsp/cu/dijkstra.cu'
 
 def dijkstra(para):
@@ -89,7 +89,7 @@ def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
 # 一次多个源，一次一个源但是都是拷贝了全图，
 # 一次多个源，一次一个源但是都是使用了分图。
 # 这还没有实现
-def multi_sssp(CSR, n, m, pathRecordingBool):
+def divide(CSR, n, m, pathRecordingBool, BLOCK, GRID):
     """
 	function: 
         use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
@@ -117,7 +117,7 @@ def multi_sssp(CSR, n, m, pathRecordingBool):
         BLOCK = (1024, 1, 1)
     
     if GRID == None:
-        GRID = (512, 1)
+        GRID = (1, 1)
 
     # 这里的 m 无需再乘 2 因为传入的数据必须针对无向边用两条有向边来表示了
     partNum = (m + part - 1) // part # 计算一共有多少边的块数据需要拷贝
@@ -142,27 +142,7 @@ def multi_sssp(CSR, n, m, pathRecordingBool):
         Ws.append(W[i * part:(i + 1) * part])
 
 
-    # 申请变量空间
-    dist = np.full((n * n, ), INF).astype(np.int32)
-    vis = np.full((n * n, ), 0).astype(np.int32)
-    predist = np.full((n * n, ), INF).astype(np.int32)
-
-    # 多/全源的时候 若直接把 dist 放入太大 则可能只能通过多次单源来解决了
-    # 为各个源点初始化
-    for i in range(n):
-        # i为源点的情况下 
-        dist[i * n + i] = np.int32(0)
-        vis[i * n + i] = np.int32((V[i + 1] + part - 1) // part - (V[i]) // part)
-
-    # copy to device
-    dist_gpu = drv.mem_alloc(dist.nbytes)
-    drv.memcpy_htod(dist_gpu, dist)
-
-    predist_gpu = drv.mem_alloc(predist.nbytes)
-    drv.memcpy_htod(predist_gpu, predist)
-
-    vis_gpu = drv.mem_alloc(vis.nbytes)
-    drv.memcpy_htod(vis_gpu, vis)
+    dist = []
 
     n_gpu = drv.mem_alloc(n.nbytes)
     drv.memcpy_htod(n_gpu, n)
@@ -173,44 +153,67 @@ def multi_sssp(CSR, n, m, pathRecordingBool):
     V_gpu = drv.mem_alloc(V.nbytes)
     drv.memcpy_htod(V_gpu, V)
 
-    # 获取kernal函数
-    noStream_cuda_fuc = mod.get_function('divide')
-
-    flag = np.full((n, ), 0).astype(np.int32)
-    flag_gpu = drv.mem_alloc(flag.nbytes)
-
-    for j in range(n):
-
-        # 此时的 flag 是一个 n 维数组 每个表示每个源是否更新完毕
-        flag &= np.int32(0)
-        drv.memcpy_htod(flag_gpu, flag)    
+    # 多/全源的时候 若直接把 dist 放入太大 则可能只能通过多次单源来解决了
+    # 为各个源点初始化
+    for i in range(n):
+        # 申请变量空间
+        disti = np.full((n, ), INF).astype(np.int32)
+        vis = np.full((n, ), 0).astype(np.int32)
+        predist = np.full((n, ), INF).astype(np.int32)
         
-        for i in range(partNum):
-            noStream_cuda_fuc(V_gpu, 
-                            drv.In(Es[i]),  
-                            drv.In(Ws[i]), 
-                            n_gpu, 
-                            flag_gpu, 
-                            bases[i], 
-                            part_gpu, 
-                            vis_gpu, 
-                            dist_gpu,
-                            predist_gpu, 
-                            block = BLOCK, 
-                            grid = GRID)
+        # i为源点的情况下 
+        disti[i] = np.int32(0)
+        vis[i] = np.int32((V[i + 1] + part - 1) // part - (V[i]) // part)
 
-        drv.memcpy_dtoh(flag, flag_gpu)
+        # copy to device
+        dist_gpu = drv.mem_alloc(disti.nbytes)
+        drv.memcpy_htod(dist_gpu, disti)
 
-        # 确保所有的源都是松驰完毕了才行 
-        if (flag == 0).all():
-            break
+        predist_gpu = drv.mem_alloc(predist.nbytes)
+        drv.memcpy_htod(predist_gpu, predist)
 
-    drv.memcpy_dtoh(dist, dist_gpu)
+        vis_gpu = drv.mem_alloc(vis.nbytes)
+        drv.memcpy_htod(vis_gpu, vis)
+
+        # 获取kernal函数
+        noStream_cuda_fuc = mod.get_function('divide')
+
+        flag = np.full((n, ), 0).astype(np.int32)
+        flag_gpu = drv.mem_alloc(flag.nbytes)
+
+        for j in range(n):
+
+            # 此时的 flag 是一个 n 维数组 每个表示每个源是否更新完毕
+            flag &= np.int32(0)
+            drv.memcpy_htod(flag_gpu, flag)    
+            
+            for i in range(partNum):
+                noStream_cuda_fuc(V_gpu, 
+                                drv.In(Es[i]),  
+                                drv.In(Ws[i]), 
+                                n_gpu, 
+                                flag_gpu, 
+                                bases[i], 
+                                part_gpu, 
+                                vis_gpu, 
+                                dist_gpu,
+                                predist_gpu, 
+                                block = BLOCK, 
+                                grid = GRID)
+
+            drv.memcpy_dtoh(flag, flag_gpu)
+
+            # 确保所有的源都是松驰完毕了才行 
+            if (flag == 0).all():
+                break
+
+        drv.memcpy_dtoh(disti, dist_gpu)
+        dist.append(disti)
 
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
+    result = Result(dist = np.arrat(dist).flatten(), timeCost = timeCost)
     
     if pathRecordingBool:
         result.calcPath(CSR = CSR)

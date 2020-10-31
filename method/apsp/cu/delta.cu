@@ -1,8 +1,8 @@
 __global__ void delta_stepping(int* V, int* E, int* W, int* n, int* delta, int* dist, int* predist, int* B, int* hadin){
-	const int u0 = (const int) threadIdx.x;
-	const int s0 = (const int) blockIdx.x;
-	const int offset = (const int) blockDim.x;
-	const int blockNum = (const int) gridDim.x;
+    const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x ; // 每个thread有自己的编号 
+    const int s0 = gridDim.x * blockIdx.y + blockIdx.x;
+    const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
+    const int blockNum = (const int) gridDim.x * gridDim.y; // block 的数量
 
 	int u = -1;
 	int s = -1;

@@ -1,8 +1,8 @@
 // 普通 edge 不记录路径
 __global__ void edge(int* src, int* des, int* w, int* m, int* dist, int* flag){ // 每个线程作为一条边 判断两个端点是否发生了改变 w可以不用每次都传吧
 	
-	int e0 = threadIdx.x; // 每个thread有自己的编号 
-	int offset = blockDim.x; // 一个grid里面有多少的thread
+	const int e0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
 	int e = -1;
 	int old = -1;
 		

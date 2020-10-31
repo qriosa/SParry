@@ -22,6 +22,7 @@ def edge(para):
     t1 = time()
 
     edgeSet, n, m, s, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordingBool
+    src, des, w = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2]
 
     # 退出标识
     flag = 1
@@ -37,8 +38,8 @@ def edge(para):
         flag = 0
 
         # edge = (u, v, w): u -> v = w
-        for item in edgeSet:
-            u, v, w = item[0], item[1], item[2]
+        for i in range(len(src)):
+            u, v, w = src[i], des[i], w[i]
             if dist[v] > dist[u] + w:
                 dist[v] = dist[u] + w
                 flag = 1

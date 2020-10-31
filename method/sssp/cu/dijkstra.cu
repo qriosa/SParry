@@ -1,7 +1,7 @@
 // 简单并行 的 dijkstra
 __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, int* predist){
-	const int u0 = threadIdx.x; // 每个thread有自己的编号 
-	const int offset = blockDim.x; // 一个grid里面有多少的thread
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
     __shared__ int quickBreak[1];
     
     int u = -1;
@@ -45,8 +45,8 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, in
 // 现在这个base是E中的起点 
 __global__ void divide(int* V, int* E, int* W, int* n, int* flag, int* base, int* part, int* vis, int* dist, int* predist){
 	
-	const int u0 = threadIdx.x; // 每个thread有自己的编号 
-	const int offset = blockDim.x; // 一个grid里面有多少的thread
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
 	
 	int u = -1;
 	int l = -1;

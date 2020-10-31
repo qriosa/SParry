@@ -26,15 +26,11 @@ def edge(para):
         cuf = f.read()
     mod = SourceModule(cuf)
 
-    edgeSet, n, m, pathRecordingBool = para.edgeSet, para.n, para.m, para.pathRecordingBool
-    
-    # 将 edgeSet 转化为 三个列表
-    src = np.array([item[0] for item in edgeSet], dtype = np.int32)
-    des = np.array([item[1] for item in edgeSet], dtype = np.int32)
-    w = np.array([item[2] for item in edgeSet], dtype = np.int32)
-
     # 开始计时
     t1 = time()
+
+    edgeSet, n, m, pathRecordingBool = para.edgeSet, para.n, para.m, para.pathRecordingBool
+    src, des, w = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2] 
 
     if para.BLOCK != None:
         BLOCK = para.BLOCK

@@ -41,7 +41,7 @@ class Parameter(object):
 
 		self.CSR = None # 压缩邻接矩阵
 		self.matrix = None # 邻接矩阵
-		self.edgeSet = None # 边 一个 list 元素是三元组 (u, v, w)
+		self.edgeSet = None # 边  (src, des, w)
 		self.graphType = None # 传入的图的类型 
 
 		self.method = None # 使用的计算方法(dij\spfa\delta\edge\matrix)

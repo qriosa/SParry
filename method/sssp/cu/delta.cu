@@ -3,8 +3,8 @@
 // 普通 delta 
 __global__ void delta_stepping(int* V, int* E, int* W, int* n, int* s, int* delta, int* dist, int* predist, int* nowIsNull, int* quickBreak){
 	
-	const int u0 = (const int)threadIdx.x;
-	const int offset = (const int) blockDim.x;
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
 	const int localSize = 100; // 用这个来调控开启的多少
 
 	// nowIsNull 全局变量 用于标记当前轮的桶是否是空的 1就是非空

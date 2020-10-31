@@ -1,4 +1,4 @@
-from classes.parameter import Parameter as parameter
+from classes.parameter import Parameter 
 from utils.transfer import transfer as tf
 from utils.getIndex import getIndex
 

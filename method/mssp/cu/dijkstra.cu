@@ -1,9 +1,12 @@
 // 普通的 dijkstra 算法的并行 拥有未更新退出 一个 block 代表着第 i 个源点的计算结果
 __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, int* dist, int* predist){
-	
-	const int u0 = (const int)threadIdx.x;
-	const int offset = (const int)(blockDim.x);
-	const int blockNum = (const int)(gridDim.x); // block总数 也即是 一次最多解决多少和单源问题
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
+	const int blockNum = (const int) gridDim.x * gridDim.y; // block 的数量
+		
+	// const int u0 = (const int)threadIdx.x;
+	// const int offset = (const int)(blockDim.x);
+	// const int blockNum = (const int)(gridDim.x); // block总数 也即是 一次最多解决多少和单源问题
 
 	int u = -1;
 	int sn = -1;
@@ -54,9 +57,14 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, 
 
 __global__ void divide(int* V, int* E, int* W, int* n, int* sNum, int* flag, int* base, int* part, int* vis, int* dist, int* predist){
 	
-	const int u0 = threadIdx.x; // 每个thread有自己的编号 
-	const int offset = blockDim.x; // 一个grid里面有多少的thread
-	const int s0 = blockIdx.x; 
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
+	// const int blockNum = (const int) gridDim.x * gridDim.y; // block 的数量
+	const int s0 = gridDim.x * blockIdx.y + blockIdx.x;
+	
+	// const int u0 = threadIdx.x; // 每个thread有自己的编号 
+	// const int offset = blockDim.x; // 一个grid里面有多少的thread
+	// const int s0 = blockIdx.x; 
 	
 	int u = -1;
 	int sn = -1;
