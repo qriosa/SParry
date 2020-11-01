@@ -7,7 +7,7 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, in
 
 	int u = -1;
 	int sn = -1;
-	int s = blockIdx.x; // s是源点的问题
+	int s = blockIdx.z *(gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
 
 	__shared__ int quickBreak[1];
 

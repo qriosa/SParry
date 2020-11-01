@@ -13,11 +13,18 @@ __global__ void edge(int* src, int* des, int* w, int* m, int* dist, int* flag){ 
 		
 		__syncthreads();
 		
-		while(e < (*m)){ // 有向边敏感型
+		while(e < (*m)){
+			
+			// old = atomicMin(&dist[src[e]], dist[des[e]] + w[e]);
+
+			// if(dist[src[e]] < old)
+			// 	flag[0] = 1;
+			
 			old = atomicMin(&dist[des[e]], dist[src[e]] + w[e]);
-			if(dist[des[e]] < old){
+
+			if(dist[des[e]] < old)
 				flag[0] = 1;
-			}
+			
 			e += offset;
 		}
 		

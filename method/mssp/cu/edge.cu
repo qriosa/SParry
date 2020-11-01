@@ -24,10 +24,20 @@ __global__ void edge(int* src, int* des, int* w, int* n, int* m, int* srcNum, in
             __syncthreads();
             
             while(e < (*m)){
-                old = atomicMin(&dist[des[e] + sn], dist[src[e] + sn] + w[e]);
+                
+                // if (dist[src[e] + sn] > dist[des[e] + sn] + w[e]){
+                //     atomicMin(&dist[src[e] + sn], dist[des[e] + sn] + w[e]);
 
-                if(dist[src[e] + sn] == dist[des[e] + sn] + w[e]){
-                    quickBreak[0] = 1;
+                //     if(dist[src[e] + sn] == dist[des[e] + sn] + w[e]){
+                //         quickBreak[0] = 1;
+                //     }
+                // }
+                if(dist[des[e] + sn] > dist[src[e] + sn] + w[e]){
+                    atomicMin(&dist[des[e] + sn], dist[src[e] + sn] + w[e]);
+
+                    if(dist[des[e] + sn] = dist[src[e] + sn] + w[e]){
+                        quickBreak[0] = 1;
+                    }
                 }
                 e += offset;
             }

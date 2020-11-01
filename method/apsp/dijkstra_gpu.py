@@ -16,7 +16,7 @@ def dijkstra(para):
     from utils.judgeDivide import judge
     
     if judge(para):
-        return divide(para.CSR, para.n, para.m, para.srclist, para.part, para.sNum, para.pathRecordingBool, para.BLOCK, para.GRID)
+        return divide(para.CSR, para.n, para.m, para.part, para.pathRecordingBool, para.BLOCK, para.GRID)
     else:
         return nodivide(para.CSR, para.n, para.pathRecordingBool, para.BLOCK, para.GRID)
 
@@ -89,7 +89,7 @@ def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
 # 一次多个源，一次一个源但是都是拷贝了全图，
 # 一次多个源，一次一个源但是都是使用了分图。
 # 这还没有实现
-def divide(CSR, n, m, pathRecordingBool, BLOCK, GRID):
+def divide(CSR, n, m, part, pathRecordingBool, BLOCK, GRID):
     """
 	function: 
         use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
@@ -187,13 +187,13 @@ def divide(CSR, n, m, pathRecordingBool, BLOCK, GRID):
             flag &= np.int32(0)
             drv.memcpy_htod(flag_gpu, flag)    
             
-            for i in range(partNum):
+            for ii in range(partNum):
                 noStream_cuda_fuc(V_gpu, 
-                                drv.In(Es[i]),  
-                                drv.In(Ws[i]), 
+                                drv.In(Es[ii]),  
+                                drv.In(Ws[ii]), 
                                 n_gpu, 
                                 flag_gpu, 
-                                bases[i], 
+                                bases[ii], 
                                 part_gpu, 
                                 vis_gpu, 
                                 dist_gpu,
@@ -213,7 +213,7 @@ def divide(CSR, n, m, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = np.arrat(dist).flatten(), timeCost = timeCost)
+    result = Result(dist = np.array(dist).flatten(), timeCost = timeCost)
     
     if pathRecordingBool:
         result.calcPath(CSR = CSR)

@@ -33,6 +33,8 @@ class Parameter(object):
 		self.directed = None # 指定图是否有向
 		self.valueType = None # 边权数据类型 int float
 
+		self.device = None # 设备参数
+
 		# 指定kernel使用的grid block
 		self.grid = None
 		self.block = None
@@ -51,7 +53,6 @@ class Parameter(object):
 
 		self.pathRecordingBool = False # 是否记录路径
 		self.output = None # 输出结果的文件路径（默认生成三个文件？dist、path？）
-		self.logBool = None # 是否打印调试日志
 
 		# delta 还需要一些参数
 		self.delta = None
@@ -60,7 +61,6 @@ class Parameter(object):
 
 		# 以下是分块的参数
 		self.part = None # 分块中一次拷贝的边的数目
-		self.sNum = None # 多源中一次解决多少个问题
 
 		# 以下是多流的属性参数
 		self.streamNum = None # 指定流的数量

@@ -8,11 +8,13 @@ import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
+cuFilepath = './method/mssp/cu/dijkstra.cu'
+
 def dijkstra(para):
     from utils.judgeDivide import judge
     
     if judge(para):
-        return divide(para.CSR, para.n, para.m, para.srclist, para.part, para.sNum, para.pathRecordingBool, para.BLOCK, para.GRID)
+        return divide(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordingBool, para.BLOCK, para.GRID)
     else:
         return nodivide(para.CSR, para.n, para.srclist, para.pathRecordingBool, para.BLOCK, para.GRID)
 
@@ -29,7 +31,7 @@ def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
     return: Result(class).(more info please see the developer documentation) .  
     """
 
-    with open('./method/mssp/cu/dijkstra.cu', 'r', encoding = 'utf-8') as f:
+    with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)
 
@@ -84,7 +86,7 @@ def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
     return result
 
 
-def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
+def divide(CSR, n, m, srclist, part, pathRecordingBool, BLOCK, GRID):
     """
     function: use dijkstra algorithm in GPU to solve the SSSP, but this func can
         devide the graph if it's too large to put it in GPU memory. 
@@ -100,7 +102,7 @@ def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
     
     return: Result(class).(more info please see the developer documentation) .
     """
-    # nostream
+
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)
@@ -108,13 +110,13 @@ def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
     # 起始时间
     t1 = time()
 
+    V, E, W = CSR[0], CSR[1], CSR[2]
+
     if BLOCK == None:
         BLOCK = (1024, 1, 1)
     
     if GRID == None:
-        GRID = (10, 1)
-
-    V, E, W = CSR[0], CSR[1], CSR[2]
+        GRID = (1, 1)
 
     # 这里的 m 无需再乘 2 因为传入的数据必须针对无向边用两条有向边来表示了
     partNum = (m + part - 1) // part # 计算一共有多少边的块数据需要拷贝
@@ -138,7 +140,9 @@ def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
         Es.append(E[i * part:(i + 1) * part])
         Ws.append(W[i * part:(i + 1) * part])
 
-    # copy to device 
+
+    dist = []
+
     n_gpu = drv.mem_alloc(n.nbytes)
     drv.memcpy_htod(n_gpu, n)
 
@@ -148,36 +152,19 @@ def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
     V_gpu = drv.mem_alloc(V.nbytes)
     drv.memcpy_htod(V_gpu, V)
 
-    # 获取kernal函数
-    noStream_cuda_fuc = mod.get_function('divide')
+    # 多/全源的时候 若直接把 dist 放入太大 则可能只能通过多次单源来解决了
+    # 为各个源点初始化
+    sNum = len(srclist)
 
-    sNum = len(srclist) # 源的个数
-    # 一次解决多少个单源问题
-    if GRID[0] * GRID[1] < sPart:
-        GRID = tuple((sPart, 1))
-    
-    sPartNum = (sNum + sPart - 1) // sPart # 计算这么多个源点 在一次拷贝 sNum 个源点的情况下需要多少次循环
-
-    dist = []
-
-    for i in range(sPartNum):
-
+    for i in range(sNum):
         # 申请变量空间
-        disti = np.full((n * sPart, ), INF).astype(np.int32)
-        vis = np.full((n * sPart, ), 0).astype(np.int32)
-        predist = np.full((n * sPart, ), INF).astype(np.int32)
-
-        # 为各个源点初始化
-        for j in range(sPart):
-            # srclist[j]为源点的情况下 
-            # 此时 第 j 行就是第j个源点 同时是 这次解决的 sPart 个源点问题中的第 j 个 而不是原序 
-            if i * sPart + j >= sNum:
-                sNum_kernal = np.int32(j) # 这次实际进入kernal的s个数，处理srclist 尾部不足无法整除
-                break
-
-            disti[j * n + srclist[j + i * sPart]] = np.int32(0)
-            vis[i * n + srclist[j + i * sPart]] = np.int32((V[srclist[j + i * sPart] + 1] + part - 1) // part - (V[srclist[j + i * sPart]]) // part)
-
+        disti = np.full((n, ), INF).astype(np.int32)
+        vis = np.full((n, ), 0).astype(np.int32)
+        predist = np.full((n, ), INF).astype(np.int32)
+        
+        # i为源点的情况下 
+        disti[srclist[i]] = np.int32(0)
+        vis[srclist[i]] = np.int32((V[srclist[i] + 1] + part - 1) // part - (V[srclist[i]]) // part)
 
         # copy to device
         dist_gpu = drv.mem_alloc(disti.nbytes)
@@ -189,25 +176,25 @@ def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
         vis_gpu = drv.mem_alloc(vis.nbytes)
         drv.memcpy_htod(vis_gpu, vis)
 
-        sNum_kernal_gpu = drv.mem_alloc(sNum_kernal.nbytes)
-        drv.memcpy_htod(sNum_kernal_gpu, sNum_kernal)
+        # 获取kernal函数
+        noStream_cuda_fuc = mod.get_function('divide')
 
-        flag = np.full((1, ), 0).astype(np.int32)
+        flag = np.full((n, ), 0).astype(np.int32)
         flag_gpu = drv.mem_alloc(flag.nbytes)
 
         for j in range(n):
 
-            flag[0] &= np.int32(0) # 里面的所有源都没有更新了才可以 break
+            # 此时的 flag 是一个 n 维数组 每个表示每个源是否更新完毕
+            flag &= np.int32(0)
             drv.memcpy_htod(flag_gpu, flag)    
             
-            for k in range(partNum):
+            for ii in range(partNum):
                 noStream_cuda_fuc(V_gpu, 
-                                drv.In(Es[k]),  
-                                drv.In(Ws[k]), 
+                                drv.In(Es[ii]),  
+                                drv.In(Ws[ii]), 
                                 n_gpu, 
-                                sNum_kernal_gpu,
                                 flag_gpu, 
-                                bases[k], 
+                                bases[ii], 
                                 part_gpu, 
                                 vis_gpu, 
                                 dist_gpu,
@@ -217,11 +204,11 @@ def divide(CSR, n, m, srclist, part, sPart, pathRecordingBool, BLOCK, GRID):
 
             drv.memcpy_dtoh(flag, flag_gpu)
 
-            if flag[0] == 0:
+            # 确保所有的源都是松驰完毕了才行 
+            if (flag == 0).all():
                 break
 
         drv.memcpy_dtoh(disti, dist_gpu)
-        
         dist.append(disti)
 
     timeCost = time() - t1

@@ -2,6 +2,8 @@
 # 同时如果需要则进行相应的参数的计算
 from utils.debugger import Logger
 from classes.device import Device
+from utils.settings import forceDivide
+
 from math import sqrt
 import numpy as np
 
@@ -28,14 +30,9 @@ def judge_sssp(para):
             part = ((3.6*free - 3*n - 4) + sqrt((3.6*free - 3*n - 4)² - 4 * (2*n))) / 2 / 2 * 10 // 10 # 向下取整
     """
     
-    # logger
-    logger = Logger(__name__)
 
-    # 获取设备的显卡信息
-    device = Device()
+    device = para.device
     freeGpuMem = device.free
-    logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
-    
 
     # 判断是否满足
     lowLimit = lambda PART, N, FREE: 2*PART + (2*N)/(2*PART) <= 3.6*FREE - 3*N - 4
@@ -43,8 +40,8 @@ def judge_sssp(para):
 
     assert lowLimit(0.5 * sqrt(2*para.n), para.n, device.free), "该算法目前无法在此设备上解决此规模的问题"
 
-    # 整个 m 条边可以放进去
-    if lowLimit(para.m, para.n, device.free):
+    # # 整个 m 条边可以放进去
+    if lowLimit(para.m, para.n, device.free) and forceDivide == False:
         return False # 不用分图跳转
 
     # 如果没有指定一次拷贝的边的数量，则每次拷贝的值我们来定
@@ -65,60 +62,48 @@ def judge_sssp(para):
             para.part = getPart(device.free, para.n) # 一个流拷贝进去的边的数量
     
     # print part
-    print(f'part = {para.part}, m = {para.m}') 
+    # print(f'part = {para.part}, m = {para.m}') 
     
     return True # 需要分图跳转
 
 
 def judge_mssp(para):
+    """
+    function: 
+        determine whether the current graph needs to use graph segmentation.
     
-    # logger
-    logger = Logger(__name__)
-
-    # 获取设备的显卡信息
-    device = Device()
-    freeGpuMem = device.free
-    logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
+    parameters: 
+        a parameters class. (more info please see the developer documentation) .
     
-    if 4 * (3 * para.n * len(para.srclist) + 2 * para.m) < 0.9 * device.free:
-        return False # 不需要跳转 
+    return: 
+        bool.    
+    """
+    
+    freeGpuMem = para.device.free
 
-    # 若 part 都没有指定则是需要自己计算一个可行的，那我们就一次解决 10 个吧
-    if para.part == None:
-        sNum = 10 # 一次拷贝解决的问题数量
-        para.part = np.int32((0.3*device.free) / (4 * sNum * para.n))
-        if para.part <= 100:
-            # 跳转到一次只解决一个源
-            return judge_sssp(para)
-        else:
-            return True
+    if forceDivide == False and (para.n * para.n + para.n + 2 * para.m) <= 0.9 * freeGpuMem:
+        return False # 不需要分图 
+    else:
+        return judge_sssp(para)
 
-    elif para.part != None and para.sNum == None:
-        sNum = np.int32((0.3*device.free) / (4 * para.part * para.n))
-        if sNum < 1:
-            sNum = 1
-            return judge_sssp(para)
-        else:
-            return True
-            
+def judge_apsp(para):
+    """
+    function: 
+        determine whether the current graph needs to use graph segmentation.
+    
+    parameters: 
+        a parameters class. (more info please see the developer documentation) .
+    
+    return: 
+        bool.    
+    """
 
-    elif para.part == None and para.sNum != None:
-        para.part = np.int32((0.3*device.free) / (4 * sNum * para.n))
-        if para.part <= 100:
-            return judge_sssp(para)
-        else:
-            return True
-
-    elif para.part != None and para.sNum != None:
-        if 4 * sNum * para.n * para.part > 0.3 * device.free:
-            sNum = 10 # 一次拷贝解决的问题数量
-            para.part = np.int32((0.3*device.free) / (4 * sNum * para.n))
-            if para.part <= 100:
-                # 跳转到一次只解决一个源
-                return judge_sssp(para)
-        else:
-            # para.part para.sNum
-            return True
+    freeGpuMem = para.device.free
+    
+    if forceDivide == False and (para.n * para.n + para.n + 2 * para.m) <= 0.9 * freeGpuMem:
+        return False # 不需要分图 
+    else:
+        return judge_sssp(para)
 
 
 def judge(para):
@@ -133,9 +118,22 @@ def judge(para):
         bool.
     """
 
+    # logger
+    logger = Logger(__name__)   
+
+    # 获取设备的显卡信息
+    device = Device()
+    freeGpuMem = device.free
+    logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
+    
+    para.device = device
+
     if para.sourceType == "SSSP":
         return judge_sssp(para)
 
     elif para.sourceType == "MSSP":
         return judge_mssp(para)
+    
+    elif para.sourceType == "APSP":
+        return judge_apsp(para)
         

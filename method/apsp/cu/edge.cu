@@ -7,7 +7,7 @@ __global__ void edge(int* src, int* des, int* w, int *n, int* m, int* dist){ // 
 
     int e = -1;
 	int sn = -1;
-    int s = blockIdx.x; // s是源点的问题
+    int s = blockIdx.z *(gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
     int old = -1;
     
     __shared__ int quickBreak[1]; // block 内部的退出标识
@@ -23,11 +23,20 @@ __global__ void edge(int* src, int* des, int* w, int *n, int* m, int* dist){ // 
             
             while(e < (*m)){
                 
-            old = atomicMin(&dist[des[e] + sn], dist[src[e] + sn] + w[e]);
+                // if (dist[src[e] + sn] > dist[des[e] + sn] + w[e]){
+                //     old = atomicMin(&dist[src[e] + sn], dist[des[e] + sn] + w[e]);
 
-            if(dist[des[e] + sn] < old){
-                quickBreak[0] = 1;
-            }
+                //     if(dist[src[e] + sn] < old){
+                //         quickBreak[0] = 1;
+                //     }
+                // }
+                if(dist[des[e] + sn] > dist[src[e] + sn] + w[e]){
+                    old = atomicMin(&dist[des[e] + sn], dist[src[e] + sn] + w[e]);
+
+                    if(dist[des[e] + sn] < old){
+                        quickBreak[0] = 1;
+                    }
+                }
                 e += offset;
             }
             
