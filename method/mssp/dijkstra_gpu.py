@@ -3,14 +3,29 @@ import numpy as np
 
 from classes.result import Result
 from utils.settings import INF
+from utils.debugger import Logger
 
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
 cuFilepath = './method/mssp/cu/dijkstra.cu'
+logger = Logger(__name__)
 
 def dijkstra(para):
+    """
+    function: 
+        use dijkstra algorithm in GPU to solve the MSSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .    
+    """
+
+    logger.info("turning to func dijkstra-gpu-mssp")
+
     from utils.judgeDivide import judge
     
     if judge(para):
@@ -20,16 +35,22 @@ def dijkstra(para):
 
 def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
     """
-    function: use dijkstra algorithm in GPU to solve the MSSP. 
+    function: 
+        use dijkstra algorithm in GPU to solve the APSP. 
     
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        srclist: the source list, can be list.(more info please see the developer documentation).
+        n: the number of the vertices in the graph.
+        srclist: the source list.
         pathRecordingBool: record the path or not.
+        block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
+        grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
-    return: Result(class).(more info please see the developer documentation) .  
+    return: 
+        Result(class).(more info please see the developer documentation) .
     """
+
+    logger.info("turning to func dijkstra-gpu-mssp no-divide")
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -88,20 +109,24 @@ def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
 
 def divide(CSR, n, m, srclist, part, pathRecordingBool, BLOCK, GRID):
     """
-    function: use dijkstra algorithm in GPU to solve the SSSP, but this func can
-        devide the graph if it's too large to put it in GPU memory. 
+    function: 
+        use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
     
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
+        n: the number of the vertices in the graph.
         m: the number of the edge in the graph.
-        srclist: the source list, can be number.(more info please see the developer documentation).
+        srclist: the source list.
         part: the number of the edges that will put to GPU at a time.
-        sPart: the number of source calc a time.
         pathRecordingBool: record the path or not.
+        block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
+        grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks
     
-    return: Result(class).(more info please see the developer documentation) .
+    return: 
+        Result(class).(more info please see the developer documentation) .
     """
+
+    logger.info("turning to func dijkstra-gpu-mssp divide")
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()

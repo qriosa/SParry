@@ -3,24 +3,27 @@ import numpy as np
 
 from classes.result import Result
 from utils.settings import INF
+from utils.debugger import Logger
 
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
+logger = Logger(__name__)
+
 def edge(para):
     """
-	function: use edge free in GPU to solve the APSP. 
-        (more info please see the developer documentation) .
-	
-	parameters:  
-		edgeSet: edgeSet graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        m: the number of the edges in the graph.
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .  
+    function: 
+        use edgeSet in GPU to solve the APSP.  (more info please see the developer documentation) .
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) . 
     """
+
+    logger.info("turning to func edge-gpu-apsp")
 
     with open('./method/apsp/cu/edge.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()

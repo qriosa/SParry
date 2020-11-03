@@ -3,29 +3,31 @@ import numpy as np
 
 from classes.result import Result
 from utils.settings import INF
+from utils.debugger import Logger
 
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
+logger = Logger(__name__)
+
 def delta_stepping(para):
     """
-    function: use delta_stepping algorithm in GPU to solve the APSP. 
+    function: 
+        use delta_stepping algorithm in GPU to solve the APSP. 
     
     parameters:  
-        CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        delta: the delta of this algorithm.
-        pathRecordingBool: record the path or not.
+        class, Parameter object.
     
-    return: Result(class).(more info please see the developer documentation) .
-    
-    尚不稳定
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
 
     with open('./method/apsp/cu/delta.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)
+
+    logger.info("turning to func delta_stepping-gpu-apsp")
 
     # 起始时间
     t1 = time()

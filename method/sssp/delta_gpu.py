@@ -3,24 +3,27 @@ from time import time
 
 from utils.settings import INF
 from classes.result import Result
+from utils.debugger import Logger
 
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
+logger = Logger(__name__)
+
 def delta_stepping(para):
     """
-	function: use delta_stepping algorithm in GPU to solve the SSSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        s: the source vertex, can be number.(more info please see the developer documentation).
-        delta: the delta of this algorithm.
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .  
+    function: 
+        use delta_stepping algorithm in GPU to solve the SSSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
+
+    logger.info("turning to func delta_stepping-gpu-sssp")    
     
     with open('./method/sssp/cu/delta.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()

@@ -6,7 +6,7 @@ import sys
 # test update different file
 def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	'''
-	for test.
+	developers use to  test.
 	'''
 	# set logging
 	logger = Logger(__name__)
@@ -70,7 +70,7 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	# srclist = [i for i in range(n)]
 	# srclist = None
 	# srclist = 232
-	srclist = [1,2,3,4,5,6,7,8,32,45,23,56,38]
+	srclist = [1,2]
 	# srclist = [20,123,1114,5098,6111,9914,23,345,123,345,435,67,234,124,456,768,34,234,456,78,234,56,678,89,123,456,678,423,576,8964,6489,1999,2437,1031,5436,6522,1456,2345]
 	# srclist = [2, 5, 12, 45, 45, 23, 87, 145, 567, 368, 325, 463, 168, 1276, 2416, 1567, 23, 4567, 2352, 3456, 2878, 2978, 1983]
 	# srclist = [i for i in range(200, 1000, 40)]
@@ -86,6 +86,7 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 		PRINT(check(ans[0].dist, ans[i].dist, method[0], method[i])) # 检测两个答案是否相等
 		PRINT(f'{method[i]}_{useCUDATrue if useCUDA[i] else useCUDAFalse} time cost = ' + str(ans[i].timeCost)) # 计算用时
 		
+		print(ans[i].dist.reshape(len(srclist), n))
 
 
 if __name__ == '__main__':
@@ -94,4 +95,4 @@ if __name__ == '__main__':
 	else:
 		filename = None
 
-	test(filename = filename, n = 300, m = 8000, l = 3, r = 60)
+	test(filename = filename, n = 30, m = 100, l = 3, r = 60)

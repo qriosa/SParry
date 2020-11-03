@@ -2,24 +2,25 @@ from time import time
 import numpy as np
 
 from utils.settings import INF
+from utils.debugger import Logger
 from classes.result import Result
 
 # CSR 结点数 源点 delta 最大边权
+logger = Logger(__name__)
+
 def delta_stepping(para):
     """
-	function: use delta_stepping algorithm in CPU to solve the SSSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        s: the source vertex, can be [None, list, number].(more info please see the developer documentation).
-        delta: the delta of this algorithm.
-        MAXN: the max value of all the edges in the graph.
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .  
-
+    function: 
+        use delta_stepping algorithm in CPU to solve the SSSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
+
+    logger.info("turning to func delta_stepping-cpu-sssp")
 
     # 起始时间
     t1 = time()

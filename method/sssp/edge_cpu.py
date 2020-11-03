@@ -3,21 +3,23 @@ import numpy as np
 
 from classes.result import Result
 from utils.settings import INF
+from utils.debugger import Logger
+
+logger = Logger(__name__)
 
 def edge(para):
     """
-	function: use edge free in CPU to solve the SSSP. 
-        (more info please see the developer documentation) .
-	
-	parameters:  
-		edgeSet: edgeSet graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        m: the number of the edges in the graph.
-        s: the source list, can be number.(more info please see the developer documentation).
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .   
+    function: 
+        use edgeSet in CPU to solve the SSSP.  (more info please see the developer documentation) .
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) . 
     """
+
+    logger.info("turning to func edge-cpu-sssp")
 
     t1 = time()
 

@@ -7,20 +7,23 @@ import numpy as np
 
 logger = Logger(__name__)
 
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, block):
+def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, grid):
     """
-    function: schedule the program by passing in parameters.
+    function: 
+        schedule the program by passing in parameters.
     
     parameters: 
-        graph: the graph data that you want to get the shortest path.
-        graphType: type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
-        method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
-        useCUDA: use CUDA to speedup or not.
-        pathRecordBool: record the path or not.
-        srclist: the source list, can be [None, list, number].(more info please see the developer documentation).
+        graph: str/list/tuple, must, the graph data that you want to get the shortest path.(more info please see the developer documentation).
+        graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
+        method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        useCUDA: bool, use CUDA to speedup or not.
+        pathRecordBool: bool, record the path or not.
+        srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
+        block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
+        grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        this func will return a Result(class). (more info please see the developer documentation) .  
+        class, Result object. (more info please see the developer documentation).  
     """
 
     logger.info(f"begin to dispatch ... ")
@@ -46,8 +49,8 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, b
     para = Parameter()
 
     # 填入指定的grid和block参数，未指定则为空
-    para.grid = grid
-    para.block = block
+    para.GRID = grid
+    para.BLOCK = block
     # 依据图的类型将图写入类中
     if graphType == 'CSR' or graphType == None:
         graphType = 'CSR'

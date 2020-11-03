@@ -1,0 +1,5 @@
+nvidia-ml-py3
+numpy
+pycuda
+logging
+cyaron

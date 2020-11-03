@@ -2,20 +2,25 @@ from time import time
 import numpy as np
 
 from utils.settings import INF
+from utils.debugger import Logger
 from classes.result import Result
+
+logger = Logger(__name__)
 
 def spfa(para):
     """
-	function: use Bellman-Ford algorithm in CPU to solve the SSSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        srclist: the source list, can be number.(more info please see the developer documentation).
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .     
+    function: 
+        use spfa algorithm in CPU to solve the APSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
+
+    logger.info("turning to func spfa-cpu-apsp")
+
     CSR = para.CSR
     n = para.n 
     s = para.srclist

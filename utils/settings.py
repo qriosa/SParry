@@ -1,5 +1,5 @@
 # use debugger or not
-debugger = True
+debugger = False
 
 # the INF
 INF = 0x7f7f3f7f
@@ -10,8 +10,20 @@ forceDivide = False
 
 
 # print different
-def PRINT(chars = None):
-	if chars == None:
-		print("\033[0;36;40m" + '\n' + "\033[0m")
-	else:
-		print("\033[0;36;40m" + chars + "\033[0m")
+def PRINT(chars = None, ptype = "\033[0;36;40m"):
+    """
+    function:
+        print different.
+    
+    parameters:
+        chars: str, the content you can to print.
+        ptyte: str, the type of print.
+    
+    return:
+        None, no return.    
+    """
+    
+    if chars == None:
+        print(ptype + '\n' + "\033[0m")
+    else:
+        print(ptype + chars + "\033[0m")

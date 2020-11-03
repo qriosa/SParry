@@ -4,6 +4,7 @@ from math import sqrt
 
 from utils.settings import INF
 from classes.result import Result
+from utils.debugger import Logger
 
 import pycuda.autoinit
 import pycuda.driver as drv
@@ -11,9 +12,22 @@ from pycuda.compiler import SourceModule
 import pycuda.gpuarray as gpuarray
 
 cuFilepath = './method/sssp/cu/dijkstra.cu'
-
+logger = Logger(__name__)
 
 def dijkstra(para):
+    """
+    function: 
+        use dijkstra algorithm in GPU to solve the APSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .    
+    """
+
+    logger.info("turning to func dijkstra-gpu-apsp")
+
     from utils.judgeDivide import judge
     
     if judge(para):
@@ -24,16 +38,22 @@ def dijkstra(para):
 
 def direct(CSR, n, s, pathRecordingBool, BLOCK, GRID):
     """
-    function: use dijkstra algorithm in GPU to solve the SSSP. 
+    function: 
+        use dijkstra algorithm in GPU to solve the SSSP. 
     
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        s: the source list, can be number.(more info please see the developer documentation).
+        n: the number of the vertices in the graph.
+        s: the source vertex.
         pathRecordingBool: record the path or not.
+        block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
+        grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
-    return: Result(class).(more info please see the developer documentation) . 
+    return: 
+        Result(class).(more info please see the developer documentation) .
     """
+
+    logger.info("turning to func dijkstra-gpu-sssp no-divide")
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -91,19 +111,24 @@ def direct(CSR, n, s, pathRecordingBool, BLOCK, GRID):
 # 但是 CU 中的函数是一致的 无需更改
 def noStream(CSR, n, m, s, part, pathRecordingBool, BLOCK, GRID):
     """
-    function: use dijkstra algorithm in GPU to solve the SSSP, but this func can
-        devide the graph if it's too large to put it in GPU memory. 
+    function: 
+        use dijkstra algorithm in GPU to solve the SSSP. 
     
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        m: the number of the edge in the graph.
-        s: the source list, can be number.(more info please see the developer documentation).
-        part: the number of the edges that will put to GPU at a time.
+        n: the number of the vertices in the graph.
+        m: the number of edges in the graph.
+        s: the source vertex.
         pathRecordingBool: record the path or not.
+        block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
+        grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
-    return: Result(class).(more info please see the developer documentation) .
+    return: 
+        Result(class).(more info please see the developer documentation) .
     """
+
+    logger.info("turning to func dijkstra-gpu-sssp divide")
+
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)

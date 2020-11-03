@@ -15,15 +15,15 @@ def mult(x):
 
 def matrix(matrix, n, pathRecordingBool = False):
     """
-	function: use Floyd-Warshall algorithm in CPU to solve the APSP. 
+    function: use Floyd-Warshall algorithm in CPU to solve the APSP. 
         (more info please see the developer documentation) .
-	
-	parameters:  
-		matrix: adjacency matrix of the graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
+    
+    parameters:  
+        matrix: adjacency matrix of the graph data. (more info please see the developer documentation) .
+        n: the number of the vertices in the graph.
         pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .  
+    
+    return: Result(class).(more info please see the developer documentation) .  
     """
     t1 = time()
 

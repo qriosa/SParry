@@ -3,28 +3,31 @@ import numpy as np
 
 from classes.result import Result
 from utils.settings import INF
+from utils.debugger import Logger
 
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 
+logger = Logger(__name__)
+
 def delta_stepping(para):
     """
-	function: use delta_stepping algorithm in GPU to solve the MSSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        srclist: the source list, can be list.(more info please see the developer documentation).
-        delta: the delta of this algorithm.
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .  
+    function: 
+        use delta_stepping algorithm in GPU to solve the MSSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
 
     with open('./method/mssp/cu/delta.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)
+
+    logger.info("turning to func delta_stepping-gpu-mssp")
 
     # 起始时间
     t1 = time()

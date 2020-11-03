@@ -2,19 +2,24 @@ from time import time
 import numpy as np
 
 from classes.result import Result
+from utils.debugger import Logger
 from method.sssp.dijkstra_cpu import dijkstra as dij_sssp
+
+logger = Logger(__name__)
 
 def dijkstra(para):
     """
-	function: use dijkstra algorithm in CPU to solve the APSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .
+    function: 
+        use dijkstra algorithm in CPU to solve the APSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
+
+    logger.info("turning to func dijkstra-cpu-apsp")
 
     t1 = time()
 

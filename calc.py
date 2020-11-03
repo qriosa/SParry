@@ -8,12 +8,14 @@ logger = Logger(__name__)
 
 def INF():
     """
-    function: return the INF of this tool.
+    function: 
+        return the INF of this tool.
     
-    parameters: None.
+    parameters: 
+        None, no parameter.
     
     return:
-        the INF in this tools.
+        int, the INF in this tools.
     """
 
     from utils.settings import INF as inf
@@ -21,36 +23,39 @@ def INF():
     return inf
 
 
-def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRecordBool = False, srclist = None, grid=None, block=None):
+def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRecordBool = False, srclist = None, block=None, grid=None):
     
     """
     function: 
         a calculate interface.
     
     parameters: 
-        graph: the graph data that you want to get the shortest path.
-        graphType: type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
-        method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
-        useCUDA: use CUDA to speedup or not.
-        pathRecordBool: record the path or not.
-        srclist: the source list, can be [None, list, number].(more info please see the developer documentation).
-    
+        graph: str/list/tuple, must, the graph data that you want to get the shortest path.(more info please see the developer documentation).
+        graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
+        method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        useCUDA: bool, use CUDA to speedup or not.
+        pathRecordBool: bool, record the path or not.
+        srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
+        block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
+        grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
+
     return:
-        this func will return a Result(class). (more info please see the developer documentation) .  
+        class, Result object. (more info please see the developer documentation).  
     """
     # 跳转到 dispatch 函数进行分发
     # we only accept graphic data in edgeSet format 
+
+    logger.info(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
+  
     if(type(graph) == str):
         graphObj=read(graph)
         if(graphType=='edgeSet'):
-            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, grid, block)
+            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, block, grid)
         else:
-            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist, grid, block)
+            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist, block, grid)
     else:
-        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, grid, block)
-    
-    logger.info(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
-    
+        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, grid)
+     
     return result
     
 

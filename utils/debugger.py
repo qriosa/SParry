@@ -6,13 +6,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 
 class Logger(object):
     """
-    function: set a logger.
+    function: 
+        set a logger.
     
     parameters: 
-        name: the '__name__' of the caller.
+        name: str, the '__name__' of the caller.
     
     attributes:
-        logger: a logging object.
+        logger: class, a logging object.
     
     method:
         notset: the 'notset' of the logging.
@@ -22,7 +23,8 @@ class Logger(object):
         error: the 'error' of the logging.
         critical: the 'critical' of the logging.
     
-    return: Logger object.      
+    return: 
+        class, Logger object.      
     """
 
     def __init__(self, name):
@@ -31,12 +33,14 @@ class Logger(object):
     
     def notset(self, strings):
         """
-        function: the 'notset' of the logging.
+        function: 
+            the 'notset' of the logging.
 
         parameters:
-            strings: what you want to notset.
+            strings: str, what you want to notset.
 
-        return None. 
+        return 
+            None, no return. 
         """
         if self.debugger == False:
             return
@@ -44,12 +48,14 @@ class Logger(object):
 
     def debug(self, strings):
         """
-        function: the 'debug' of the logging.
+        function: 
+            the 'debug' of the logging.
 
         parameters:
-            strings: what you want to debug.
+            strings: str, what you want to debug.
 
-        return None. 
+        return 
+            None, no return. 
         """
         if self.debugger == False:
             return
@@ -57,12 +63,14 @@ class Logger(object):
 
     def info(self, strings):
         """
-        function: the 'info' of the logging.
+        function: 
+            the 'info' of the logging.
 
         parameters:
-            strings: what you want to info.
+            strings: str, what you want to info.
 
-        return None. 
+        return 
+            None, no return . 
         """
         if self.debugger == False:
             return
@@ -70,12 +78,14 @@ class Logger(object):
 
     def warning(self, strings):
         """
-        function: the 'warning' of the logging.
+        function: 
+            the 'warning' of the logging.
 
         parameters:
-            strings: what you want to warning.
+            strings: str, what you want to warning.
 
-        return None. 
+        return 
+            None, no return. 
         """
         if self.debugger == False:
             return
@@ -83,12 +93,14 @@ class Logger(object):
 
     def error(self, strings):
         """
-        function: the 'error' of the logging.
+        function: 
+            the 'error' of the logging.
 
         parameters:
-            strings: what you want to error.
+            strings: str, what you want to error.
 
-        return None. 
+        return 
+            None, no return. 
         """
         if self.debugger == False:
             return
@@ -96,12 +108,14 @@ class Logger(object):
 
     def critical(self, strings):
         """
-        function: the 'critical' of the logging.
+        function: 
+            the 'critical' of the logging.
 
         parameters:
-            strings: what you want to critical.
+            strings: str, what you want to critical.
 
-        return None. 
+        return 
+            None, no return. 
         """
         if self.debugger == False:
             return

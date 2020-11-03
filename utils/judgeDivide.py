@@ -10,6 +10,17 @@ import numpy as np
 
 def judge_sssp(para):
     """
+    function: 
+        determine whether the current graph needs to use graph segmentation.
+    
+    parameters: 
+        para: class, Parameter object.
+    
+    return:
+        bool, True/False. (more info please see the developer documentation).  
+    """
+
+    """
     SSSP 情况下的拷贝 
     会拷贝进入的东西有: 
         dist, predist, vis 长度都是 n 个 int32， 
@@ -73,10 +84,10 @@ def judge_mssp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        a parameters class. (more info please see the developer documentation) .
+        para: class, Parameter object.
     
-    return: 
-        bool.    
+    return:
+        bool, True/False. (more info please see the developer documentation).  
     """
     
     freeGpuMem = para.device.free
@@ -92,10 +103,10 @@ def judge_apsp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        a parameters class. (more info please see the developer documentation) .
+        para: class, Parameter object.
     
-    return: 
-        bool.    
+    return:
+        bool, True/False. (more info please see the developer documentation).    
     """
 
     freeGpuMem = para.device.free
@@ -112,10 +123,10 @@ def judge(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        a parameters class. (more info please see the developer documentation) .
+        para: class, Parameter object.
     
-    return: 
-        bool.
+    return:
+        bool, True/False. (more info please see the developer documentation).
     """
 
     # logger

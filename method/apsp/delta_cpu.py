@@ -2,21 +2,24 @@ from time import time
 import numpy as np
 
 from classes.result import Result
+from utils.debugger import Logger
 from method.sssp.delta_cpu import delta_stepping as delta_sssp
+
+logger = Logger(__name__)
 
 def delta_stepping(para):
     """
-	function: use delta_stepping algorithm in CPU to solve the APSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertex in the graph.
-        delta: the delta of this algorithm.
-        MAXN: the max value of all the edge in the graph.
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) .
+    function: 
+        use delta_stepping algorithm in CPU to solve the APSP. 
+    
+    parameters:  
+        class, Parameter object.
+    
+    return: 
+        class, Result object. (more info please see the developer documentation) .
     """
+
+    logger.info("turning to func delta_stepping-cpu-apsp")
 
     t1 = time()
     
