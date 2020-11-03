@@ -26,11 +26,13 @@ def CSR2Matrix(CSR):
     E = CSR[1]
     W = CSR[2]
     n = len(V)-1
+    MAXN = -1
     mat = [[INF for i in range(n)] for j in range(n)]
     for u in range(n):
         for ind in range(V[u],V[u+1]):
-            mat[u][E[ind]]=W[ind]
-    return np.int32(n), np.int32(len(E)), np.array(mat,dtype=np.int32)
+            mat[u][E[ind]]=min(mat[u][E[ind]], W[ind])
+            MAXN = max(mat[u][E[ind]], MAXN)
+    return np.int32(n), np.int32(MAXN), np.int32(len(E)), np.array(mat,dtype=np.int32)
 
 def CSR2edgeSet(CSR):
     """
@@ -54,14 +56,17 @@ def CSR2edgeSet(CSR):
     des = []
     val = []
     edgeSet=[]
+    MAXN = -1
+
     for u in range(n):
         for ind in range(V[u],V[u+1]):
             # edgeSet.append((u,E[ind],W[ind]))
             src.append(u)
             des.append(E[ind])
             val.append(W[ind])
+            MAXN = max(MAXN, W[ind])
     edgeSet = [src, des, val]
-    return np.int32(n), np.int32(len(E)), np.array(edgeSet,dtype=np.int32)
+    return np.int32(n), np.int32(MAXN), np.int32(len(E)), np.array(edgeSet,dtype=np.int32)
 
 def matrix2CSR(mat):
     """
@@ -78,6 +83,7 @@ def matrix2CSR(mat):
     logger.info("transfering Matrix to CSR.")
 
     n = len(mat)
+    MAXN = -1
     V = [0 for i in range(n+1)]
     E = []
     W = []
@@ -91,9 +97,10 @@ def matrix2CSR(mat):
                 V[u+1]=V[u+1]+1
                 E.append(v)
                 W.append(w)
+                MAXN = max(MAXN, w)
         V[u+1] = V[u] + tot
     V[n]=len(W)
-    return np.int32(n),np.int32(len(E)-1),[np.array(V,dtype=np.int32), np.array(E,dtype=np.int32), np.array(W,dtype=np.int32)]
+    return np.int32(n), np.int32(MAXN), np.int32(len(E)-1),[np.array(V,dtype=np.int32), np.array(E,dtype=np.int32), np.array(W,dtype=np.int32)]
 
 def matrix2edgeSet(mat):
     """
@@ -112,7 +119,7 @@ def matrix2edgeSet(mat):
     src = []
     des = []
     val = []
-    edgeSet=[]
+    MAXN = -1
     n = len(mat)
     edgeSet = []
     for u in range(n):
@@ -123,8 +130,9 @@ def matrix2edgeSet(mat):
                 src.append(u)
                 des.append(v)
                 val.append(w)
+                MAXN = max(MAXN, w)
     edgeSet = [src, des, val]                
-    return np.int32(n),np.int32(len(edgeSet)),np.array(edgeSet,np.int32)
+    return np.int32(n),np.int32(MAXN),np.int32(len(edgeSet)),np.array(edgeSet,np.int32)
 
 def edgeSet2Matrix(edgeSet):
     """
@@ -142,6 +150,7 @@ def edgeSet2Matrix(edgeSet):
 
     m = len(edgeSet)
     n = 0
+    MAXN = -1
     for ind in range(len(edgeSet[0])):
         n=max(n,edgeSet[0][ind])
         n=max(n,edgeSet[1][ind])
@@ -153,7 +162,8 @@ def edgeSet2Matrix(edgeSet):
         # print(u,v)
         mat[u,v]=min(mat[u,v],w)
         mat[v,u]=min(mat[v,u],w)
-    return np.int32(n),np.int32(m),mat
+        MAXN = max(MAXN, w)
+    return np.int32(n),np.int32(MAXN),np.int32(m),mat
 
 def edgeSet2CSR(edgeSet):
     """
@@ -170,7 +180,7 @@ def edgeSet2CSR(edgeSet):
     logger.info("transfering edgeSet to CSR.")
 
     # print(edgeSet.shape)
-    n,m,mat=edgeSet2Matrix(edgeSet)
+    n,MAXN,m,mat=edgeSet2Matrix(edgeSet)
     return matrix2CSR(mat)
 
 def transfer(para, outType):
@@ -190,26 +200,26 @@ def transfer(para, outType):
 
     if(para.graphType == 'CSR'):
         if(outType == 'matrix'):
-            para.n, para.m, para.matrix = CSR2Matrix(para.CSR)
+            para.n, para.MAXN, para.m, para.matrix = CSR2Matrix(para.CSR)
         elif(outType == 'edgeSet'):
-            para.n, para.m, para.edgeSet = CSR2edgeSet(para.CSR)
+            para.n, para.MAXN, para.m, para.edgeSet = CSR2edgeSet(para.CSR)
         else:
             raise Exception("can not tranfer graph type to an undefined type")
 
     elif(para.graphType == 'matrix'):
         if(outType == 'CSR'):
-            para.n, para.m, para.CSR = matrix2CSR(para.matrix)
+            para.n, para.MAXN, para.m, para.CSR = matrix2CSR(para.matrix)
         elif(outType == 'edgeSet'):
-            para.n, para.m, para.edgeSet = matrix2edgeSet(para.matrix)
+            para.n, para.MAXN, para.m, para.edgeSet = matrix2edgeSet(para.matrix)
             para.directed = 1
         else:
             raise Exception("can not tranfer graph type to an undefined type")
 
     elif(para.graphType == 'edgeSet'):
         if(outType == 'matrix'):
-            para.n, para.m, para.matrix = edgeSet2Matrix(para.edgeSet)
+            para.n, para.MAXN, para.m, para.matrix = edgeSet2Matrix(para.edgeSet)
         elif(outType == 'CSR'):
-            para.n, para.m, para.CSR = edgeSet2CSR(para.edgeSet)
+            para.n, para.MAXN, para.m, para.CSR = edgeSet2CSR(para.edgeSet)
         else:
             raise Exception("can not tranfer graph type to an undefined type")
 
@@ -217,3 +227,9 @@ def transfer(para, outType):
         raise Exception("can not tranfer graph type from an undefined type")
 
     para.graphType = outType
+
+    para.msg += f"""
+结点数量\tn = {para.n}, 
+无向边数量\tm = {para.m}, 
+最大边权\tMAXW = {para.MAXN}, 
+"""

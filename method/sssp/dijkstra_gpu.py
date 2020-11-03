@@ -31,12 +31,18 @@ def dijkstra(para):
     from utils.judgeDivide import judge
     
     if judge(para):
-        return noStream(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordingBool, para.BLOCK, para.GRID)
+        dist, timeCost = noStream(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
     else:
-        return direct(para.CSR, para.n, para.srclist, para.pathRecordingBool, para.BLOCK, para.GRID)
+        dist, timeCost = direct(para.CSR, para.n, para.srclist, para.pathRecordBool, para.BLOCK, para.GRID)
 
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
 
-def direct(CSR, n, s, pathRecordingBool, BLOCK, GRID):
+    if para.pathRecordBool:
+        result.calcPath()
+
+    return result
+
+def direct(CSR, n, s, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the SSSP. 
@@ -45,7 +51,7 @@ def direct(CSR, n, s, pathRecordingBool, BLOCK, GRID):
         CSR: CSR graph data. (more info please see the developer documentation) .
         n: the number of the vertices in the graph.
         s: the source vertex.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
@@ -96,12 +102,7 @@ def direct(CSR, n, s, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
-
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
-
-    return result
+    return dist, timeCost
 
 
 # 就是针对直接 无法放入 GPU 的显存中的情况，这里分两种情况解决测试
@@ -109,7 +110,7 @@ def direct(CSR, n, s, pathRecordingBool, BLOCK, GRID):
 # 二是 使用多流但是需要满足 流数×每次拷贝的边数 不可以超过剩余的显存空间 
 # 但是这个也是可以通过 先确定流数再确定边数 还是先确定边数再确定流数s
 # 但是 CU 中的函数是一致的 无需更改
-def noStream(CSR, n, m, s, part, pathRecordingBool, BLOCK, GRID):
+def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the SSSP. 
@@ -119,7 +120,7 @@ def noStream(CSR, n, m, s, part, pathRecordingBool, BLOCK, GRID):
         n: the number of the vertices in the graph.
         m: the number of edges in the graph.
         s: the source vertex.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
@@ -232,16 +233,12 @@ def noStream(CSR, n, m, s, part, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
-    
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
+    return dist, timeCost
 
-    return result
 
 
 # V 是全部进去了的 dist vis predist 都是全部进去了
-def divide(CSR, n, m, s, streamNum = None, part = None, pathRecordingBool = False):
+def divide(CSR, n, m, s, streamNum = None, part = None, pathRecordBool = False):
     """
     因为存在当图的大小过于巨大，而无法直接放入显存中，这里就是分段拷贝数据进入显存进行计算的方法。
     此函数，不进行多流的应用直接应用分多次拷贝即可，使用默认流
@@ -391,7 +388,7 @@ def divide(CSR, n, m, s, streamNum = None, part = None, pathRecordingBool = Fals
     # 结果
     result = Result(dist = dist, timeCost = timeCost)
     
-    if pathRecordingBool:
+    if pathRecordBool:
         result.calcPath(CSR = CSR)
 
     return result
@@ -400,7 +397,7 @@ def divide(CSR, n, m, s, streamNum = None, part = None, pathRecordingBool = Fals
 # 目前又感觉下面这个其实没啥用 应该可以归属到上一个中间去 
 # 流的数量过多以后 就会导致一流一个 part 不足以计算完，因此必须复用流 就和上面一样了 
 # 下面这个就是有多流了 但是流的数量×一次拷贝的数量不可以超过剩余的显存数量，否则会溢出
-def useStream(CSR, n, m, s, part = None, pathRecordingBool = False):
+def useStream(CSR, n, m, s, part = None, pathRecordBool = False):
     """
     这个就是使用多流的方案的函数 
     流的数量通过边的数量和 part 值来确定 但是不应该超过显存
@@ -530,7 +527,7 @@ def useStream(CSR, n, m, s, part = None, pathRecordingBool = False):
     # 结果
     result = Result(dist = dist, timeCost = timeCost)
     
-    if pathRecordingBool:
+    if pathRecordBool:
         result.calcPath(CSR = CSR)
 
     return result

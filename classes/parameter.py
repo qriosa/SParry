@@ -21,9 +21,12 @@ class Parameter(object):
         sourceType: str, the type of the problem. [APSP, SSSP, MSSP]
         pathRecordingBool: bool, record the path or not.
         delta: int, the delta of delta-stepping algorithm.
+        MAXN: int, the max value of the edges.
+        MAXU: int, the vertex has the maxOutDegree.
         maxOutDegree: int, the max out degree of the graph.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
         streamNum: int, the number of streams used.
+        msg: str, the info of the graph.
     
     method:
         None, but init.
@@ -57,13 +60,14 @@ class Parameter(object):
         self.srclist = None # 源点的集合 单个源点的[数字编号]、全源的[无]、多源的[list] 
         self.sourceType = None # SSSP APSP MSSP
 
-        self.pathRecordingBool = False # 是否记录路径
+        self.pathRecordBool = False # 是否记录路径
         self.output = None # 输出结果的文件路径（默认生成三个文件？dist、path？）
 
         # delta 还需要一些参数
         self.delta = None
         self.maxOutDegree = None # 最大出度 
-        self.MAXN = -1
+        self.MAXN = -1 # 最大边权  
+        self.MAXU = None # 最大度的点
 
         # 以下是分块的参数
         self.part = None # 分块中一次拷贝的边的数目
@@ -74,6 +78,8 @@ class Parameter(object):
 
         # 以下是矩阵相乘
         self.blockNum = None # 矩阵分块的块数
+
+        self.msg = ''
 
 
         

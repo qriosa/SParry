@@ -50,11 +50,11 @@ def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRec
     if(type(graph) == str):
         graphObj=read(graph)
         if(graphType=='edgeSet'):
-            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, block, grid)
+            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, graphObj.msg, block, grid)
         else:
-            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist, block, grid)
+            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist, graphObj.msg, block, grid)
     else:
-        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, grid)
+        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, "", block, grid)
      
     return result
     

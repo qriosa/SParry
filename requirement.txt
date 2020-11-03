@@ -3,3 +3,4 @@ numpy
 pycuda
 logging
 cyaron
+networkx

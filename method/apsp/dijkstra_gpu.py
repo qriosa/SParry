@@ -16,7 +16,7 @@ logger = Logger(__name__)
 def dijkstra(para):
     """
     function: 
-        use dijkstra algorithm in GPU to solve the SSSP. 
+        use dijkstra algorithm in GPU to solve the APSP. 
     
     parameters:  
         class, Parameter object.
@@ -24,18 +24,24 @@ def dijkstra(para):
     return: 
         class, Result object. (more info please see the developer documentation) .    
     """
-
-    logger.info("turning to func dijkstra-gpu-sssp")
+    logger.info("turning to func dijkstra-gpu-apsp")
 
     from utils.judgeDivide import judge
-    
+
     if judge(para):
-        return divide(para.CSR, para.n, para.m, para.part, para.pathRecordingBool, para.BLOCK, para.GRID)
+        dist, timeCost = divide(para.CSR, para.n, para.m, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
     else:
-        return nodivide(para.CSR, para.n, para.pathRecordingBool, para.BLOCK, para.GRID)
+        dist, timeCost = nodivide(para.CSR, para.n, para.pathRecordBool, para.BLOCK, para.GRID)
+
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+
+    if para.pathRecordBool:
+        result.calcPath()
+        
+    return result
 
 # 整个图拷贝
-def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
+def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the APSP. 
@@ -43,7 +49,7 @@ def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
         n: the number of the vertices in the graph.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
@@ -94,12 +100,7 @@ def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
     
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
-
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
-
-    return result
+    return dist, timeCost
 
 
 # 多源就不给其分图了 就通过多次调用一次一个单源来解决吧
@@ -107,7 +108,7 @@ def nodivide(CSR, n, pathRecordingBool, BLOCK, GRID):
 # 一次多个源，一次一个源但是都是拷贝了全图，
 # 一次多个源，一次一个源但是都是使用了分图。
 # 这还没有实现
-def divide(CSR, n, m, part, pathRecordingBool, BLOCK, GRID):
+def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
@@ -117,7 +118,7 @@ def divide(CSR, n, m, part, pathRecordingBool, BLOCK, GRID):
         n: the number of the vertices in the graph.
         m: the number of the edge in the graph.
         part: the number of the edges that will put to GPU at a time.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks
     
@@ -235,9 +236,4 @@ def divide(CSR, n, m, part, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = np.array(dist).flatten(), timeCost = timeCost)
-    
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
-
-    return result
+    return dist, timeCost

@@ -32,7 +32,7 @@ def delta_stepping(para):
     # 起始时间
     t1 = time()
 
-    CSR, n, delta, pathRecordingBool = para.CSR, para.n, para.delta, para.pathRecordingBool
+    CSR, n, delta, pathRecordBool = para.CSR, para.n, para.delta, para.pathRecordBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
@@ -76,9 +76,9 @@ def delta_stepping(para):
     timeCost = time() - t1
     
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
 
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
+    if pathRecordBool:
+        result.calcPath()
 
     return result

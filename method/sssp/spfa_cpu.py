@@ -24,7 +24,7 @@ def spfa(para):
     CSR = para.CSR
     n = para.n 
     s = para.srclist
-    pathRecording = para.pathRecordingBool
+    pathRecording = para.pathRecordBool
     start_time = time()
     Va=CSR[0]
     Ea=CSR[1]
@@ -51,7 +51,9 @@ def spfa(para):
     dist=np.array(dist)
     end_time = time()
     timeCost = end_time - start_time
-    result = Result(dist = dist, timeCost = timeCost)
-    # if(pathRecording):
-    #     result.calcPath(CSR=CSR)
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    
+    if(pathRecording):
+        result.calcPath()
+
     return result

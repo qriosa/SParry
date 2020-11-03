@@ -29,11 +29,18 @@ def dijkstra(para):
     from utils.judgeDivide import judge
     
     if judge(para):
-        return divide(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordingBool, para.BLOCK, para.GRID)
+        dist, timeCost = divide(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
     else:
-        return nodivide(para.CSR, para.n, para.srclist, para.pathRecordingBool, para.BLOCK, para.GRID)
+        dist, timeCost = nodivide(para.CSR, para.n, para.srclist, para.pathRecordBool, para.BLOCK, para.GRID)
 
-def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+
+    if para.pathRecordBool:
+        result.calcPath()
+
+    return result
+
+def nodivide(CSR, n, srclist, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the APSP. 
@@ -42,7 +49,7 @@ def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
         CSR: CSR graph data. (more info please see the developer documentation) .
         n: the number of the vertices in the graph.
         srclist: the source list.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
@@ -99,15 +106,9 @@ def nodivide(CSR, n, srclist, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
     
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
+    return dist, timeCost
 
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
-
-    return result
-
-
-def divide(CSR, n, m, srclist, part, pathRecordingBool, BLOCK, GRID):
+def divide(CSR, n, m, srclist, part, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
@@ -118,7 +119,7 @@ def divide(CSR, n, m, srclist, part, pathRecordingBool, BLOCK, GRID):
         m: the number of the edge in the graph.
         srclist: the source list.
         part: the number of the edges that will put to GPU at a time.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks
     
@@ -239,9 +240,4 @@ def divide(CSR, n, m, srclist, part, pathRecordingBool, BLOCK, GRID):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = np.array(dist).flatten(), timeCost = timeCost)
-    
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
-
-    return result
+    return dist, timeCost

@@ -81,6 +81,7 @@ class Graph(object):
             None, no return.
         """
 
+        # 目前只读无向图
         logger.info(f"reading graph from {filename}...")
 
         try:
@@ -184,5 +185,11 @@ class Graph(object):
         self.MIND = np.int32(self.MIND) # 最小度
         self.MINU = np.int32(self.MINU) # 最小度的点(之一)
 
-        self.msg = f"读取完毕:\n结点数量 n = {self.n}\n无向边数量 m = {self.m}\n最大边权 MAXW = {self.MAXW}\n最大度 degree({self.MAXU}) = {self.MAXD}\n最小度 degree({self.MINU}) = {self.MIND}\n"
+        self.msg = f"""
+结点数量\tn = {self.n}, 
+无向边数量\tm = {self.m}, 
+最大边权\tMAXW = {self.MAXW}, 
+最大度\tdegree({self.MAXU}) = {self.MAXD}, 
+最小度\tdegree({self.MINU}) = {self.MIND}, 
+"""
 
