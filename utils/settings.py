@@ -1,5 +1,5 @@
 # use debugger or not
-debugger = True
+debugger = False
 
 # the INF
 INF = 0x7f7f3f7f

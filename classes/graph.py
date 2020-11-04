@@ -14,6 +14,7 @@ class Graph(object):
 
     parameters:
         filename: str, must, the graph data file. (more info please see the developer documentation).
+        directed: bool, the graph is directed ot not.
     
     attributes:
         n: int, the number of the vertices in the graph.
@@ -28,6 +29,7 @@ class Graph(object):
         MINU: int, one of the vertices with the min degree.
         degree: list, save the degree of each vertex.
         msg: str, the message about the read func.
+        filename: str, the file name of the graph.
     
     method:
         read: read the graph from file.
@@ -65,12 +67,12 @@ class Graph(object):
 
         self.msg = '欢迎使用'
         
-        if filename != None:
-            self.read(filename)
-            self.reshape()
+        self.filename = filename
+        
+        self.read()
 
 
-    def read(self, filename):
+    def read(self):
         """
         function: 
             read the graph from file.
@@ -78,21 +80,22 @@ class Graph(object):
             by the way, we wanna to specify the edgeSet format as a variable with 3 array src/des/weight which are consistent with every edge in graph
 
         parameters: 
-            filename: the graph data file. (more info please see the developer documentation).
-            directed: directed or not.
+            None, but 'self'.
 
         return:
             None, no return.
         """
 
-        # 目前只读无向图
-        logger.info(f"reading graph from {filename}...")
+        if self.filename == None:
+            return
+        
+        logger.info(f"reading graph from {self.filename}...")
 
         try:
-            with open(filename, 'r') as f:
+            with open(self.filename, 'r') as f:
                 lines = f.readlines()
         except:
-            filename = "./data/" + filename
+            filename = "./data/" + self.filename
             try:
                 with open(filename, 'r') as f:
                     lines = f.readlines()
@@ -160,6 +163,8 @@ class Graph(object):
                 self.CSR[2].append(j[1])
 
         self.CSR[0].append(last)
+
+        self.reshape()
 
     def reshape(self):
         

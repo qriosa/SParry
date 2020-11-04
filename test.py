@@ -102,4 +102,4 @@ if __name__ == '__main__':
 	else:
 		filename = None
 
-	test(filename = filename, n = 29, m = 200, l = 3, r = 30)
+	test(filename = filename, n = 5, m = 10, l = 3, r = 30)

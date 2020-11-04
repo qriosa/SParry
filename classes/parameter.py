@@ -19,9 +19,9 @@ class Parameter(object):
         method: str, the algorithm. [dij, delta, spfa, fw, edge]
         srclist: list/int, the source of shortest path problem.
         sourceType: str, the type of the problem. [APSP, SSSP, MSSP]
-        pathRecordingBool: bool, record the path or not.
+        pathRecordBool: bool, record the path or not.
         delta: int, the delta of delta-stepping algorithm.
-        MAXN: int, the max value of the edges.
+        MAXW: int, the max value of the edges.
         MAXU: int, the vertex has the maxOutDegree.
         maxOutDegree: int, the max out degree of the graph.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
@@ -32,7 +32,7 @@ class Parameter(object):
         None, but init.
             
     return 
-        class, parameter object.
+        class, Parameter object.
     """
     
     def __init__(self):

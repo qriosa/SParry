@@ -56,7 +56,7 @@ class Result(object):
             None, but 'self'.
         
         return: 
-            None, no return.       
+            str, the msg info.       
         """
         return f"{self.msg}计算用时\ttimeCost = {self.timeCost}"
     
