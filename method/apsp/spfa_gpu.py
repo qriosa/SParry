@@ -60,26 +60,26 @@ def spfa(CSR,n,pathRecording = False):
 
     DIST_np32  = np.full( (n*n, ), INF).astype(np.int32)
     PREDIST_np32=np.full( (n*n, ), INF).astype(np.int32)
-    # VISIT_np32 = np.full( (n*n, ), 0).astype(bool)
+    VISIT_np32 = np.full( (n*n, ), 0).astype(bool)
     for st in range(0,n):
         DIST_np32[st * n + st] = np.int32(0)
-        # VISIT_np32[st * n + st] = np.bool(True)
+        VISIT_np32[st * n + st] = np.bool(True)
     
     # DIST_np32 = np.copy(DIST).astype(np.int32)
     # VISIT_np32 = np.copy(VISIT).astype(bool)
     # PREDIST_np32=np.copy(PREDIST).astype(np.int32)
     # RANDOMSEQ_np32 = np.copy(randomSeq).astype(np.int32)
 
-    KERNEL(
-        drv.In(V_np32), drv.In(E_np32), drv.In(W_np32), drv.In(N_np32),
-        drv.InOut(DIST_np32), drv.In(PREDIST_np32),
-        block=BLOCK, grid=GRID
-    )
     # KERNEL(
     #     drv.In(V_np32), drv.In(E_np32), drv.In(W_np32), drv.In(N_np32),
-    #     drv.In(VISIT_np32), drv.InOut(DIST_np32), drv.In(PREDIST_np32),
+    #     drv.InOut(DIST_np32), drv.In(PREDIST_np32),
     #     block=BLOCK, grid=GRID
     # )
+    KERNEL(
+        drv.In(V_np32), drv.In(E_np32), drv.In(W_np32), drv.In(N_np32),
+        drv.In(VISIT_np32), drv.InOut(DIST_np32), drv.In(PREDIST_np32),
+        block=BLOCK, grid=GRID
+    )
     end_time = time.process_time()
     timeCost = end_time - start_time
     result = Result(dist = DIST_np32, timeCost = timeCost)
