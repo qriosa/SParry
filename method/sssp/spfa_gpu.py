@@ -33,6 +33,27 @@ def spfa(CSR,n,st,pathRecording = False):
 	
 	return: Result(class).(more info please see the developer documentation) .     
     """
+<<<<<<< Updated upstream
+=======
+
+    logger.info("turning to func spfa-gpu-apsp")
+
+    CSR = para.CSR
+    n = para.n 
+    st = para.srclist
+    pathRecording = para.pathRecordingBool
+
+    if(para.GRID is not None):
+        GRID = para.GRID
+    else:
+        GRID=(1,1,1)
+    
+    if(para.BLOCK is not None):
+        BLOCK = para.BLOCK
+    else:
+        BLOCK=(1024,1,1)
+    # print(BLOCK,GRID)
+>>>>>>> Stashed changes
     start_time = time.process_time()
     RST_V_np32 = CSR[0]
     RST_E_np32 = CSR[1]
