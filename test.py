@@ -71,8 +71,11 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	# srclist = [i for i in range(n)]
 	srclist = None
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	# srclist = 23
 =======
+=======
+>>>>>>> Stashed changes
 	# srclist = 232
 	# srclist = [1,2]
 	# srclist = [20,123,1114,5098,6111,9914,23,345,123,345,435,67,234,124,456,768,34,234,456,78,234,56,678,89,123,456,678,423,576,8964,6489,1999,2437,1031,5436,6522,1456,2345]
@@ -98,6 +101,9 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 =======
 		
 		# print(ans[i].dist.reshape(len(srclist), n))
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
@@ -108,7 +114,11 @@ if __name__ == '__main__':
 		filename = None
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	test(filename = filename, n = 3000, m = 15000, l = 3, r = 1000)
+=======
+	test(filename = filename, n = 6000, m = 30000, l = 3, r = 60)
+>>>>>>> Stashed changes
 =======
 	test(filename = filename, n = 6000, m = 30000, l = 3, r = 60)
 >>>>>>> Stashed changes
