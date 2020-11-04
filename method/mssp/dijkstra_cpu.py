@@ -23,7 +23,7 @@ def dijkstra(para):
 
     t1 = time()
 
-    CSR, n, srclist, pathRecordingBool = para.CSR, para.n, para.srclist.copy(), para.pathRecordingBool
+    CSR, n, srclist, pathRecordBool = para.CSR, para.n, para.srclist.copy(), para.pathRecordBool
 
     dist = []
 
@@ -38,9 +38,9 @@ def dijkstra(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
 
-    if pathRecordingBool:
-        result.calcPath(CSR = CSR)
+    if pathRecordBool:
+        result.calcPath()
 
     return result

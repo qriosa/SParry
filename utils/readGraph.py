@@ -5,7 +5,7 @@ from utils.debugger import Logger
 
 logger = Logger(__name__) 
 
-def read(filename = 'data.txt'):
+def read(filename = 'data.txt', directed = False):
     """
     function:
         read graph from file, and shape to a Graph object.
@@ -21,7 +21,7 @@ def read(filename = 'data.txt'):
 
     start = time()
     
-    g = Graph(filename)
+    g = Graph(filename, directed = directed)
 
     end = time()
 

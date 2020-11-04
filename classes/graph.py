@@ -38,11 +38,14 @@ class Graph(object):
     """
 
     # 只可以接受一个delta 和 s
-    def __init__(self, filename = None):
+    def __init__(self, filename = None, directed = False):
 
         # 预定义变量
         self.n = -1
         self.m = -1
+
+        # 方向
+        self.directed = directed
 
         self.CSR = None
 
@@ -76,11 +79,13 @@ class Graph(object):
 
         parameters: 
             filename: the graph data file. (more info please see the developer documentation).
+            directed: directed or not.
 
         return:
             None, no return.
         """
 
+        # 目前只读无向图
         logger.info(f"reading graph from {filename}...")
 
         try:
@@ -100,6 +105,11 @@ class Graph(object):
 
         self.n = int(lines[0].split(' ')[0])
         self.m = int(lines[0].split(' ')[1])
+        
+        # 使用两个无向边表示有向边
+        if self.directed == False:
+            self.m *= 2
+
         self.degree = np.full((self.n, ), 0).astype(np.int32)
 
         lines = lines[1:]
@@ -111,14 +121,15 @@ class Graph(object):
             line = (line[:-1]).split(' ')
             
             e[line[0]].append((int(line[1]), int(line[2])))
-            e[line[1]].append((int(line[0]), int(line[2])))
+            
+            if self.directed == False:
+                e[line[1]].append((int(line[0]), int(line[2])))
+                self.src.append(int(line[1]))
+                self.des.append(int(line[0]))
+                self.w.append(int(line[2]))
             
             self.src.append(int(line[0]))
             self.des.append(int(line[1]))
-            self.w.append(int(line[2]))
-
-            self.src.append(int(line[1]))
-            self.des.append(int(line[0]))
             self.w.append(int(line[2]))
 
             if int(line[2]) > self.MAXW:
@@ -184,5 +195,11 @@ class Graph(object):
         self.MIND = np.int32(self.MIND) # 最小度
         self.MINU = np.int32(self.MINU) # 最小度的点(之一)
 
-        self.msg = f"读取完毕:\n结点数量 n = {self.n}\n无向边数量 m = {self.m}\n最大边权 MAXW = {self.MAXW}\n最大度 degree({self.MAXU}) = {self.MAXD}\n最小度 degree({self.MINU}) = {self.MIND}\n"
+        self.msg = f"""
+结点数量\tn = {self.n}, 
+无向边数量\tm = {self.m}, 
+最大边权\tMAXW = {self.MAXW}, 
+最大度\tdegree({self.MAXU}) = {self.MAXD}, 
+最小度\tdegree({self.MINU}) = {self.MIND}, 
+"""
 

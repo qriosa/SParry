@@ -7,7 +7,7 @@ import numpy as np
 
 logger = Logger(__name__)
 
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, grid):
+def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, block, grid):
     """
     function: 
         schedule the program by passing in parameters.
@@ -19,6 +19,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
         useCUDA: bool, use CUDA to speedup or not.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
+        msg: the info of the graph.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
@@ -48,9 +49,16 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
     # 实例化一个 parameter
     para = Parameter()
 
+    # 填入 msg
+    para.msg = msg
+
+    # method
+    para.method = 'dij' if method is None else method
+
     # 填入指定的grid和block参数，未指定则为空
     para.GRID = grid
     para.BLOCK = block
+
     # 依据图的类型将图写入类中
     if graphType == 'CSR' or graphType == None:
         graphType = 'CSR'
@@ -88,9 +96,17 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
     else:
         raise Exception("undefined srclist type")
 
+    para.msg += f'''
+计算方法\tmethod = {para.method}, 
+使用CUDA\tuseCUDA = {para.useCUDA}, 
+源点列表\tsrclist = {para.srclist}, 
+问题类型\tsourceType = {para.sourceType}, 
+记录路径\tpathRecord = {para.pathRecordBool}, 
+'''
+
     # 依据使用的方法来选择图数据的类型
     # 矩阵相乘
-    if method == 'fw':
+    if para.method == 'fw':
         if graphType != 'matrix':
             tf(para, 'matrix')
         
@@ -110,7 +126,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
             return matrix(para)
     
     # 边细粒度
-    elif method == 'edge':
+    elif para.method == 'edge':
         if graphType != 'edgeSet':
             tf(para, 'edgeSet')
         
@@ -160,7 +176,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
             getIndex(para) # 尚存在重复计算
         
 
-        if method == 'dij':
+        if para.method == 'dij':
             # GPU dijkstra
             if useCUDA == True:
                 from utils.judgeDivide import judge
@@ -210,7 +226,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
                     from method.sssp.dijkstra_cpu import dijkstra as dij
                     return dij(para)
         
-        elif method == 'spfa':
+        elif para.method == 'spfa':
             # GPU SPFA
             if useCUDA == True:
                 if para.sourceType == 'APSP':
@@ -240,7 +256,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
                 else:
                     raise Exception("can not run calculation by undefined calcType")
         # delta
-        else:
+        elif para.method == 'delta':
             if para.delta == None or para.MAXN == None or para.maxOutDegree == None:
                 getIndex(para)
 
@@ -272,5 +288,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, block, 
                     from method.sssp.delta_cpu import delta_stepping as delta
                     return delta(para)
 
+        else:
+            raise Exception(f"unkown method of {para.method}")
 
 

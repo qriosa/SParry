@@ -31,7 +31,7 @@ def edge(para):
 
     t1 = time()
 
-    edgeSet, n, m, srclist, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordingBool
+    edgeSet, n, m, srclist, pathRecordBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordBool
     src, des, w = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2] 
 
     if para.BLOCK != None:
@@ -75,9 +75,9 @@ def edge(para):
     # path 则具体是第i个单源问题中的真的路径中的点的编号就不考虑某个点是当前的源点的不会用i来表示这个源点了
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.edgeSet, graphType = 'edgeSet')
 
-    if pathRecordingBool:
-        result.calcPath(edgeSet = edgeSet)
+    if pathRecordBool:
+        result.calcPath()
 
     return result

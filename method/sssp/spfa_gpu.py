@@ -37,7 +37,7 @@ def spfa(para):
     CSR = para.CSR
     n = para.n 
     st = para.srclist
-    pathRecording = para.pathRecordingBool
+    pathRecording = para.pathRecordBool
 
     if(para.GRID is not None):
         GRID = para.GRID
@@ -73,7 +73,11 @@ def spfa(para):
     )
     end_time=time.process_time()
     timeCost = end_time - start_time
-    result = Result(dist = DIST_np32, timeCost = timeCost)
+    result = Result(dist = DIST_np32, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    
+    if(pathRecording):
+        result.calcPath()
+
     return result
 
     

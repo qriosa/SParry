@@ -85,16 +85,24 @@ def getIndex(para):
         
         para.maxOutDegree = 0
         for i in range(1, para.n):
-            para.maxOutDegree = max(para.maxOutDegree, V[i] - V[i - 1])
+            if(V[i] - V[i - 1] > para.maxOutDegree):
+                para.maxOutDegree = V[i] - V[i - 1]
+                para.MAXU = i - 1
             # if V[i] - V[i - 1] > para.maxOutDegree:
             #     para.maxOutDegree = V[i] - V[i - 1]
         para.maxOutDegree = np.int32(para.maxOutDegree)
         
         if para.delta == None:
-            para.delta = max(3, para.MAXN // para.maxOutDegree)
+            para.delta = max(3, para.MAXN // (para.maxOutDegree * 2))
         
         para.delta = np.int32(para.delta)
     
     else:
         raise Exception("can not extract indexs from a graph with an undefined type")
-        
+    
+    para.msg += f"""
+结点数量\tn = {para.n}, 
+无向边数量\tm = {para.m}, 
+最大边权\tMAXW = {para.MAXN}, 
+最大度\tdegree({para.MAXU}) = {para.maxOutDegree}, 
+"""

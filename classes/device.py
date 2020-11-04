@@ -30,6 +30,7 @@ class Device(object):
         get_version: obtain the version of CUDA against which PyCuda was compiled.
         get_driver_version: obtain the version of the CUDA driver on top of which PyCUDA is running. 
         getDeviceInfo: obtain the device infomation include: 'freeMemory, totalMemory, memoryUsed, temperature, powerStstus'.
+        get_attributes: the pycuda's get_attributes.
 
     return 
         class, Device object.
@@ -124,6 +125,19 @@ class Device(object):
         
         return self.driverVersion
     
+    def get_attributes(self):
+        """
+        function: 
+            show the pycuda's get_attributes. 
+
+        parameters: 
+            None but 'self'.
+
+        return:        
+            str, the pycuda's get_attributes return.        
+        """
+        return self.device.get_attributes()
+
     def getDeviceInfo(self):
         """
         function: 

@@ -23,7 +23,7 @@ def edge(para):
 
     t1 = time()
 
-    edgeSet, n, m, s, pathRecordingBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordingBool
+    edgeSet, n, m, s, pathRecordBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordBool
     src, des, val = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2]
 
     # 退出标识
@@ -51,10 +51,10 @@ def edge(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost)
+    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.edgeSet, graphType = 'edgeSet')
     
-    if pathRecordingBool:
-        result.calcPath(edgeSet = edgeSet)
+    if pathRecordBool:
+        result.calcPath()
 
     return result
 

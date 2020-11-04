@@ -10,7 +10,7 @@ import pycuda.driver as drv
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
 
-def matrix(matrix, n, pathRecordingBool = False):
+def matrix(matrix, n, pathRecordBool = False):
     """
     function: use Floyd-Warshall algorithm in GPU to solve the APSP. 
         (more info please see the developer documentation) .
@@ -18,7 +18,7 @@ def matrix(matrix, n, pathRecordingBool = False):
     parameters:  
         matrix: adjacency matrix of the graph data. (more info please see the developer documentation) .
         n: the number of the vertices in the graph.
-        pathRecordingBool: record the path or not.
+        pathRecordBool: record the path or not.
     
     return: Result(class).(more info please see the developer documentation) . 
     """
@@ -63,9 +63,9 @@ def matrix(matrix, n, pathRecordingBool = False):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = p[0:n_old,0:n_old], timeCost = timeCost)
+    result = Result(dist = p[0:n_old,0:n_old], timeCost = timeCost, msg = para.msg, graph = para.matrix, graphType = 'matrix')
 
-    if pathRecordingBool:
-        result.calcPath(matrix = matrix)
+    if pathRecordBool:
+        result.calcPath()
     
     return result
