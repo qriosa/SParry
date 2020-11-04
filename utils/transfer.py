@@ -100,7 +100,7 @@ def matrix2CSR(mat):
                 MAXN = max(MAXN, w)
         V[u+1] = V[u] + tot
     V[n]=len(W)
-    return np.int32(n), np.int32(MAXN), np.int32(len(E)-1),[np.array(V,dtype=np.int32), np.array(E,dtype=np.int32), np.array(W,dtype=np.int32)]
+    return np.int32(n), np.int32(MAXN), np.int32(len(E)),[np.array(V,dtype=np.int32), np.array(E,dtype=np.int32), np.array(W,dtype=np.int32)]
 
 def matrix2edgeSet(mat):
     """
@@ -161,7 +161,7 @@ def edgeSet2Matrix(edgeSet):
         u, v, w=edgeSet[0][ind], edgeSet[1][ind], edgeSet[2][ind]
         # print(u,v)
         mat[u,v]=min(mat[u,v],w)
-        mat[v,u]=min(mat[v,u],w)
+        # mat[v,u]=min(mat[v,u],w) # 必须坚持单向边
         MAXN = max(MAXN, w)
     return np.int32(n),np.int32(MAXN),np.int32(m),mat
 

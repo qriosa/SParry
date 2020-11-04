@@ -38,11 +38,14 @@ class Graph(object):
     """
 
     # 只可以接受一个delta 和 s
-    def __init__(self, filename = None):
+    def __init__(self, filename = None, directed = False):
 
         # 预定义变量
         self.n = -1
         self.m = -1
+
+        # 方向
+        self.directed = directed
 
         self.CSR = None
 
@@ -76,6 +79,7 @@ class Graph(object):
 
         parameters: 
             filename: the graph data file. (more info please see the developer documentation).
+            directed: directed or not.
 
         return:
             None, no return.
@@ -101,6 +105,11 @@ class Graph(object):
 
         self.n = int(lines[0].split(' ')[0])
         self.m = int(lines[0].split(' ')[1])
+        
+        # 使用两个无向边表示有向边
+        if self.directed == False:
+            self.m *= 2
+
         self.degree = np.full((self.n, ), 0).astype(np.int32)
 
         lines = lines[1:]
@@ -112,14 +121,15 @@ class Graph(object):
             line = (line[:-1]).split(' ')
             
             e[line[0]].append((int(line[1]), int(line[2])))
-            e[line[1]].append((int(line[0]), int(line[2])))
+            
+            if self.directed == False:
+                e[line[1]].append((int(line[0]), int(line[2])))
+                self.src.append(int(line[1]))
+                self.des.append(int(line[0]))
+                self.w.append(int(line[2]))
             
             self.src.append(int(line[0]))
             self.des.append(int(line[1]))
-            self.w.append(int(line[2]))
-
-            self.src.append(int(line[1]))
-            self.des.append(int(line[0]))
             self.w.append(int(line[2]))
 
             if int(line[2]) > self.MAXW:

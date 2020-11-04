@@ -6,7 +6,37 @@ import matplotlib.pyplot as plt
 
 logger = Logger(__name__)
 
-def draw(path, n, graph, graphType):
+def get_node_pos(node_list, radius=1, step=1, step_num=8, center=(0, 0), dim=2):
+    """
+    function: 
+        get the pos of vertex. https://www.jianshu.com/p/b8c5d01a715e
+
+    parameters:
+        node_list: the nodes.
+    
+    """
+    if dim < 2:
+        raise ValueError('cannot handle dimensions < 2')
+    paddims = max(0, (dim - 2))
+    odd_all_num = len(node_list)
+    node_pos_list = []
+    while odd_all_num > 0:
+        cur_lever_num = radius * step_num
+        if odd_all_num < cur_lever_num:
+            cur_lever_num = odd_all_num
+        odd_all_num -= cur_lever_num
+
+        theta = np.linspace(0, 1, cur_lever_num + 1)[:-1] * 2 * np.pi
+        theta = theta.astype(np.float32)
+        pos = np.column_stack([np.cos(theta) * radius, np.sin(theta) * radius,
+                               np.zeros((cur_lever_num, paddims))])
+        pos = pos.tolist()
+        node_pos_list.extend(pos)
+        radius += 1
+    all_pos = dict(zip(node_list, node_pos_list))
+    return all_pos
+
+def draw(path, n, s, graph, graphType):
     """
     function: 
         use path to draw a pic.
@@ -14,6 +44,7 @@ def draw(path, n, graph, graphType):
     parameters:
         path: list, must,  about precursors of each vertex in each problem.
         n: int, must, the number of vertices.
+        s: int , must, the source vertex.
         graph: str/list/tuple, must, the graph data that you want to get the shortest path.(more info please see the developer documentation).
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
     
@@ -47,10 +78,6 @@ def draw(path, n, graph, graphType):
 
     else:
         raise Exception("unknown graphType, can only be 'matrix', 'CSR' and 'edgeSet'")
-    
-
-    # 先就只展示一个源
-    s = 1
 
     pathi = np.array(path[:n]) 
     values = ['green' for i in range(n)]
@@ -67,7 +94,10 @@ def draw(path, n, graph, graphType):
     
     edge_colors = ['black' if not edge in red_edges else 'red' for edge in G.edges()]
 
-    pos=nx.spring_layout(G)
+    # pos=nx.spring_layout(G)
+    pos = get_node_pos(G.nodes()) # 按照同心圆分布点
+
+    fig, ax = plt.subplots(figsize=(13, 13))
     nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
-    nx.draw(G,pos, node_color = values, with_labels=True, font_weight='bold', node_size=800,edge_color=edge_colors,edge_cmap=plt.cm.Reds)
+    nx.draw(G,pos, node_color = values, with_labels=True, font_weight='bold', node_size = 800, edge_color=edge_colors,edge_cmap=plt.cm.Reds)
     plt.show()

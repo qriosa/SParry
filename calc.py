@@ -23,7 +23,7 @@ def INF():
     return inf
 
 
-def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRecordBool = False, srclist = None, block=None, grid=None):
+def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directed = False, pathRecordBool = False, srclist = None, block = None, grid = None):
     
     """
     function: 
@@ -34,6 +34,7 @@ def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRec
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        directed: bool, directed or not. only valid in read graph from file.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
@@ -48,7 +49,7 @@ def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRec
     logger.info(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
   
     if(type(graph) == str):
-        graphObj=read(graph)
+        graphObj=read(graph, directed = directed)
         if(graphType=='edgeSet'):
             result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, graphObj.msg, block, grid)
         else:
@@ -61,4 +62,4 @@ def main(graph = None, graphType = None, method = 'dij', useCUDA = True, pathRec
 
 
 if __name__ == "__main__":
-    main()
+    calc()

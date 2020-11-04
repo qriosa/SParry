@@ -76,7 +76,13 @@ class Result(object):
             self.calcPath()
         
         from utils.showPath import draw
-        draw(path = self.path, n = self.n, graph = self.graph, graphType = self.graphType)
+        
+        # 先就只展示一个源
+        for i in range(self.dist.size):
+            if self.dist[i] == 0:
+                s = i % self.n
+                
+        draw(path = self.path, n = self.n, s = s, graph = self.graph, graphType = self.graphType)
 
     def calcPath(self):
         """
@@ -129,9 +135,9 @@ class Result(object):
             for j in range(V[i], V[i + 1]):
                 for k in range(sNum):
                     kn = k * self.n
-                    if(self.dist[E[j] + kn] == self.dist[i + kn] + W[j]):
+                    if(self.path[E[j] + kn] == -1 and self.dist[E[j] + kn] == self.dist[i + kn] + W[j]):
                         self.path[E[j] + kn] = i # E[j] 这个点在某个源的问题中的前驱是结点i
-    
+        
     def calcPathFromMatrix(self):
         """
         function: 
@@ -154,7 +160,7 @@ class Result(object):
             for j in range(self.n):
                 for k in range(sNum):
                     kn = k * self.n
-                    if(self.dist[j + kn] == self.dist[i + kn] + self.matrix[i][j]):
+                    if(self.path[j + kn] == -1 and self.dist[j + kn] == self.dist[i + kn] + self.matrix[i][j]):
                         self.path[j + kn] = i # E[j] 这个点在某个源的问题中的前驱是结点i
 
     def calcPathFromEdgeSet(self):
@@ -185,5 +191,5 @@ class Result(object):
         for i in range(m):
             for k in range(sNum):
                 kn = k * self.n
-                if(self.dist[des[i] + kn] == self.dist[src[i] + kn] + w[i]):
+                if(self.path[des[i] + kn] == -1 and self.dist[des[i] + kn] == self.dist[src[i] + kn] + w[i]):
                     self.path[des[i] + kn] = src[i]# E[j] 这个点在某个源的问题中的前驱是结点i        
