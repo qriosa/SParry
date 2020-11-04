@@ -5,11 +5,7 @@
 
 It's **developing**.
 
-
-
 ------
-
-## English version
 
 `spoon` is a **shortest path calculation toolkit**, the main shortest path algorithms, including `Dijkstra`, `Bellman-Ford`, `Delta-Stepping`, and `Edge-Threads`, are encapsulated. It also provides **a parallel accelerated version based on CUDA is provided** to improve development efficiency.
 
@@ -58,6 +54,10 @@ Download the file package directly and run the `calc` interface function in the 
 **It's not not a release version currently, so it cannot be installed with pip, and the development structure is not yet perfect. **
 
 
+
+### flow chart
+
+![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
 
 ### Quick start tutorial
 
@@ -131,13 +131,11 @@ array([ 0,  9,  6, 13])
 
 ### More.
 
-**See the developer documentation for more information. **
+Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/tutorials.md#interface) for more information. 
 
 
 
 ------
-
-## 中文版本
 
 所谓工欲善其事必先利其器。
 
@@ -186,6 +184,12 @@ array([ 0,  9,  6, 13])
 直接下载文件包，即可在主目录中运行 `calc` 接口函数。
 
 **目前不是发行版本，故不可pip安装，开发结构尚不是很完善。**
+
+
+
+### 流程图
+
+![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
 
 
 
@@ -259,7 +263,7 @@ array([ 0,  9,  6, 13])
 
 ### 更多
 
-**更多信息请参阅开发者文档。**
+更多信息请参阅[开发者文档](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%8E%A5%E5%8F%A3)。
 
 
 
@@ -323,18 +327,20 @@ array([ 0,  9,  6, 13])
 - 实现了文本display函数，展示本次计算的相关信息
 - 实现了绘路径图功能 但是图还不理想
 
-- [ ] 但SPFA多源出现了奇怪的bug，每次只计算了一个源
-- [ ] 绘制的图还得漂亮
+- [x] 但SPFA多源出现了奇怪的bug，每次只计算了一个源
+- [x] 绘制的图还得漂亮
 
 
 
 ### 11/4
 
 - 修复了绘图中的源点问题
-- 修复了绘图中的点分布过于稠密的问题
+- 修复了绘图中的点分布过于稠密的问题，分布点于同心圆上
 - 在读图函数中添加了对单向边的支持
 - 完善了readme
 - 完成了开发者文档编写
+- 修复了SPFA多源只算一个源的feature
+- 修复了SPFA对有向图的支持feature
 
 
 
@@ -344,4 +350,4 @@ array([ 0,  9,  6, 13])
 - [x] 开发者文档
 - [ ] 用法截图
 - [ ] 大规模集成测试
-- [ ] 简单usage
+- [x] 简单usage

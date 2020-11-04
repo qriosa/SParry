@@ -8,6 +8,7 @@ import os
 
 from classes.result import Result
 from utils.settings import INF
+from utils.debugger import Logger
 
 kernelName="kernelForAPSP"
 fr=open("./method/apsp/cu/spfa.cu","r",encoding='utf-8')
@@ -18,7 +19,9 @@ KERNEL=mod.get_function(kernelName)
 BLOCK=(1024,1,1)
 GRID=(4096,1,1)
 
-def spfa(CSR,n,pathRecording = False):
+logger = Logger(__name__)
+
+def spfa(para):
     """
 	function: use Bellman-Ford algorithm in GPU to solve the APSP . 
 	
@@ -34,7 +37,7 @@ def spfa(CSR,n,pathRecording = False):
 
     CSR = para.CSR
     n = para.n 
-    pathRecording = para.pathRecordingBool
+    pathRecording = para.pathRecordBool
 
     if(para.GRID is not None):
         GRID = para.GRID

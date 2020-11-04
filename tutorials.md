@@ -58,6 +58,14 @@ Download the file package directly and run the `calc` interface function in the 
 
 
 
+
+
+## flow chart
+
+![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
+
+
+
 ## Quick start tutorial
 
 This section is an introduction to help beginners of `SPoon` get started quickly.
@@ -150,7 +158,7 @@ All error reports in the software will be reported with python error messages, a
 
 #### func calc
 
-This method is the only calculation interface of the software. By calling this method, the shortest path of the graph can be directly calculated. See `func calc` for more information. 超链接
+This method is the only calculation interface of the software. By calling this method, the shortest path of the graph can be directly calculated. See ([func calc](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-1)) for more information. 
 
 ------
 
@@ -316,7 +324,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
 
 This method is an interface function, and the meaning of each parameter is as follows:
 
-- graph, Graph data, required, the graph data or graph data storage file that needs to calculate the shortest path. See figure data specification.
+- graph, Graph data, required, the graph data or graph data storage file that needs to calculate the shortest path. See figure [data specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%9B%BE%E6%95%B0%E6%8D%AE%E8%A7%84%E8%8C%83).
   1. In the case of graph data in memory, data in three formats are supported: adjacency matrix (matrix), compressed adjacency matrix (CSR), and edge set array (edgeSet).
   2. If it is a file of graph data, it means the file name of the graph file that meets the **graph data specification**.
 - graphType, the type of the incoming graph data, required. str. It can only be of the following three types:
@@ -347,7 +355,7 @@ This method is an interface function, and the meaning of each parameter is as fo
 
 #### Return
 
-The return value is an instance of `class Result`. Please refer to `class Result` for details.
+The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
 
 
@@ -416,7 +424,7 @@ This method is a transfer-in function inherited by the interface function. The m
 
 #### Return
 
-The return value is an instance of `class Result`. Please refer to `class Result` for details.
+The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
 
 
@@ -522,7 +530,7 @@ def read(filename = 'data.txt', directed = False):
 
 #### Return
 
-The return value is an instance of `class Class`. Please refer to `class Class` for details.
+The return value is an instance of `class Class`. Please refer to[class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result)for details.
 
 
 
@@ -682,7 +690,7 @@ def dijkstra(CSR, n, s, pathRecordingBool = False):
 
 #### Return
 
-The return value is an instance of `class Result`. Please refer to `class Result` for details.
+The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
 ------
 
@@ -1144,6 +1152,12 @@ class Graph(object):
 
 
 
+## 流程图
+
+![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
+
+
+
 ## 快速入门教程
 
 本节是帮助 `SPoon` 新手快速上手的简介。
@@ -1236,7 +1250,7 @@ array([ 0,  9,  6, 13])
 
 #### func calc
 
-该方法是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 `func calc`。超链接
+该方法是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-3)。
 
 ------
 
@@ -1401,7 +1415,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
 
 该方法是接口函数，各个参数意义如下：
 
-- graph， 图数据，必填，需要计算最短路径的图数据或者图数据存储文件。参见图数据规范。
+- graph， 图数据，必填，需要计算最短路径的图数据或者图数据存储文件。参见[图数据规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%9B%BE%E6%95%B0%E6%8D%AE%E8%A7%84%E8%8C%83)。
   1. 若是内存中的图数据，则支持三种格式的数据：邻接矩阵(matrix)、压缩邻接矩阵(CSR)、边集数组(edgeSet)。
   2. 若是图数据的文件，则表示满足**图数据规范**的图文件的文件名。
 - graphType ，传入的图数据的类型，必填。 str。仅可以是以下三种类型：
@@ -1432,7 +1446,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
 
 #### 返回值
 
-返回值是 `class Result` 的一个实例。详细请参阅 `class Result` 。
+返回值是 `class Result` 的一个实例。详细请参阅  [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
 
 
@@ -1501,7 +1515,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
 
 #### 返回值
 
-返回值是 `class Result` 的一个实例。详细请参阅 `class Result` 。
+返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
 
 
@@ -1607,7 +1621,7 @@ def read(filename = 'data.txt', directed = False):
 
 #### 返回值
 
-返回值是 `class Class` 的一个实例。详细请参阅 `class Class` 。
+返回值是 `class Class` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
 
 
@@ -1767,7 +1781,7 @@ pathRecordingBool: record the path or not.
 
 #### 返回值
 
-返回值是 `class Result` 的一个实例。详细请参阅 `class Result` 。
+返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
 ------
 

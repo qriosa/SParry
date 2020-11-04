@@ -63,7 +63,7 @@
 
 
 __global__ void kernelForAPSP(int *V, int *E, int *W, int *n, bool *visit, int *dist, int *predist){
-    /*thread 和 block 的两级复用 ，暂时不使用dist矩阵对称特性的利用，也不开启随机计算优化*/
+    /*thread 和 block 的两级复用 ，视情况使用dist矩阵对称特性的利用，不开启随机计算优化*/
     const int blockId  = blockIdx.z *(gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
     const int threadId = threadIdx.z*(blockDim.x * blockDim.y)+ threadIdx.y* blockDim.x+ threadIdx.x;
     const int blockSize =blockDim.x * blockDim.y * blockDim.z;
@@ -104,17 +104,17 @@ __global__ void kernelForAPSP(int *V, int *E, int *W, int *n, bool *visit, int *
                 break;
             }
         }
-        // __syncthreads();
+        __syncthreads();
         /*这里开始dist中间结果利用*/
-        u=threadId;
-        while(u < (*n)){
-            int ualign = u * (*n);
-            old=atomicMin(&dist[ualign + st],dist[align + u]);
-            if(old > dist[ualign + st]){
-                visit[ualign + st]=1;
-            }
-            u+=blockSize;
-        }
+        // u=threadId;
+        // while(u < (*n)){
+        //     int ualign = u * (*n);
+        //     old=atomicMin(&dist[ualign + st],dist[align + u]);
+        //     if(old > dist[ualign + st]){
+        //         visit[ualign + st]=1;
+        //     }
+        //     u+=blockSize;
+        // }
         st += gridSize;
     }
 }

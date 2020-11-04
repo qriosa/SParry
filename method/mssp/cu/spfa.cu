@@ -10,7 +10,7 @@ __global__ void kernelForMSSP(int *V, int *E, int *W, int *n, int *src, int *sn,
     if(threadId >= (*n)) return ;
     stInd = blockId;
     st = src[stInd];
-    while(st < (*n))
+    while(stInd < (*sn))
     {
         align = (stInd * (*n));
         while(1){/*这个while里解决了一个单元最短路问题*/
@@ -51,6 +51,6 @@ __global__ void kernelForMSSP(int *V, int *E, int *W, int *n, int *src, int *sn,
         //     }
         //     u+=blockSize;
         // }
-        st += gridSize;
+        stInd += gridSize;
     }
 }
