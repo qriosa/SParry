@@ -176,7 +176,7 @@ This method is the only calculation interface of the software. By calling this m
 
 The graph data received in the tool is available in **both file and memory formats** (three types: adjacency matrix (matrix), compressed adjacency matrix (CSR), and edgeSet array (edgeSet)).
 
-The following is an example of a common diagram:
+The following is an example of a common graph:
 
 ![image-20201023091301096.png](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201023091301096.png)
 
@@ -324,7 +324,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
 
 This method is an interface function, and the meaning of each parameter is as follows:
 
-- graph, Graph data, required, the graph data or graph data storage file that needs to calculate the shortest path. See figure [data specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%9B%BE%E6%95%B0%E6%8D%AE%E8%A7%84%E8%8C%83).
+- graph, Graph data, required, the graph data or graph data storage file that needs to calculate the shortest path. See figure [data specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#data-type--specification).
   1. In the case of graph data in memory, data in three formats are supported: adjacency matrix (matrix), compressed adjacency matrix (CSR), and edge set array (edgeSet).
   2. If it is a file of graph data, it means the file name of the graph file that meets the **graph data specification**.
 - graphType, the type of the incoming graph data, required. str. It can only be of the following three types:

@@ -39,7 +39,7 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 
 > python 3.6
 >
-> pycuda ?
+> pycuda 2019.1.2
 >
 > numpy 1.19.2
 >

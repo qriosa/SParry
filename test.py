@@ -69,7 +69,7 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	useCUDAFalse = 'noUseCUDA'
 	ans = []
 	# srclist = [i for i in range(n)]
-	srclist = None
+	# srclist = None
 	# srclist = 232
 	# srclist = 2
 	# srclist = [1,2,3,12,13,17]
@@ -81,6 +81,7 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 
 	for i in range(len(method)):
 		logger.info(f'begin to calc. method = {method[i]}, useCUDA = {useCUDA[i]}, pathRecordBool = False, directed = {directed}, srclist = {np.array(srclist)}')
+		
 		ans.append(calc(graph = filename, graphType = 'edgeSet', method = method[i], useCUDA = useCUDA[i], directed = directed, pathRecordBool = True, srclist = srclist, block=(512, 2, 1), grid = (1, 1)))
 		
 		logger.info(f'begin to check')
