@@ -11,7 +11,7 @@ import numpy as np
 logger = Logger(__name__)
 
 
-def main(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
+def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
     """
     function: 
         an interface to prove the correctness of this algorithm with the standard input&output graph data that user provides
@@ -57,13 +57,13 @@ def main(inputGraph = None, graphType = None, outputGraph=None, method=None, use
         for msz in methods:
             for use in usage:
                 result = dispatch(inputGraph, graphType, msz, use, False, None, None, None)
-                PRINT(check(result.dist, outputGraph, f'answer[{msz} {pltform[use]}]','stdout'))
+                return check(result.dist, outputGraph, f'answer[{msz} {pltform[use]}]','stdout')
                 # print(result.dist,outputGraph)
     else:
         result = dispatch(inputGraph, graphType, method, useCUDA, False, None, None, None)
-        PRINT(check(result.dist, outputGraph, f'answer[{methods} {pltform[useCUDA]}]','stdout'))
+        return check(result.dist, outputGraph, f'answer[{methods} {pltform[useCUDA]}]','stdout')
         # print(result.dist,outputGraph)
 
 
 if __name__ == "__main__":
-    main(inputGraph='./data/test.txt',graphType='edgeSet',outputGraph='./data/std.bin')
+    userTest(inputGraph='./data/test.txt',graphType='edgeSet',outputGraph='./data/std.bin')

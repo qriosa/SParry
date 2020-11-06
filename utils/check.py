@@ -27,7 +27,7 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
         return f"{name1} and {name2} are NOT EQUAL"
 
 
-def check(data1, data2):
+def checkBool(data1, data2):
     """
     function: 
         to check the data is equal or not.

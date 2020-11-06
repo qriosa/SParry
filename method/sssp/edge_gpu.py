@@ -49,9 +49,6 @@ def edge(para):
     dist = np.full((n, ), INF).astype(np.int32)
     dist[s] = np.int32(0)
 
-    # 退出标识
-    flag = np.full((m, ), 1).astype(np.int32)
-
     # 获取函数
     edge_sssp_cuda_fuc = mod.get_function('edge')  
 
@@ -61,7 +58,6 @@ def edge(para):
                         drv.In(w),
                         drv.In(m),
                         drv.InOut(dist),
-                        drv.In(flag),
                         block = BLOCK, 
                         grid = GRID)
     

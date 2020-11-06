@@ -1,4 +1,5 @@
 from utils.debugger import Logger
+from utils.settings import INF
 
 import networkx as nx
 import numpy as np
@@ -58,26 +59,31 @@ def draw(path, n, s, graph, graphType):
 
     G = nx.DiGraph()
     G.add_nodes_from(np.arange(n))
+    matrix = np.full((n, n), INF)
 
+    # 都转化为邻接矩阵 可以去重 毕竟这个画图会被覆盖。
     if(graphType == 'CSR'):
         V, E, W = graph[0], graph[1], graph[2]
         for i in range(n):
             for j in range(V[i], V[i + 1]):
-                G.add_edge(i, E[j], weight=W[j])
+                matrix[i][E[j]] = min(matrix[i][E[j]], W[j])
 
     elif(graphType == 'matrix'):
-        for i in range(n):
-            for j in range(n):
-                G.add_edge(i, j, weight=graph[i][j])
+        matrix = graph
 
     elif(graphType == 'edgeSet'):
         src, des, w = graph[0], graph[1], graph[2]
         m = len(src)
         for i in range(m):
-            G.add_edge(src[i], des[i], weight=w[i])
+            matrix[src[i]][des[i]] = min(matrix[src[i]][des[i]], w[i])
 
     else:
         raise Exception("unknown graphType, can only be 'matrix', 'CSR' and 'edgeSet'")
+
+    for i in range(n):
+        for j in range(n):
+            if matrix[i][j] < INF:
+                G.add_edge(i, j, weight=matrix[i][j])
 
     pathi = np.array(path[:n]) 
     values = ['green' for i in range(n)]
@@ -89,7 +95,7 @@ def draw(path, n, s, graph, graphType):
     for i in range(n):
         if pathi[i] != -1:
             red_edges.append((i, pathi[i]))
-            # 无向图暂时先这样写
+            # 无向图暂时先这样写 怕颜色被覆盖了 但是有向图这样写也没有关系 
             red_edges.append((pathi[i], i))
     
     edge_colors = ['black' if not edge in red_edges else 'red' for edge in G.edges()]

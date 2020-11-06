@@ -160,6 +160,12 @@ All error reports in the software will be reported with python error messages, a
 
 This method is the only calculation interface of the software. By calling this method, the shortest path of the graph can be directly calculated. See ([func calc](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-1)) for more information. 
 
+
+
+#### func INF()
+
+This method will return the positive infinity in this tool.
+
 ------
 
 
@@ -214,7 +220,7 @@ The adjacency matrix is an n × n two-dimensional array to represent a graph, an
 
 Since this tool is a shortest-path calculator, more strictly speaking, `matrix[i][j] = w` should be the side weight of the shortest of all edges of the representation from node `i` to node `j` is `w`.
 
-Since this tool calculates in the range of a 32-bit integer, positive infinity in this tool is a number that is very close to the maximum number that can be represented by a 32-bit integer. The positive infinity of this tool can be returned with `func: calc.INF`.
+Since this tool calculates in the range of a 32-bit integer, positive infinity in this tool is a number that is very close to the maximum number that can be represented by a 32-bit integer. The positive infinity of this tool can be returned with `func: calc.INF()`.
 
 The above figure translates into an adjacency matrix as follows：
 
@@ -646,6 +652,50 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
 - data2, the second data to be tested, required. list.
 - name1, the first data name, the default is'data1'. str.
 - name2, the second data name, the default is'data2'. str.
+
+#### Return
+
+str, equal or not equal
+
+
+
+### func userTest()
+
+#### Function
+
+The test interface provided to users, users can complete the test of the correctness of the tool by calling this function and passing in `STD`.
+
+#### Structure
+
+```python
+def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
+    """
+    function: 
+        an interface to prove the correctness of this algorithm with the standard input&output graph data that user provides
+        this algorithm will calculate an answer to the input graph and compare answer with the output graph in APSP problem
+        hence, we could prove the correctness of this algorithm
+        we will test all of out calculating flow in this algorithm if the method is defined as None
+        since this function is only for correctness proving, so there's no need to consider the performance with other config parameters
+    
+    parameters: 
+        inputGraph: the graph data that you want to get the shortest path. [CSR edgeSet Matrix]
+        graphType: type of the input graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
+        outputGraph:the graph data of answer that you want to get the shortest path. [only in matrix format]
+        method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        useCUDA: use CUDA to speedup or not.
+    
+    return:
+        no return but print the result of proving 
+    """
+```
+
+#### Parameters
+
+- inputGraph, graph data, required. CSR/edgeSet/matrix/filename.
+- graphType, the type of the input graph data, required. CSR/edgeSet/matrix/filename.
+- outputGraph, the standard output provided by the user, is required. list.
+- method, the algorithm you want to test, the default default is None, that is, all tests. str.
+- UseCUDA, whether to test only parallel algorithms. bool.
 
 #### Return
 
@@ -1252,6 +1302,12 @@ array([ 0,  9,  6, 13])
 
 该方法是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-3)。
 
+
+
+#### func INF()
+
+该方法会返回工具中的正无穷
+
 ------
 
 
@@ -1305,7 +1361,7 @@ array([ 0,  9,  6, 13])
 
 由于本工具是最短路径计算工具，更严格地说， `matrix[i][j] = w` 应该是表示的结点 `i` 到结点 `j` 的所有边中最短的边的边权是 `w` 。
 
-由于本工具是在32位整型的范围中进行计算，因此，本工具中的正无穷是一个很接近32位整型能表示的最大数的一个数。可以通过 `func: calc.INF` 返回本工具的正无穷。
+由于本工具是在32位整型的范围中进行计算，因此，本工具中的正无穷是一个很接近32位整型能表示的最大数的一个数。可以通过 `func: calc.INF()` 返回本工具的正无穷。
 
 上转化为邻接矩阵如下：
 
@@ -1737,6 +1793,50 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
 - data2，第二个待检测的数据，必填。list。
 - name1，第一个数据名字，缺省为 'data1'。str。
 - name2，第二个数据名字，缺省为 'data2'。str。
+
+#### 返回值
+
+str， 相等或者不相等
+
+
+
+### func userTest()
+
+#### 功能
+
+提供给用户的测试接口，用户可以通过此函数的调用和传入 `STD` 完成对工具正确性的测试。
+
+#### 结构
+
+```python
+def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
+    """
+    function: 
+        an interface to prove the correctness of this algorithm with the standard input&output graph data that user provides
+        this algorithm will calculate an answer to the input graph and compare answer with the output graph in APSP problem
+        hence, we could prove the correctness of this algorithm
+        we will test all of out calculating flow in this algorithm if the method is defined as None
+        since this function is only for correctness proving, so there's no need to consider the performance with other config parameters
+    
+    parameters: 
+        inputGraph: the graph data that you want to get the shortest path. [CSR edgeSet Matrix]
+        graphType: type of the input graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
+        outputGraph:the graph data of answer that you want to get the shortest path. [only in matrix format]
+        method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        useCUDA: use CUDA to speedup or not.
+    
+    return:
+        no return but print the result of proving 
+    """
+```
+
+#### parameters
+
+- inputGraph，图数据，必填。CSR/edgeSet/matrix/filename。
+- graphType， 输入的图数据的类型，必填。CSR/edgeSet/matrix/filename。
+- outputGraph，用户提供的标准输出，必填。list。
+- method，您想要测试的算法，缺省默认 None，即全部测试。str。
+- useCUDA，是否只测试并行算法。bool。
 
 #### 返回值
 
