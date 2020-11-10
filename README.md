@@ -149,7 +149,7 @@ Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/t
 
 #### 环境依赖
 
-**window：**
+**windows：**
 
 > python 3.6/3.7
 >
