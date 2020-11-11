@@ -17,10 +17,10 @@ def delta_stepping(para):
         use delta_stepping algorithm in GPU to solve the SSSP. 
     
     parameters:  
-        class, Parameter object.
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return: 
-        class, Result object. (more info please see the developer documentation) .
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
     logger.info("turning to func delta_stepping-gpu-sssp")    

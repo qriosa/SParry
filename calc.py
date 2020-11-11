@@ -41,7 +41,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
 
     return:
-        class, Result object. (more info please see the developer documentation).  
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
     # 跳转到 dispatch 函数进行分发
     # we only accept graphic data in edgeSet format 

@@ -14,7 +14,7 @@ def read(filename = 'data.txt', directed = False):
         filename: str, the graph data file name.
     
     return:
-        class, Graph object.
+        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')
     """
 
     logger.info("entering read func.")

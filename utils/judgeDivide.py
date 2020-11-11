@@ -123,7 +123,7 @@ def judge(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object.
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
     
     return:
         bool, True/False. (more info please see the developer documentation).

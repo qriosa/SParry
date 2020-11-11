@@ -24,7 +24,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (more info please see the developer documentation).  
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
     logger.info(f"begin to dispatch ... ")

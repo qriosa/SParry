@@ -23,14 +23,14 @@ logger = Logger(__name__)
 
 def spfa(para):
     """
-	function: use Bellman-Ford algorithm in GPU to solve the APSP . 
+	function: 
+        use Bellman-Ford algorithm in GPU to solve the APSP . 
 	
 	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        pathRecordingBool: record the path or not.
+		class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
 	
-	return: Result(class).(more info please see the developer documentation) .      
+	return: 
+        class, Result object.  (see the 'SPoon/classes/result.py/Result')   
     """
 
     logger.info("turning to func spfa-gpu-apsp")

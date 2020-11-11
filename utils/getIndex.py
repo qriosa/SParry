@@ -11,7 +11,7 @@ def getIndex(para):
         and if the algorithm is 'delta_stepping' it will also get the delta value. 
     
     parameters:
-        para: class, Parameters object. (more info please see the developer documentation) . 
+        para: class, Parameters object. (see the 'SPoon/classes/parameter.py/Parameter')
     
     return: 
         None, no return.

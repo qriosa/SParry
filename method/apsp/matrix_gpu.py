@@ -12,7 +12,8 @@ from pycuda.compiler import SourceModule
 
 def matrix(matrix, n, pathRecordBool = False):
     """
-    function: use Floyd-Warshall algorithm in GPU to solve the APSP. 
+    function: 
+        use Floyd-Warshall algorithm in GPU to solve the APSP. 
         (more info please see the developer documentation) .
     
     parameters:  
@@ -20,7 +21,8 @@ def matrix(matrix, n, pathRecordBool = False):
         n: the number of the vertices in the graph.
         pathRecordBool: record the path or not.
     
-    return: Result(class).(more info please see the developer documentation) . 
+    return:
+        class, Result object. (see the 'SPoon/classes/result.py/Result')
     """
 
     with open('./method/apsp/cu/matrix.cu', 'r', encoding = 'utf-8') as f:

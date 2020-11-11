@@ -18,10 +18,10 @@ def dijkstra(para):
         use dijkstra algorithm in GPU to solve the MSSP. 
     
     parameters:  
-        class, Parameter object.
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return: 
-        class, Result object. (more info please see the developer documentation) .    
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
     logger.info("turning to func dijkstra-gpu-mssp")

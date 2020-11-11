@@ -66,6 +66,22 @@ Download the file package directly and run the `calc` interface function in the 
 
 
 
+## Test&Result
+
+We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs. The following shows the running effect diagram of each algorithm in the figure of `M=10*N`. For more detailed data, please refer to [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult) .
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_gpu_timecost_by_N_M=10N.png" alt="spoon_gpu_timecost_by_N_M=10N" style="zoom:50%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_GPUoverCPU_by_N_M=10N.png" alt="spoon_speedUp_GPUoverCPU_by_N_M=10N" style="zoom:50%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N.png" alt="spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N" style="zoom:50%;" />
+
+
+
 ## Quick start tutorial
 
 This section is an introduction to help beginners of `SPoon` get started quickly.
@@ -1205,6 +1221,20 @@ class Graph(object):
 ## 流程图
 
 ![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
+
+
+
+## 测试和效果
+
+我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上的用时情况和串并行加速比。下面展示了 `M=10*N` 的图中各个算法的运行效果图，更详细的数据请查阅 [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult)。
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_gpu_timecost_by_N_M=10N.png" alt="spoon_gpu_timecost_by_N_M=10N" style="zoom:50%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_GPUoverCPU_by_N_M=10N.png" alt="spoon_speedUp_GPUoverCPU_by_N_M=10N" style="zoom:50%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N.png" alt="spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N" style="zoom:50%;" />
 
 
 

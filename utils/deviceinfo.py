@@ -11,7 +11,7 @@ def deviceinfo():
         None.
     
     return: 
-        class, Device object. (more info please see the developer documentation).
+        class, Device object.(see the 'SPoon/classes/device.py/Device')
     """
 
     # 实例化类
