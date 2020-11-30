@@ -1,9 +1,12 @@
 # [SPoon](https://github.com/LCX666/SPoon)
-![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_logo.png)
+
+![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_logo.jpg)
 
 **SPoon** is a shortest path calc tool using some algorithms with cuda to speedup.
 
 It's **developing**.
+
+
 
 ------
 
@@ -13,9 +16,13 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 
 
 
-### Installation
+------
 
-#### Environment & Dependence
+## Installation
+
+### Environment & Dependence
+
+The following is the environment that passed the test in the development experiment.
 
 **window：**
 
@@ -27,13 +34,11 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 >
 > CUDA Version  10.2.89
 >
-> cudnn 7.6.5
->
 > networkx 2.4
 >
-> cyaron 0.4.2
->
 > logging 0.5.1.2
+>
+> pynvml 8.0.4
 
 **linux**
 
@@ -45,27 +50,35 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 >
 > CUDA Version 10.1.243
 >
-> cudnn ?
+> networkx 2.4
+>
+> logging 0.5.1.2
+>
+> pynvml 8.0.4
 
-#### Installation
+<br>
 
-Download the file package directly and run the `calc` interface function in the main directory.
+### Installation
+
+Download the file package directly and run the `calc` interface function **in the main directory**.
 
 **It's not not a release version currently, so it cannot be installed with pip, and the development structure is not yet perfect. **
 
 
 
-### flow chart
+------
+
+## flow chart
 
 ![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
 
 
 
+------
+
 ## Test&Result
 
-We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs. The following shows the running effect diagram of each algorithm in the figure of `M=10*N`. For more detailed data, please refer to [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult) .
-
-
+We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs to solve the **single-source shortest path (SSSP)**. The following shows the running effect diagram of each algorithm in the figure of `M=10*N`. For more detailed data, please refer to [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult) .
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
 
@@ -77,11 +90,13 @@ We have conducted a lot of tests on this tool, and no errors occurred in the tes
 
 
 
-### Quick start tutorial
+------
+
+## Quick start tutorial
 
 This section is an introduction to help beginners of `SPoon` get started quickly.
 
-#### step1. cd to the current root directory
+### step1. cd to the current root directory
 
 ```powershell
 cd XXX/spoon/
@@ -89,9 +104,11 @@ cd XXX/spoon/
 
 
 
-#### step2. Import calculation interface
+### step2. Import calculation interface
 
-- When your graph data is **in memory** and **meets the data requirements**, you can import your data as follows to quickly calculate the results.
+#### In Memory
+
+- When your graph data is **in memory** and **meets the data requirements** ([see here](https://github.com/LCX666/SPoon/blob/main/tutorials.md#csr)), you can import your data as follows to quickly calculate the results.
 
 ```python
 >>> from calc import calc
@@ -105,7 +122,7 @@ array([[0, 1, 2, 3],
 >>>
 >>> result = calc(graph = matrix, # Graph data
 ... graphType = 'matrix', # Graph format
-... srclist = 0, # Calculate the shortest path of a single source. The source point is node 0
+... srclist = 0, # Calculate the shortest path of a single source. The source vertex is node 0
 ... useCUDA = True) # Use CUDA for acceleration 
 >>>
 >>> result.dist
@@ -114,14 +131,16 @@ array([0, 1, 2, 3])
 >>> result.display()
 '\n计算方法\tmethod = dij, \n使用CUDA\tuseCUDA = True, \n源点列表\tsrclist = 0, \n问题类型\tsourceType = SSSP, \n记录路 径\tpathRecord = False, \n\n结点数量\tn = 4, \n无向边数量\tm = 15, \n最大边权\tMAXW = 4, \n计算用时\ttimeCost = 0.009 sec'
 >>>
->>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange point is the source point; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
+>>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
 ```
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103113127.png" alt="image-20201104103113127"  />
 
 
 
-- You can also pass **in a file** to calculate the shortest path when your graph data is stored in a file and **meets the data requirements**.
+#### In File
+
+- You can also pass **in a file** to calculate the shortest path when your graph data is stored in a file and **meets the data requirements**. ([see here](https://github.com/LCX666/SPoon/blob/main/tutorials.md#file-format))
 
 ```python
 >>> from calc import calc
@@ -131,7 +150,7 @@ array([0, 1, 2, 3])
 >>> 
 >>> result = calc(graph = filename, # Graph
 ... graphType = 'edgeSet', # Graph format
-... srclist = 0, # Calculate the shortest path of a single source. The source point is node 0
+... srclist = 0, # Calculate the shortest path of a single source. The source vertex is node 0
 ... useCUDA = True) # Use CUDA for acceleration
 >>>
 >>> result.dist
@@ -140,7 +159,7 @@ array([ 0,  9,  6, 13])
 >>> result.display()
 '\n结点数量\tn = 4, \n无向边数量\tm = 8, \n最大边权\tMAXW = 28, \n最大度\tdegree(0) = 7, \n最小度\tdegree(3) = 1, \n用时 t = 0.000 s \n\n计算方法\tmethod = dij, \n使用CUDA\tuseCUDA = True, \n源点列表\tsrclist = 0, \n问题类型\tsourceType = SSSP, \n记录路径\tpathRecord = False, \n\n结点数量\tn = 4, \n无向边数量\tm = 8, \n最大边权\tMAXW = 25, \n计算用时\ttimeCost = 0.0 sec'
 >>>
->>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange point is the source point; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
+>>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
 ```
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103213127.png" alt="image-20201104113340700" style="zoom: 67%;" />
@@ -163,11 +182,15 @@ Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/t
 
 
 
-### 安装
+------
 
-#### 环境依赖
+## 安装
 
-**windows：**
+### 环境依赖
+
+下面是开发实验中通过测试的环境。
+
+**window：**
 
 > python 3.6/3.7
 >
@@ -177,43 +200,53 @@ Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/t
 >
 > CUDA Version  10.2.89
 >
-> cudnn 7.6.5
->
 > networkx 2.4
 >
-> cyaron 0.4.2
->
 > logging 0.5.1.2
+>
+> pynvml 8.0.4
 
 **linux**
 
 > python 3.6
 >
-> pycuda ?
+> pycuda 2019.1.2
 >
 > numpy 1.19.2
 >
 > CUDA Version 10.1.243
 >
-> cudnn ?
+> networkx 2.4
+>
+> logging 0.5.1.2
+>
+> pynvml 8.0.4
 
-#### 安装
+<br>
 
-直接下载文件包，即可在主目录中运行 `calc` 接口函数。
+### 安装
+
+直接下载文件包，即可在**主目录**中运行 `calc` 接口函数。
 
 **目前不是发行版本，故不可pip安装，开发结构尚不是很完善。**
 
 
 
-### 流程图
+------
+
+## 流程图
 
 ![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
 
 
 
+
+
+------
+
 ## 测试和效果
 
-我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上的用时情况和串并行加速比。下面展示了 `M=10*N` 的图中各个算法的运行效果图，更详细的数据请查阅 [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult)。
+我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上计算**单源最短路径问题(SSSP)**的用时情况和串并行加速比。下面展示了 `M=10*N` 的图中各个算法的运行效果图，更详细的数据请查阅 [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult)。
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
 
@@ -225,11 +258,13 @@ Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/t
 
 
 
-### 快速入门教程
+------
+
+## 快速入门教程
 
 本节是帮助 `SPoon` 新手快速上手的简介。
 
-#### step1. cd 到当前根目录
+### step1. cd 到当前根目录
 
 ```powershell
 cd XXX/spoon/
@@ -237,9 +272,11 @@ cd XXX/spoon/
 
 
 
-#### step2. 导入计算接口
+### step2. 导入计算接口
 
-- 当您的图数据在**内存**中并**符合数据要求** 时，可以像下面一样导入您的数据，快速计算结果。
+#### 内存数据
+
+- 当您的图数据在**内存**中并**符合数据要求** （[内存数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5)）时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
@@ -267,7 +304,9 @@ array([0, 1, 2, 3])
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103113127.png" alt="image-20201104103113127"  />
 
-- 当您的图数据存储在**文件**中并**符合数据要求时**，您也可以传入文件来计算最短路径。
+#### 文件数据
+
+- 当您的图数据存储在**文件**中并**符合数据要求时** ([文件数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F))，您也可以传入文件来计算最短路径。
 
 ```python
 >>> from calc import calc
@@ -401,10 +440,20 @@ array([ 0,  9,  6, 13])
 
 ## ToDo
 
-- [ ] fw 或者 matrix 给跑起来(新文章)
+- [ ] ~~fw 或者 matrix 给跑起来(新文章)~~
 - [x] 开发者文档
 - [x] 用法截图
-- [ ] 大规模集成测试
+- [x] 大规模集成测试
 - [x] 简单usage
 - [x] 在哪个文件夹下各个类
 - [ ] ~~在开发者文档中添加各个类~~
+- [x] 利用集群上跑的数据对分图实际效果进行测试
+- [x] ~~添加多线程支持，待修改开发者文档到一致，但是在开倒车~~
+- [ ] 对集群 dijkstra 并行的不一样进行测试
+- [ ] 转入多进程
+- [x] 获取的part多源和全源还需要修改计算公式
+- [x] 更新 judge 的文档 分图的文档 多进程接口的文档
+- [x] 更新了 logo
+- [x] 修复文档中的一些纰漏
+- [x] 添加换行和分割线 
+- [x] 英文大小写 和 逗号冒号

@@ -1,6 +1,6 @@
 # [SPoon](https://github.com/LCX666/SPoon)
 
-![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_logo.png)
+![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_logo.jpg)
 
 **SPoon** is a shortest path calc tool using some algorithms with cuda to speedup.
 
@@ -16,9 +16,13 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 
 
 
+------
+
 ## Installation
 
 ### Environment & Dependence
+
+The following is the environment that passed the test in the development experiment.
 
 **window：**
 
@@ -30,35 +34,39 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 >
 > CUDA Version  10.2.89
 >
-> cudnn 7.6.5
->
 > networkx 2.4
 >
-> cyaron 0.4.2
->
 > logging 0.5.1.2
+>
+> pynvml 8.0.4
 
 **linux**
 
 > python 3.6
 >
-> pycuda ?
+> pycuda 2019.1.2
 >
 > numpy 1.19.2
 >
 > CUDA Version 10.1.243
 >
-> cudnn ?
+> networkx 2.4
+>
+> logging 0.5.1.2
+>
+> pynvml 8.0.4
+
+<br>
 
 ### Installation
 
-Download the file package directly and run the `calc` interface function in the main directory.
+Download the file package directly and run the `calc` interface function **in the main directory**.
 
 **It's not not a release version currently, so it cannot be installed with pip, and the development structure is not yet perfect. **
 
 
 
-
+------
 
 ## flow chart
 
@@ -66,11 +74,11 @@ Download the file package directly and run the `calc` interface function in the 
 
 
 
+------
+
 ## Test&Result
 
-We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs. The following shows the running effect diagram of each algorithm in the figure of `M=10*N`. For more detailed data, please refer to [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult) .
-
-
+We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs to solve the **single-source shortest path (SSSP)**. The following shows the running effect diagram of each algorithm in the figure of `M=10*N`. For more detailed data, please refer to [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult) .
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
 
@@ -81,6 +89,8 @@ We have conducted a lot of tests on this tool, and no errors occurred in the tes
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N.png" alt="spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N" style="zoom:50%;" />
 
 
+
+------
 
 ## Quick start tutorial
 
@@ -96,7 +106,9 @@ cd XXX/spoon/
 
 ### step2. Import calculation interface
 
-- When your graph data is **in memory** and **meets the data requirements**, you can import your data as follows to quickly calculate the results.
+#### In Memory
+
+- When your graph data is **in memory** and **meets the data requirements** ([see here](https://github.com/LCX666/SPoon/blob/main/tutorials.md#csr)), you can import your data as follows to quickly calculate the results.
 
 ```python
 >>> from calc import calc
@@ -110,7 +122,7 @@ array([[0, 1, 2, 3],
 >>>
 >>> result = calc(graph = matrix, # Graph data
 ... graphType = 'matrix', # Graph format
-... srclist = 0, # Calculate the shortest path of a single source. The source point is node 0
+... srclist = 0, # Calculate the shortest path of a single source. The source vertex is node 0
 ... useCUDA = True) # Use CUDA for acceleration 
 >>>
 >>> result.dist
@@ -119,14 +131,16 @@ array([0, 1, 2, 3])
 >>> result.display()
 '\n计算方法\tmethod = dij, \n使用CUDA\tuseCUDA = True, \n源点列表\tsrclist = 0, \n问题类型\tsourceType = SSSP, \n记录路 径\tpathRecord = False, \n\n结点数量\tn = 4, \n无向边数量\tm = 15, \n最大边权\tMAXW = 4, \n计算用时\ttimeCost = 0.009 sec'
 >>>
->>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange point is the source point; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
+>>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
 ```
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103113127.png" alt="image-20201104103113127"  />
 
 
 
-- You can also pass **in a file** to calculate the shortest path when your graph data is stored in a file and **meets the data requirements**.
+#### In File
+
+- You can also pass **in a file** to calculate the shortest path when your graph data is stored in a file and **meets the data requirements**. ([see here](https://github.com/LCX666/SPoon/blob/main/tutorials.md#file-format))
 
 ```python
 >>> from calc import calc
@@ -136,7 +150,7 @@ array([0, 1, 2, 3])
 >>> 
 >>> result = calc(graph = filename, # Graph
 ... graphType = 'edgeSet', # Graph format
-... srclist = 0, # Calculate the shortest path of a single source. The source point is node 0
+... srclist = 0, # Calculate the shortest path of a single source. The source vertex is node 0
 ... useCUDA = True) # Use CUDA for acceleration
 >>>
 >>> result.dist
@@ -145,16 +159,16 @@ array([ 0,  9,  6, 13])
 >>> result.display()
 '\n结点数量\tn = 4, \n无向边数量\tm = 8, \n最大边权\tMAXW = 28, \n最大度\tdegree(0) = 7, \n最小度\tdegree(3) = 1, \n用时 t = 0.000 s \n\n计算方法\tmethod = dij, \n使用CUDA\tuseCUDA = True, \n源点列表\tsrclist = 0, \n问题类型\tsourceType = SSSP, \n记录路径\tpathRecord = False, \n\n结点数量\tn = 4, \n无向边数量\tm = 8, \n最大边权\tMAXW = 25, \n计算用时\ttimeCost = 0.0 sec'
 >>>
->>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange point is the source point; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
+>>> result.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
 ```
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103213127.png" alt="image-20201104113340700" style="zoom: 67%;" />
 
 
 
+
+
 ------
-
-
 
 ## Interface
 
@@ -162,17 +176,17 @@ array([ 0,  9,  6, 13])
 
 This tool is still in the initial development iterative version, and the pip station has not been uploaded.
 
-
+<br>
 
 ### Error Reporting
 
 All error reports in the software will be reported with python error messages, and hint sentences are embedded in some places where errors are expected.
 
-
+<br>
 
 ### Calculation Interface
 
-#### func calc
+#### func calc()
 
 This method is the only calculation interface of the software. By calling this method, the shortest path of the graph can be directly calculated. See ([func calc](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-1)) for more information. 
 
@@ -182,15 +196,15 @@ This method is the only calculation interface of the software. By calling this m
 
 This method will return the positive infinity in this tool.
 
+
+
 ------
-
-
 
 ## Data Type & Specification
 
-1. The current version of this tool only supports data with 32-bit integers. Therefore, the edge weights, the number of points and the number of edges must be within the range of what a 32-bit integer can express. Also the calculated shortest path result value should not be outside the range of the 32-bit integer. One explanation for this is that most current data problems can be solved within the range of 32-bit integers. The second is that most non-professional NVIDIA GPUs are neutered for 64-bit and therefore do not support 64-bit data.
+1. The current version of this tool only supports data with 32-bit integers. Therefore, the edge weights, the number of vertices and the number of edges must be within the range of what a 32-bit integer can express. Also the calculated shortest path result value should not be outside the range of the 32-bit integer. One explanation for this is that most current data problems can be solved within the range of 32-bit integers. The second is that most non-professional NVIDIA GPUs are neutered for 64-bit and therefore do not support 64-bit data.
 
-2. In this tool, all graphs are numbered from node 0 by default. Therefore graphs numbered from node 1 should ignore the data from the first node and start with the second data. (At this point the number of nodes perceived in the tool will be 1 more than the true number of nodes in the graph, because the tool always thinks there is another node 0.
+2. In this tool, all graphs are numbered from vertex0 by default. Therefore graphs numbered from vertex1 should ignore the data from the first vertexand start with the second data. (At this vertex the number of nodes perceived in the tool will be 1 more than the true number of nodes in the graph, because the tool always thinks there is another vertex0.
 
 
 
@@ -223,7 +237,7 @@ The above graph, when stored in a file, should be in the following format.
     - Default parameter directed = False. The default graph is an undirected graph.
 - Second row to fifth row: 3 integers, representing an edge.
   - The first parameter represents the start of the current edge.
-  - The second parameter represents the endpoint of the current side.
+  - The second parameter represents the endvertex of the current side.
   - The third parameter represents the side weight of the current edge.
 - Sixth row(the last row): A blank line.
   - **End of document with a blank line**
@@ -232,9 +246,9 @@ The above graph, when stored in a file, should be in the following format.
 
 #### Adjacency Matrix
 
-The adjacency matrix is an n × n two-dimensional array to represent a graph, any one element of the matrix can represent an edge. That is, `matrix[i][j] = w` means that there is at least one edge in the graph from node `i` to node `j`, and its edge weight is `w`.
+The adjacency matrix is an n × n two-dimensional array to represent a graph, any one element of the matrix can represent an edge. That is, `matrix[i][j] = w` means that there is at least one edge in the graph from vertex`i` to vertex`j`, and its edge weight is `w`.
 
-Since this tool is a shortest-path calculator, more strictly speaking, `matrix[i][j] = w` should be the side weight of the shortest of all edges of the representation from node `i` to node `j` is `w`.
+Since this tool is a shortest-path calculator, more strictly speaking, `matrix[i][j] = w` should be the side weight of the shortest of all edges of the representation from vertex`i` to vertex`j` is `w`.
 
 Since this tool calculates in the range of a 32-bit integer, positive infinity in this tool is a number that is very close to the maximum number that can be represented by a 32-bit integer. The positive infinity of this tool can be returned with `func: calc.INF()`.
 
@@ -254,11 +268,11 @@ array([[0, 1, 3, 2139045759],
 
 #### CSR
 
-CSR is the main storage and computing method of this tool, which saves memory space in most cases compared to the adjacency matrix storage method. It also saves memory space when using GPU to accelerate computation. It is represented by three one-dimensional arrays: `V`, `E` and `W`. In this tool, these three arrays are combined in the order of `V`, `E` and `W` to form CSR.
+`CSR` is the main storage and computing method of this tool, which saves memory space in most cases compared to the adjacency matrix storage method. It also saves memory space when using GPU to accelerate computation. It is represented by three one-dimensional arrays: `V`, `E` and `W`. In this tool, these three arrays are combined in the order of `V`, `E` and `W` to form CSR.
 
-The `V` array is the starting subscript of the first edge of each node in the `E` array, and its dimension is the number of points in the diagram, but for the convenience of calculation, a virtual node is usually added at the end to determine whether the end is reached or not. So the dimension must be strictly virtual nodes in this tool.
+The `V` array is the starting subscript of the first edge of each vertexin the `E` array, and its dimension is the number of vertices in the diagram, but for the convenience of calculation, a virtual vertexis usually added at the end to determine whether the end is reached or not. So the dimension must be strictly virtual nodes in this tool.
 
-The `E` array is a record of which node each edge ends at. Its dimension is therefore strictly the number of (directed) edges in the graph, and an undirected edge is represented by two directed edges in this tool.
+The `E` array is a record of which vertexeach edge ends at. Its dimension is therefore strictly the number of (directed) edges in the graph, and an undirected edge is represented by two directed edges in this tool.
 
 The `W` array is a record of the edge weights of each edge corresponding to the `E` array, so its dimension is also strictly the number of edges in the graph.
 
@@ -282,13 +296,13 @@ In [4]: W
 Out[4]: array([1, 3, 4, 5])
 ```
 
-**A virtual node at the end of V to define the boundary.**
+**A virtual vertexat the end of V to define the boundary.**
 
 
 
 #### edgeSet
 
-edgeSet is a ternary list where the first list represents the starting point of all edges, the second list represents the end point of all edges, and the third list represents the edge weights of all edges.
+`edgeSet` is a ternary list where the first list represents the starting vertex of all edges, the second list represents the end vertex of all edges, and the third list represents the edge weights of all edges.
 
 The above figure translates into an edgeSet array as follows
 
@@ -299,15 +313,15 @@ Out[1]: [[0, 0, 2, 1], [1, 3, 1, 3], [1, 2, 5, 4]]
 
 **If it is an undirected edge it needs to be represented as two directed edges in the above list and then passed in.**
 
-
+<br>
 
 ### Constants
 
-INF: positive infinity in this tool. it's 2139045759
+INF: Positive infinity in this tool. it's 2139045759
+
+
 
 ------
-
-
 
 ## Func
 
@@ -330,6 +344,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         directed: bool, directed or not. only valid in read graph from file.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
@@ -337,7 +352,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
 
     return:
-        class, Result object. (more info please see the developer documentation).  
+        class, Result object. (see the 'SPoon/classes/result.py/Result')  
     """
     return result
 ```
@@ -360,17 +375,25 @@ This method is an interface function, and the meaning of each parameter is as fo
   3. delta: Means to use the `delta-stepping` algorithm to solve the shortest path.
   4. edge: Indicates that fine-grained edges are used to calculate the shortest path.
 - useCUDA, whether to use CUDA acceleration, the default is True. bool. It can only be of the following types:
-  1. True: means to use CUDA for acceleration.
+  1. True: Means to use CUDA for acceleration.
   2. False: Indicates that only the CPU is used for serial calculation.
+
+- useMultiPro, whether to use CPU multi-process to accelerate calculation, the default is False. bool. It can only be of the following types:
+
+  1. True: Indicates that the CPU multi-process is used for accelerated calculation.
+
+  2. False: Indicates that the CPU multi-process is not used for acceleration calculation.
+
+     **It should be noted that this parameter is meaningful only when `method` is specified as `dij` and `useCUDA` is `False`, and the problem to be solved is `APSP` or `MSSP`. **
 - directed, whether the graph is directed, the default is False. bool. It can only be of the following types:
-  1. True: indicates that the graph is a directed graph.
-  2. False: indicates that the graph is undirected.
+  1. True: Indicates that the graph is a directed graph.
+  2. False: Indicates that the graph is undirected.
 - pathRecordBool, whether to record the path of the shortest path, the default is False. bool. It can only be of the following types:
   1. True: Indicates the path of the shortest path needs to be recorded.
-  2. False: indicates that the path does not need to be calculated, only the value of the path is required.
-- srclist, the collection of source points, the default is None. int/list/None. It can be of the following three types:
-  1. int: An integer, representing a node in the graph as the source point for the shortest path calculation.
-  2. List: A list, each element in the list is int, which means that these points in the graph are source points, and the corresponding shortest paths need to be calculated separately.
+  2. False: Indicates that the path does not need to be calculated, only the value of the path is required.
+- srclist, the collection of source vertices, the default is None. int/list/None. It can be of the following three types:
+  1. int: An integer, representing a vertexin the graph as the source vertex for the shortest path calculation.
+  2. List: A list, each element in the list is int, which means that these vertices in the graph are source vertices, and the corresponding shortest paths need to be calculated separately.
   3. None: A null value, indicating the shortest path of all sources in the calculation graph.
 - block, the structure of thread block, the default program will automatically set. It can only be a triple `(x, y, z)`.
 - grid, the structure of thread block, the default program will automatically set. It can only be a two-tuple `(x, y)`.
@@ -379,7 +402,7 @@ This method is an interface function, and the meaning of each parameter is as fo
 
 The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
-
+<br>
 
 ### func dispatcher()
 
@@ -390,7 +413,7 @@ The task scheduling function judges the direction of the program according to th
 #### Structure
 
 ```python
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, block, grid):
+def dispatch(graph, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, msg, block, grid):
     """
     function: 
         schedule the program by passing in parameters.
@@ -400,6 +423,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
         msg: the info of the graph.
@@ -407,7 +431,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (more info please see the developer documentation). 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
    
@@ -427,19 +451,27 @@ This method is a transfer-in function inherited by the interface function. The m
   2. CSR: Indicates that the incoming data is a compressed adjacency matrix.
   3. edgeSet: Indicates that the incoming data is an edge set array or a file.
 - method, the shortest path calculation method used, the default is'dij'. str. It can only be of the following types:
-  1. dij: means to use the `dijkstra` algorithm to solve the shortest path.
+  1. dij: Means to use the `dijkstra` algorithm to solve the shortest path.
   2. spfa: Means to use the `bellman-ford` algorithm to solve the shortest path.
   3. delta: Means to use the `delta-stepping` algorithm to solve the shortest path.
   4. edge: Indicates that fine-grained edges are used to calculate the shortest path.
 - useCUDA, whether to use CUDA acceleration, the default is True. bool. It can only be of the following types:
-  1. True: means to use CUDA for acceleration.
+  1. True: Means to use CUDA for acceleration.
   2. False: Indicates that only the CPU is used for serial calculation.
+
+- useMultiPro, whether to use CPU multi-process to accelerate calculation, the default is False. bool. It can only be of the following types:
+
+  1. True: Indicates that the CPU multi-process is used for accelerated calculation.
+
+  2. False: Indicates that the CPU multi-process is not used for acceleration calculation.
+
+     **It should be noted that this parameter is meaningful only when `method` is specified as `dij` and `useCUDA` is `False`, and the problem to be solved is `APSP` or `MSSP`. **
 - pathRecordBool, whether to record the path of the shortest path, the default is False. bool. It can only be of the following types:
   1. True: Indicates the path of the shortest path needs to be recorded.
-  2. False: indicates that the path does not need to be calculated, only the value of the path is required.
-- srclist, the collection of source points, the default is None. int/list/None. It can be of the following three types:
-  1. int: An integer, representing a node in the graph as the source point for the shortest path calculation.
-  2. List: A list, each element in the list is int, which means that these points in the graph are source points, and the corresponding shortest paths need to be calculated separately.
+  2. False: Indicates that the path does not need to be calculated, only the value of the path is required.
+- srclist, the collection of source vertices, the default is None. int/list/None. It can be of the following three types:
+  1. int: An integer, representing a vertexin the graph as the source vertex for the shortest path calculation.
+  2. List: A list, each element in the list is int, which means that these vertices in the graph are source vertices, and the corresponding shortest paths need to be calculated separately.
   3. None: A null value, indicating the shortest path of all sources in the calculation graph.
 - block, the structure of thread block, the default program will automatically set. It can only be a triple `(x, y, z)`.
 - grid, the structure of thread block, the default program will automatically set. It can only be a two-tuple `(x, y)`.
@@ -448,7 +480,7 @@ This method is a transfer-in function inherited by the interface function. The m
 
 The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
-
+<br>
 
 ### func transfer()
 
@@ -465,7 +497,7 @@ def transfer(para, outType):
         transfer graph data from one format to another.
     
     parameters: 
-        para: class, Parameters object. (more info please see the developer documentation) .
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
         outType: str, the type you want to transfer.
     
     return: 
@@ -476,7 +508,7 @@ def transfer(para, outType):
 
 #### Parameters
 
-- para, the parameter class passed between functions. class parameter. The type is fixed.
+- para, the parameter class passed between functions. `class Parameter`.para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter) for details.The type is fixed.The type is fixed.
 - outType, the type of output you want to convert. str. Can be of the following types:
   1. matrix, represents the adjacency matrix.
   2. CSR, stands for compressed adjacency matrix.
@@ -486,7 +518,7 @@ def transfer(para, outType):
 
 None
 
-
+<br>
 
 ### func judge()
 
@@ -503,23 +535,24 @@ def judge(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object.
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return:
-        bool, True/False. (more info please see the developer documentation).
+        bool, [0/1/2]. (more info please see the developer documentation).  
+    """
 ```
 
 #### Parameters
 
-- para, the parameter class passed between functions. class parameter. The type is fixed.
+- para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter) for details.The type is fixed.
 
 #### Return
 
 - bool, whether to enable graph segmentation.
-  1. True: indicates that the graph segmentation algorithm needs to be enabled.
+  1. True: Indicates that the graph segmentation algorithm needs to be enabled.
   2. False: The graph segmentation algorithm does not need to be enabled.
 
-
+<br>
 
 ### func read()
 
@@ -539,7 +572,7 @@ def read(filename = 'data.txt', directed = False):
         filename: str, the graph data file name.
     
     return:
-        class, Graph object.
+        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')
     """
 ```
 
@@ -547,14 +580,14 @@ def read(filename = 'data.txt', directed = False):
 
 - filename, the name of the file to be read, required. str.
 - directed, whether the graph is directed, the default is False. bool. It can only be of the following types:
-  1. True: indicates that the graph is a directed graph.
-  2. False: indicates that the graph is undirected.
+  1. True: Indicates that the graph is a directed graph.
+  2. False: Indicates that the graph is undirected.
 
 #### Return
 
-The return value is an instance of `class Class`. Please refer to[class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result)for details.
+The return value is an instance of `class Class`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
-
+<br>
 
 ### func draw()
 
@@ -585,8 +618,8 @@ def draw(path, n, s, graph, graphType):
 
 - path, the precursor array of the shortest path, required. list.
 - n, the number of nodes in the figure, required. int.
-- s, the number of the source point, required. int.
-- graph, graph data, required, graph data for calculating the shortest path. See figure data specification.
+- s, the number of the source vertex, required. int.
+- graph, graph data, required, graph data for calculating the shortest path. See figure [data specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#data-type--specification).
 - graphType, the type of the incoming graph data, required. str. It can only be of the following three types:
   1. Matrix: Indicates that the incoming data is an adjacency matrix.
   2. CSR: Indicates that the incoming data is a compressed adjacency matrix.
@@ -596,46 +629,7 @@ def draw(path, n, s, graph, graphType):
 
 None
 
-
-
-### func generate()
-
-#### Function
-
-Generate a connected graph containing the specified number of points, number of edges, and edge weights.
-
-#### Structure
-
-```python
-def generate(filename = 'data0.txt', n = 1000, m = 30000, l = 1, r = 12):
-    """
-    function: 
-        generate a random graph to file. (more info please see the developer documentation). 
-
-    parameters:
-        filename: str, the filename of file to save the graph.
-        n: int, the number of the vertices in the graph.
-        m: int, the number of the edges in the graph.
-        l: int, the min value of a edge.
-        r: int, the max value of a edge.
-    
-    return: 
-        None, no return.
-```
-
-#### Parameters
-
-- filename, the name of the file where the generated image is stored, the default value is'data0.txt'. str.
-- n, the number of nodes in the generated graph, the default is 1000. int.
-- m, the number of edges of the generated graph, the default is 30000. int.
-- l, the lower bound of the edge weight in the figure, the default is 1. int.
-- r, the upper bound of the edge weight in the figure, the default is 12. int.
-
-#### Return
-
-None
-
-
+<br>
 
 ### func check()
 
@@ -673,7 +667,7 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
 
 str, equal or not equal
 
-
+<br>
 
 ### func userTest()
 
@@ -684,7 +678,7 @@ The test interface provided to users, users can complete the test of the correct
 #### Structure
 
 ```python
-def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
+def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, directed=False, useCUDA=True, useMultiPro = False):
     """
     function: 
         an interface to prove the correctness of this algorithm with the standard input&output graph data that user provides
@@ -698,10 +692,12 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
         graphType: type of the input graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         outputGraph:the graph data of answer that you want to get the shortest path. [only in matrix format]
         method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        directed: bool, directed or not. only valid in read graph from file.
         useCUDA: use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
     
     return:
-        no return but print the result of proving 
+        no return but print the result of proving.
     """
 ```
 
@@ -712,12 +708,13 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
 - outputGraph, the standard output provided by the user, is required. list.
 - method, the algorithm you want to test, the default default is None, that is, all tests. str.
 - UseCUDA, whether to test only parallel algorithms. bool.
+- useMultiPro, whether to test only multi-process algorithms. bool.
 
 #### Return
 
 str, equal or not equal
 
-
+<br>
 
 ### func [apsp, sssp, mssp].'[dij, delta, edge, spfa]'_[cpu, gpu]
 
@@ -730,37 +727,31 @@ Through the incoming parameters, the algorithm actually calculates the shortest 
 #### Structure
 
 ```python
-def dijkstra(CSR, n, s, pathRecordingBool = False):
+def dijkstra(para):
 	"""
-	function: use dijkstra algorithm in GPU to solve the SSSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        s: the source list, can be number.(more info please see the developer documentation).
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) . 
+    function: 
+        use dijkstra algorithm in CPU to solve the SSSP. 
+    
+    parameters:  
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+    
+    return: 
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
 	"""
 	...
 ```
 
 #### Parameters
 
-- CSR, CSR graph data.
-- n, the number of nodes in the figure, required. int.
-- s, the number of the source point, required. int.
-- pathRecordBool, whether to record the path of the shortest path, the default is False. bool. It can only be of the following types:
-  1. True: Indicates the path of the shortest path needs to be recorded.
-  2. False: indicates that the path does not need to be calculated, only the value of the path is required.
+- para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter) for details.The type is fixed.
 
 #### Return
 
 The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
 
+
+
 ------
-
-
 
 ## Class
 
@@ -792,7 +783,8 @@ class Result(object):
         drawPath: draw the path from vertices to the sources.
         calcPath: calc the path through the graph and dist.
     
-    return: Result object.
+    return: 
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
 	"""
 	def __init__(self, 
                 dist = None, 
@@ -858,13 +850,13 @@ class Result(object):
 #### Attributes
 
 - dist, the array of the shortest path calculation. np.array. The details are as follows:
-  1. If calculating the single-source shortest path, it is a one-dimensional array, `dist[i]` means the shortest distance from the source point to the node ʻi` in the current single-source shortest path problem.
-  2. If calculating the multi-source shortest path, it is a two-dimensional array composed of multiple one-dimensional arrays, `dist[i][j]` means that in the `i`th source single-source shortest path problem, the `th The shortest distance from i` sources to node `j`.
-  3. If the shortest path of all sources is calculated, it is a two-dimensional array of `n × n`, `dist[i][j]` means that in the single source shortest path problem of source point ʻi`, source point ʻi `The shortest distance to node `j`.
-- path, the path of the shortest path. np.array. The details are as follows:
-  1. If calculating the single-source shortest path, it is a one-dimensional array, `path[i]` means that in the current single-source shortest path problem, the predecessor node of node ʻi`, that is, the source point needs to be from the node `path[i]` reaches the node ʻi`.
-  2. If calculating the multi-source shortest path, it is a two-dimensional array composed of multiple one-dimensional arrays. `path[i][j]` means that in the `i`th source single-source shortest path problem, the `th i` source points need to reach the node `j` from the node `path[i][j]`.
-  3. If the shortest path of all sources is calculated, it is a two-dimensional array of `n × n`, `path[i][j]` means that in the single source shortest path problem of source point ʻi`, source point ʻi `Need to go from node `path[i][j]` to reach node `j`.
+  1. If calculating the single-source shortest path, it is a one-dimensional array, `dist[i]` means the shortest distance from the source vertex to the vertex i<sup>th</sup> in the current single-source shortest path problem.
+  2. If calculating the multi-source shortest path, it is a two-dimensional array composed of multiple one-dimensional arrays, `dist[i][j]` means that in the i<sup>th</sup> source single-source shortest path problem, the value is the shortest distance from vertex `i` sources to vertex `j`.
+  3. If the shortest path of all sources is calculated, it is a two-dimensional array of `n × n`, `dist[i][j]` means that in the i<sup>th</sup>  single source shortest path problem of source vertex `i` , the shortest distance to vertex `j`.
+- path, vertices order of the shortest path. np.array. The details are as follows:
+  1. If calculating the single-source shortest path, it is a one-dimensional array, `path[i]` means that in the current single-source shortest path problem, the predecessor vertex of vertex `i `, that is, the source vertex needs to be from the vertex ` path[i] ` reaches the vertex `i`.
+  2. If calculating the multi-source shortest path, it is a two-dimensional array composed of multiple one-dimensional arrays. `path[i][j]` means that in the `i`th source single-source shortest path problem, the i<sup>th</sup> source vertex need to reach the vertex`j` from the vertex`path[i][j]`.
+  3. If the shortest path of all sources is calculated, it is a two-dimensional array of `n × n`, `path[i][j]` means that in the single source shortest path problem of source vertex `i ` , source vertex `i ` need to go from vertex `path[i][j]` to reach vertex `j`.
 - timeCost, time spent. float. Indicates the time it takes to calculate the shortest path problem, in seconds.
 - memoryCost, space cost. int. Indicates the space spent to calculate the shortest path problem, in bytes.
 - graph, graph data, required, graph data for calculating the shortest path. See figure data specification.
@@ -886,9 +878,9 @@ class Result(object):
   1. parameters, none.
   2. Return value, none.
 
+<br>
 
-
-### class parameter
+### class Parameter
 
 #### Function
 
@@ -897,7 +889,7 @@ This class is used by the tool's internal parameter transfer. It records various
 #### Structure
 
 ```python
-class parameter(object):
+class Prameter(object):
 	"""
     function: 
         transfer the parameters in the functions.
@@ -911,6 +903,8 @@ class parameter(object):
         n: int, the number of the vertices in the graph.
         m: int, the number of the edges in the graph.
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
+        device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
         CSR: tuple, a 3-tuple of integers as (V, E, W) about the CSR of graph data. (more info please see the developer documentation).
         matrix: matrix, as (n,n), about adjacency matrix of graph data.
         edgeSet: tuple, a 3-tuple of integers as (src(list), des(list), val(list)) about the edge set.
@@ -918,9 +912,9 @@ class parameter(object):
         method: str, the algorithm. [dij, delta, spfa, fw, edge]
         srclist: list/int, the source of shortest path problem.
         sourceType: str, the type of the problem. [APSP, SSSP, MSSP]
-        pathRecordingBool: bool, record the path or not.
+        pathRecordBool: bool, record the path or not.
         delta: int, the delta of delta-stepping algorithm.
-        MAXN: int, the max value of the edges.
+        MAXW: int, the max value of the edges.
         MAXU: int, the vertex has the maxOutDegree.
         maxOutDegree: int, the max out degree of the graph.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
@@ -931,7 +925,7 @@ class parameter(object):
         None, but init.
             
     return 
-        class, Parameter object.
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
 	"""
 	def __init__(self):
 		
@@ -949,6 +943,15 @@ None
 - n, the number of nodes in the graph. int.
 - m, the number of directed edges in the graph. int.
 - useCUDA, whether to use CUDA acceleration. bool.
+- useMultiPro, whether to use CPU multi-process to accelerate calculation, the default is False. bool. It can only be of the following types:
+
+  1. True: Indicates that the CPU multi-process is used for accelerated calculation.
+
+  2. False: Indicates that the CPU multi-process is not used for acceleration calculation.
+
+     **It should be noted that this parameter is meaningful only when `method` is specified as `dij` and `useCUDA` is `False`, and the problem to be solved is `APSP` or `MSSP`. ** 
+- device，a instance of class Device. Please see [class Device](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-device) for details.
+
 - CSR, CSR graph data.
 - matrix, adjacent matrix graph data.
 - edgeSet, edge set array graph data.
@@ -957,13 +960,13 @@ None
   2. CSR: Indicates that the incoming data is a compressed adjacency matrix.
   3. edgeSet: Indicates that the incoming data is an edge set array or a file.
 - method, the shortest path calculation method used. str. It can only be of the following types:
-  1. dij: means to use the `dijkstra` algorithm to solve the shortest path.
+  1. dij: Means to use the `dijkstra` algorithm to solve the shortest path.
   2. spfa: Means to use the `bellman-ford` algorithm to solve the shortest path.
   3. delta: Means to use the `delta-stepping` algorithm to solve the shortest path.
   4. edge: Indicates that fine-grained edges are used to calculate the shortest path.
-- srclist, a collection of source points. int/list/None. It can be of the following three types:
-  1. int: An integer, representing a node in the graph as the source point for the shortest path calculation.
-  2. List: A list, each element in the list is int, which means that these points in the graph are source points, and the corresponding shortest paths need to be calculated separately.
+- srclist, a collection of source vertices. int/list/None. It can be of the following three types:
+  1. int: An integer, representing a vertexin the graph as the source vertex for the shortest path calculation.
+  2. List: A list, each element in the list is int, which means that these vertices in the graph are source vertices, and the corresponding shortest paths need to be calculated separately.
   3. None: A null value, indicating the shortest path of all sources in the calculation graph.
 - sourceType, the type of problem to be solved. str. It can be of the following three types:
   1. APSP: Shortest path for all sources
@@ -971,10 +974,10 @@ None
   3. SSSP: Single source shortest path
 - pathRecordBool, whether it is necessary to record the path of the shortest path. bool. It can only be of the following types:
   1. True: Indicates the path of the shortest path needs to be recorded.
-  2. False: indicates that the path does not need to be calculated, only the value of the path is required.
+  2. False: Indicates that the path does not need to be calculated, only the value of the path is required.
 - delta, the delta value used in the delta-stepping algorithm. int.
 - MAXW, the maximum edge weight in the graph. int
-- MAXU, the point number of the largest degree in the figure. int.
+- MAXU, the vertex number of the largest degree in the figure. int.
 - maxOutDegree, the largest out degree in the graph. int.
 - part, the number of edges copied into the GPU at a time in the part-graph algorithm. int.
 - streamNum, the number of streams enabled in the sub-picture multi-stream. int.
@@ -984,9 +987,9 @@ None
 
 None
 
+<br>
 
-
-### class device
+### class Device
 
 #### Function
 
@@ -1054,9 +1057,9 @@ None
   1. parameters, none.
   2. Return value, none.
 
+<br>
 
-
-### class graph
+### class Graph
 
 #### Function
 
@@ -1138,15 +1141,15 @@ class Graph(object):
 
 - n, the number of nodes in the graph. int.
 - m, the number of vector edges in the graph. int.
-- csr, csr graph data.
+- CSR, CSRgraph data.
 - matrix, adjacency matrix graph data.
 - src, des, w, edge set array graph data.
 - maxw, maximum edge weight. int. 7.
 - minw, minimum edge weight. int. 8.
 - MAXD, maximum degree. int. 9.
-  MAXU, node number of maximum degree. int. 10.
+  MAXU, vertexnumber of maximum degree. int. 10.
   MIND, minimum degree. int. 11.
-- minu, node number of minimum degree. int. 12. degree, number of each node.
+- minu, vertexnumber of minimum degree. int. 12. degree, number of each node.
 - degree, degree of each node. list. 13.
 - msg, message for calculation. str. 14.
 - filename, the name of the file to be read. str.
@@ -1162,10 +1165,6 @@ class Graph(object):
 
 
 
-
-
-
-
 ------
 
 所谓工欲善其事必先利其器。
@@ -1176,9 +1175,13 @@ class Graph(object):
 
 
 
+------
+
 ## 安装
 
 ### 环境依赖
+
+下面是开发实验中通过测试的环境。
 
 **window：**
 
@@ -1190,33 +1193,39 @@ class Graph(object):
 >
 > CUDA Version  10.2.89
 >
-> cudnn 7.6.5
->
 > networkx 2.4
 >
-> cyaron 0.4.2
->
 > logging 0.5.1.2
+>
+> pynvml 8.0.4
 
 **linux**
 
 > python 3.6
 >
-> pycuda ?
+> pycuda 2019.1.2
 >
 > numpy 1.19.2
 >
 > CUDA Version 10.1.243
 >
-> cudnn ?
+> networkx 2.4
+>
+> logging 0.5.1.2
+>
+> pynvml 8.0.4
+
+<br>
 
 ### 安装
 
-直接下载文件包，即可在主目录中运行 `calc` 接口函数。
+直接下载文件包，即可在**主目录**中运行 `calc` 接口函数。
 
 **目前不是发行版本，故不可pip安装，开发结构尚不是很完善。**
 
 
+
+------
 
 ## 流程图
 
@@ -1224,9 +1233,13 @@ class Graph(object):
 
 
 
+
+
+------
+
 ## 测试和效果
 
-我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上的用时情况和串并行加速比。下面展示了 `M=10*N` 的图中各个算法的运行效果图，更详细的数据请查阅 [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult)。
+我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上计算**单源最短路径问题(SSSP)**的用时情况和串并行加速比。下面展示了 `M=10*N` 的图中各个算法的运行效果图，更详细的数据请查阅 [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult)。
 
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
 
@@ -1237,6 +1250,8 @@ class Graph(object):
 <img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N.png" alt="spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N" style="zoom:50%;" />
 
 
+
+------
 
 ## 快速入门教程
 
@@ -1254,7 +1269,7 @@ cd XXX/spoon/
 
 #### 内存数据
 
-- 当您的图数据在**内存**中并**符合数据要求** 时，可以像下面一样导入您的数据，快速计算结果。
+- 当您的图数据在**内存**中并**符合数据要求** （[内存数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5)）时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
@@ -1284,7 +1299,7 @@ array([0, 1, 2, 3])
 
 #### 文件数据
 
-- 当您的图数据存储在**文件**中并**符合数据要求时**，您也可以传入文件来计算最短路径。
+- 当您的图数据存储在**文件**中并**符合数据要求时** ([文件数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F))，您也可以传入文件来计算最短路径。
 
 ```python
 >>> from calc import calc
@@ -1312,23 +1327,27 @@ array([ 0,  9,  6, 13])
 
 
 
+
+
+------
+
 ## 接口
 
 ### 版本信息
 
 此工具尚在初始开发迭代版本，未上传pip站。
 
-
+<br>
 
 ### 错误报告
 
 工具中的一切错误报告都将以 python 的错误信息进行报告，并在一些预想到错误的地方，嵌入了提示语句。
 
-
+<br>
 
 ### 计算接口
 
-#### func calc
+#### func calc()
 
 该方法是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-3)。
 
@@ -1336,18 +1355,18 @@ array([ 0,  9,  6, 13])
 
 #### func INF()
 
-该方法会返回工具中的正无穷
+该方法会返回工具中的正无穷.
+
+
 
 ------
-
-
 
 ## 数据类型与规范
 
 1. 本工具中目前的版本只支持32位整型的数据。因此，边权、点的数量和边的数量都必须是在32位整型能够表述的范围内。同时计算出的最短路径结果值也不应该超出32位整型的范围。关于此，一个解释是：目前大部分的数据问题都可以在32位整型范围内解决。其次是大部分非专业的英伟达GPU都对64位进行了阉割，因此不支持64位的数据。
 2. 本工具中，所有的图默认都从结点0开始编号。因此从结点1开始编号的图应该无视第一个结点的数据，从第二个数据开始。（此时工具中认为的图中的结点数会比真正的图中的结点数多1，因为工具始终认为还有一个0号结点。
 
-
+<br>
 
 ### 图数据规范
 
@@ -1357,7 +1376,7 @@ array([ 0,  9,  6, 13])
 
 ![image-20201023091301096.png](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201023091301096.png)
 
-#### 文件格式
+#### 文件格式 File Format
 
 上述图存储在文件中时，格式应该如下：
 
@@ -1385,9 +1404,9 @@ array([ 0,  9,  6, 13])
 
 
 
-#### 邻接矩阵
+#### 邻接矩阵 Adjacency Matrix
 
-邻接矩阵即用一个n×n二维数组来表示一个图，矩阵中的任意一个元素都可以代表一条边。即 `matrix[i][j] = w` 表示在图中存在至少一条从结点 `i` 到结点 `j` 的边，其边权为 `w` 。
+`matrix` 邻接矩阵即用一个n×n二维数组来表示一个图，矩阵中的任意一个元素都可以代表一条边。即 `matrix[i][j] = w` 表示在图中存在至少一条从结点 `i` 到结点 `j` 的边，其边权为 `w` 。
 
 由于本工具是最短路径计算工具，更严格地说， `matrix[i][j] = w` 应该是表示的结点 `i` 到结点 `j` 的所有边中最短的边的边权是 `w` 。
 
@@ -1407,9 +1426,9 @@ array([[0, 1, 3, 2139045759],
 
 
 
-#### 压缩邻接矩阵
+#### 压缩邻接矩阵 CSR
 
-压缩邻接矩阵是本工具的主要存储和运算的方式，相较于邻接矩阵的存储方式可以在绝大多数情况下节约内存空间。同时在利用GPU进行加速计算时亦可以节约显存空间。其表示方式是三个一维数组： `V` 、 `E` 和 `W` ，在本工具中将上述三个数组按照 `V` 、 `E` 和 `W` 的顺序组合成 CSR 。
+`CSR` 压缩邻接矩阵是本工具的主要存储和运算的方式，相较于邻接矩阵的存储方式可以在绝大多数情况下节约内存空间。同时在利用GPU进行加速计算时亦可以节约显存空间。其表示方式是三个一维数组： `V` 、 `E` 和 `W` ，在本工具中将上述三个数组按照 `V` 、 `E` 和 `W` 的顺序组合成 CSR 。
 
 其中 `V` 数组是记录图中各个结点的第一条边的在 `E` 数组中的起始下标的，其维数是图中点的个数，但是为了计算的方便，通常会在末尾增加一个虚拟结点来判断是否到达末尾。因此其维数在本工具中必须是严格的包含了虚拟结点的。
 
@@ -1441,9 +1460,9 @@ Out[4]: array([1, 3, 4, 5])
 
 
 
-#### 边集数组
+#### 边集数组 edgeSet
 
-边集数组是一个列表，表中的每个元素都是表示一条边的三元组 `(u, v, w)` 即一条边的起点、终点和边权。
+`edgeSet` 边集数组是一个列表，表中的每个元素都是表示一条边的三元组 `(u, v, w)` 即一条边的起点、终点和边权。
 
 上图转化为边集数组如下：
 
@@ -1454,15 +1473,15 @@ Out[1]: [[0, 0, 2, 1], [1, 3, 1, 3], [1, 2, 5, 4]]
 
 **如果是无向边需要在上述列表中表示成两条有向边再传入。**
 
-
+<br>
 
 ### 常量
 
 INF：工具中的正无穷，此处是 2139045759
 
+
+
 ------
-
-
 
 ## 函数 
 
@@ -1485,6 +1504,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         directed: bool, directed or not. only valid in read graph from file.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
@@ -1492,7 +1512,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
 
     return:
-        class, Result object. (more info please see the developer documentation).  
+        class, Result object. (see the 'SPoon/classes/result.py/Result')  
     """
     return result
 ```
@@ -1504,37 +1524,53 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
 - graph， 图数据，必填，需要计算最短路径的图数据或者图数据存储文件。参见[图数据规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%9B%BE%E6%95%B0%E6%8D%AE%E8%A7%84%E8%8C%83)。
   1. 若是内存中的图数据，则支持三种格式的数据：邻接矩阵(matrix)、压缩邻接矩阵(CSR)、边集数组(edgeSet)。
   2. 若是图数据的文件，则表示满足**图数据规范**的图文件的文件名。
+  
 - graphType ，传入的图数据的类型，必填。 str。仅可以是以下三种类型：
 
   1. matrix： 表示传入的数据是邻接矩阵。
   2. CSR： 表示传入的数据是压缩邻接矩阵。
   3. edgeSet： 表示传入的数据是边集数组。
+  
 - method， 使用的最短路径计算方法，缺省为 'dij'。str。仅可以是以下类型：
   1. dij： 表示使用 `dijkstra` 算法求解最短路径。
   2. spfa： 表示使用 `bellman-ford` 算法求解最短路径。
   3. delta： 表示使用 `delta-stepping` 算法求解最短路径。
   4. edge： 表示使用边细粒度来计算最短路径。
+  
 - useCUDA，是否使用 CUDA 加速，缺省为 True。bool。仅可以是以下类型：
   1. True： 表示使用 CUDA 进行加速。
   2. False： 表示只使用 CPU 进行串行计算。
+  
+- useMultiPro，是否使用CPU多进程加速计算，缺省为False。bool。仅可以是以下类型：
+
+  1. True： 表示使用CPU多进程进行加速计算。
+
+  2. False：表示不使用CPU多进程进行加速计算。
+
+     **需要注意的是，只有当 `method` 指定为 `dij` ， `useCUDA` 为 `False` ，解决的问题是 `APSP` 或者 `MSSP` 时，此参数才有意义。**
+
 - directed，图是否有向，缺省为 False。bool。仅可以是以下类型：
   1. True：表示图为有向图。
   2. False：表示图为无向图。
+  
 - pathRecordBool， 是否需要记录最短路径的路径，缺省为 False。bool。仅可以是以下类型：
   1. True： 表示需要记录最短路径的路径。
   2. False：表示不需要计算路径，只需要路径的值。
+  
 - srclist，源点的集合，缺省为 None。int/list/None。可以是以下三种类型：
   1. int： 一个整数，表示图中的一个结点作为最短路径计算的源点。
   2. list： 一个列表，列表中的各个元素都是 int 表示图中的这些点都是源点，需要分别计算对应的最短路径。
   3. None： 一个空值，表示计算图中的全源最短路径。
+  
 - block， 线程block的结构，缺省程序会自动设置。仅可以是一个三元组 `(x, y, z)`。
+
 - grid，线程block的结构，缺省程序会自动设置。仅可以是一个二元组`(x, y)`。
 
 #### 返回值
 
 返回值是 `class Result` 的一个实例。详细请参阅  [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
-
+<br>
 
 ### func dispatcher()
 
@@ -1545,7 +1581,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
 #### 结构
 
 ```python
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, block, grid):
+def dispatch(graph, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, msg, block, grid):
     """
     function: 
         schedule the program by passing in parameters.
@@ -1555,6 +1591,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
         msg: the info of the graph.
@@ -1562,7 +1599,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (more info please see the developer documentation). 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
    
@@ -1589,6 +1626,14 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
 - useCUDA，是否使用 CUDA 加速，缺省为 True。bool。仅可以是以下类型：
   1. True： 表示使用 CUDA 进行加速。
   2. False： 表示只使用 CPU 进行串行计算。
+
+- useMultiPro，是否使用CPU多进程加速计算，缺省为False。bool。仅可以是以下类型：
+
+  1. True： 表示使用CPU多进程进行加速计算。
+
+  2. False：表示不使用CPU多进程进行加速计算。
+
+     **需要注意的是，只有当 `method` 指定为 `dij` ， `useCUDA` 为 `False` ，解决的问题是 `APSP` 或者 `MSSP` 时，此参数才有意义。**
 - pathRecordBool， 是否需要记录最短路径的路径，缺省为 False。bool。仅可以是以下类型：
   1. True： 表示需要记录最短路径的路径。
   2. False：表示不需要计算路径，只需要路径的值。
@@ -1603,7 +1648,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
 
 返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
-
+<br>
 
 ### func transfer()
 
@@ -1620,7 +1665,7 @@ def transfer(para, outType):
         transfer graph data from one format to another.
     
     parameters: 
-        para: class, Parameters object. (more info please see the developer documentation) .
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
         outType: str, the type you want to transfer.
     
     return: 
@@ -1631,7 +1676,7 @@ def transfer(para, outType):
 
 #### parameters
 
-- para，函数间传递的参数类。class parameter。类型固定。
+- para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter-1)。类型固定。
 - outType， 想要转化输出的类型。str。可以是以下类型：
   1. matrix， 表示邻接矩阵。
   2. CSR， 表示压缩邻接矩阵。
@@ -1641,7 +1686,7 @@ def transfer(para, outType):
 
 无
 
-
+<br>
 
 ### func judge()
 
@@ -1658,23 +1703,25 @@ def judge(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object.
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return:
-        bool, True/False. (more info please see the developer documentation).
+        bool, [0/1/2]. (more info please see the developer documentation).  
+    """
 ```
 
 #### parameters
 
-- para，函数间传递的参数类。class parameter。类型固定。
+- para，para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter-1)。类型固定。
 
 #### 返回值
 
-- bool，是否需要启用图分割。
-  1. True：表示需要启用图分割算法。
-  2. False：不需要启用图分割算法。
+- int，是否需要启用图分割。
+  1. 0： 表示并不需要使用图分割算法，可以直接放入 GPU 中。
+  2. 1： 表示需要使用图分割，将图分解成更小的部分。
+  3. 2： 表示多源问题或者全源问题可以直接解决。
 
-
+<br>
 
 ### func read()
 
@@ -1694,7 +1741,7 @@ def read(filename = 'data.txt', directed = False):
         filename: str, the graph data file name.
     
     return:
-        class, Graph object.
+        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')
     """
 ```
 
@@ -1709,7 +1756,7 @@ def read(filename = 'data.txt', directed = False):
 
 返回值是 `class Class` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
-
+<br>
 
 ### func draw()
 
@@ -1734,6 +1781,7 @@ def draw(path, n, s, graph, graphType):
     
     return: 
         None, no return. 
+    """
 ```
 
 #### parameters
@@ -1741,7 +1789,7 @@ def draw(path, n, s, graph, graphType):
 - path，最短路径的前驱数组，必填。list。
 - n，图中结点的数量，必填。int。
 - s，源点的编号，必填。int。
-- graph， 图数据，必填，需要计算最短路径的图数据。参见图数据规范。
+- graph， 图数据，必填，需要计算最短路径的图数据。参见[图数据规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%A7%84%E8%8C%83)。
 - graphType ，传入的图数据的类型，必填。 str。仅可以是以下三种类型：
   1. matrix： 表示传入的数据是邻接矩阵。
   2. CSR： 表示传入的数据是压缩邻接矩阵。
@@ -1751,46 +1799,7 @@ def draw(path, n, s, graph, graphType):
 
 无
 
-
-
-### func generate()
-
-#### 功能
-
-生成一张包含指定点数、边数和边权范围的连通图。
-
-#### 结构
-
-```python
-def generate(filename = 'data0.txt', n = 1000, m = 30000, l = 1, r = 12):
-    """
-    function: 
-        generate a random graph to file. (more info please see the developer documentation). 
-
-    parameters:
-        filename: str, the filename of file to save the graph.
-        n: int, the number of the vertices in the graph.
-        m: int, the number of the edges in the graph.
-        l: int, the min value of a edge.
-        r: int, the max value of a edge.
-    
-    return: 
-        None, no return.
-```
-
-#### parameters
-
-- filename，生成图存放的文件名，缺省值为 'data0.txt'。str。
-- n，生成图的结点数量，缺省为 1000。int。
-- m，生成图的边数量，缺省为 30000。int。
-- l，图中的边权下界，缺省为 1。int。
-- r，图中的边权上界，缺省为 12。int。
-
-#### 返回值
-
-无
-
-
+<br>
 
 ### func check()
 
@@ -1828,7 +1837,7 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
 
 str， 相等或者不相等
 
-
+<br>
 
 ### func userTest()
 
@@ -1839,7 +1848,7 @@ str， 相等或者不相等
 #### 结构
 
 ```python
-def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
+def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, directed=False, useCUDA=True, useMultiPro = False):
     """
     function: 
         an interface to prove the correctness of this algorithm with the standard input&output graph data that user provides
@@ -1853,10 +1862,12 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
         graphType: type of the input graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         outputGraph:the graph data of answer that you want to get the shortest path. [only in matrix format]
         method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        directed: bool, directed or not. only valid in read graph from file.
         useCUDA: use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
     
     return:
-        no return but print the result of proving 
+        no return but print the result of proving.
     """
 ```
 
@@ -1866,13 +1877,15 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
 - graphType， 输入的图数据的类型，必填。CSR/edgeSet/matrix/filename。
 - outputGraph，用户提供的标准输出，必填。list。
 - method，您想要测试的算法，缺省默认 None，即全部测试。str。
+- directed, 测试的图数据是否有向，缺省默认无向。bool。**只有当输入的图数据为文件时才有效。**
 - useCUDA，是否只测试并行算法。bool。
+- useMultiPro，是否只测试多进程算法。bool。
 
 #### 返回值
 
 str， 相等或者不相等
 
-
+<br>
 
 ### func [apsp, sssp, mssp].'[dij, delta, edge, spfa]'_[cpu, gpu]
 
@@ -1885,37 +1898,31 @@ str， 相等或者不相等
 #### 结构
 
 ```python
-def dijkstra(CSR, n, s, pathRecordingBool = False):
+def dijkstra(para):
 	"""
-	function: use dijkstra algorithm in GPU to solve the SSSP. 
-	
-	parameters:  
-		CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertexs in the graph.
-        s: the source list, can be number.(more info please see the developer documentation).
-        pathRecordingBool: record the path or not.
-	
-	return: Result(class).(more info please see the developer documentation) . 
+    function: 
+        use dijkstra algorithm in CPU to solve the SSSP. 
+    
+    parameters:  
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+    
+    return: 
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
 	"""
 	...
 ```
 
 #### parameters
 
-```python
-CSR: CSR graph data. (more info please see the developer documentation) .
-n: the number of the vertexs in the graph.
-s: the source list, can be number.(more info please see the developer documentation).
-pathRecordingBool: record the path or not.
-```
+para，para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter-1)。类型固定。
 
 #### 返回值
 
 返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
 
+
+
 ------
-
-
 
 ## 类
 
@@ -1947,7 +1954,8 @@ class Result(object):
         drawPath: draw the path from vertices to the sources.
         calcPath: calc the path through the graph and dist.
     
-    return: Result object.
+    return: 
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
 	"""
 	def __init__(self, 
                 dist = None, 
@@ -2043,7 +2051,9 @@ class Result(object):
 
 
 
-### class parameter
+<br>
+
+### class Parameter
 
 #### 功能
 
@@ -2052,7 +2062,7 @@ class Result(object):
 #### 结构
 
 ```python
-class parameter(object):
+class Prameter(object):
 	"""
     function: 
         transfer the parameters in the functions.
@@ -2066,6 +2076,8 @@ class parameter(object):
         n: int, the number of the vertices in the graph.
         m: int, the number of the edges in the graph.
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
+        device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
         CSR: tuple, a 3-tuple of integers as (V, E, W) about the CSR of graph data. (more info please see the developer documentation).
         matrix: matrix, as (n,n), about adjacency matrix of graph data.
         edgeSet: tuple, a 3-tuple of integers as (src(list), des(list), val(list)) about the edge set.
@@ -2073,9 +2085,9 @@ class parameter(object):
         method: str, the algorithm. [dij, delta, spfa, fw, edge]
         srclist: list/int, the source of shortest path problem.
         sourceType: str, the type of the problem. [APSP, SSSP, MSSP]
-        pathRecordingBool: bool, record the path or not.
+        pathRecordBool: bool, record the path or not.
         delta: int, the delta of delta-stepping algorithm.
-        MAXN: int, the max value of the edges.
+        MAXW: int, the max value of the edges.
         MAXU: int, the vertex has the maxOutDegree.
         maxOutDegree: int, the max out degree of the graph.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
@@ -2086,7 +2098,7 @@ class parameter(object):
         None, but init.
             
     return 
-        class, Parameter object.
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
 	"""
 	def __init__(self):
 		
@@ -2103,7 +2115,19 @@ class parameter(object):
 - GRID，二元组 `(x,y)`  表示计算过程中block的结构。tuple。选填。
 - n，图中结点的数量。int。
 - m，图中有向边的数量。int。
-- useCUDA, 是否使用CUDA加速。bool。
+- useCUDA，是否使用 CUDA 加速，缺省为 True。bool。仅可以是以下类型：
+  1. True： 表示使用 CUDA 进行加速。
+  2. False： 表示只使用 CPU 进行串行计算。
+  
+- useMultiPro，是否使用CPU多进程加速计算，缺省为False。bool。仅可以是以下类型：
+
+  1. True： 表示使用CPU多进程进行加速计算。
+
+  2. False：表示不使用CPU多进程进行加速计算。
+
+     **需要注意的是，只有当 `method` 指定为 `dij` ， `useCUDA` 为 `False` ，解决的问题是 `APSP` 或者 `MSSP` 时，此参数才有意义。**
+- device，class Device 的一个实例。详情请见 [class Device](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-device-1)。
+
 - CSR， CSR图数据。
 - matrix， 邻接矩阵图数据。
 - edgeSet， 边集数组图数据。
@@ -2139,9 +2163,9 @@ class parameter(object):
 
 无
 
+<br>
 
-
-### class device
+### class Device
 
 #### 功能
 
@@ -2209,9 +2233,9 @@ class Device(object):
   1. parameters，无。
   2. 返回值，无。
 
+<br>
 
-
-### class graph
+### class Graph
 
 #### 功能
 

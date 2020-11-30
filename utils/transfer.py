@@ -189,7 +189,7 @@ def transfer(para, outType):
         transfer graph data from one format to another.
     
     parameters: 
-        para: class, Parameters object. (more info please see the developer documentation) .
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
         outType: str, the type you want to transfer.
     
     return: 

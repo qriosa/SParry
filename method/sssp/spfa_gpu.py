@@ -32,7 +32,7 @@ def spfa(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func spfa-gpu-apsp")
+    logger.info("turning to func spfa-gpu-sssp")
 
     CSR = para.CSR
     n = para.n 

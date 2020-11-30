@@ -2,6 +2,7 @@ from utils.debugger import Logger
 from utils.settings import PRINT
 
 import sys
+from time import time
 
 # test update different file
 def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
@@ -23,6 +24,23 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 		# generate a graph with n vertexs and m (undirected) edges, save it the the file
 		generate(filename = filename, n = n, m = m, l = l, r = r) 
 
+
+	# # test numpy data
+	# from utils.readGraph import read
+	# import numpy as np
+	
+	# g = read(filename, directed = True)
+	# V, E, W = g.CSR[0], g.CSR[1], g.CSR[2]
+	# tt = np.load('./data/VEW.npz')
+	# v, e, w = tt['arr_0'], tt['arr_1'], tt['arr_2']
+	# from utils.check import check 
+	# print(check(V, v))
+	# print(check(E, e))
+	# print(check(W, w))
+	# print(W)
+	# print(w)
+
+	# return 
 
 
 	# # import the read func to read a graph from file
@@ -62,16 +80,18 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	# begin to calc 
 	# method = ['dij']
 	directed = True
-	method = ['dij', 'delta', 'spfa', 'edge', 'dij', 'delta', 'spfa', 'edge']
-	useCUDA = [True, True, True, True, False, False, False, False]
-	# useCUDA = [False, False, False, False]
+	method = ['dij', 'dij', 'dij']
+	useCUDA = [False, False, True, True, False, False, False, False]
+	useThreading = [False, True, False]
+
+
 	useCUDATrue = 'useCUDA'
 	useCUDAFalse = 'noUseCUDA'
 	ans = []
 	# srclist = [i for i in range(n)]
-	srclist = None
+	# srclist = None
 	# srclist = 232
-	# srclist = 2
+	srclist = 1
 	# srclist = [1,2,3,12,13,17]
 	# srclist = [20,123,1114,5098,6111,9914,23,345,123,345,435,67,234,124,456,768,34,234,456,78,234,56,678,89,123,456,678,423,576,8964,6489,1999,2437,1031,5436,6522,1456,2345]
 	# srclist = [2, 5, 12, 45, 45, 23, 87, 145, 567, 368, 325, 463, 168, 1276, 2416, 1567, 23, 4567, 2352, 3456, 2878, 2978, 1983]
@@ -80,15 +100,18 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 	from utils.check import check 
 
 	for i in range(len(method)):
-		logger.info(f'begin to calc. method = {method[i]}, useCUDA = {useCUDA[i]}, pathRecordBool = False, directed = {directed}, srclist = {np.array(srclist)}')
+		logger.info(f'begin to calc. method = {method[i]}, useCUDA = {useCUDA[i]}, pathRecordBool = False, srclist = {np.array(srclist)}')
 		
-		ans.append(calc(graph = filename, graphType = 'CSR', method = method[i], useCUDA = useCUDA[i], srclist = srclist))
+		ans.append(calc(graph = filename, graphType = 'CSR', method = method[i], useCUDA = useCUDA[i], useThreading = useThreading[i], srclist = srclist))
 		
 		logger.info(f'begin to check')
-		
-		PRINT(check(ans[0].dist, ans[i].dist, method[0], method[i] + (useCUDATrue if useCUDA[i] else useCUDAFalse))) # 检测两个答案是否相等
+
+	for i in range(len(method)):	
+		PRINT(check(ans[0].dist, ans[i].dist, method[0] + str(useThreading[i]), method[i] + str(useThreading[i]) + (useCUDATrue if useCUDA[i] else useCUDAFalse))) # 检测两个答案是否相等
 		PRINT(f'{method[i]}_{useCUDATrue if useCUDA[i] else useCUDAFalse} time cost = ' + str(ans[i].timeCost)) # 计算用时
-		print(ans[i].display())
+		
+		
+		# print(ans[i].display())
 		
 		# print(ans[i].dist.reshape(len(srclist), n))
 		# print(ans[i].dist)
@@ -97,12 +120,20 @@ def test(filename = None, n = 1000, m = 5000, l = 1, r = 20):
 		# print(ans[i].display())
 		# print(ans[i].drawPath())
 		# input("enter enter to continue...")
+		print()
 
 
 if __name__ == '__main__':
+
+	t1 = time()
+
 	if len(sys.argv) == 2:
 		filename = sys.argv[1]
 	else:
 		filename = None
 
-	test(filename = filename, n = 100, m = 1000, l = 1, r = 100)
+	test(filename = filename, n = 30000, m = 100000, l = 1, r = 30)
+
+	t2 = time()
+
+	print("all time cost is: ", (t2 - t1) * 10000 / 1000 // 10, "sec")

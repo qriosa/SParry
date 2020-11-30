@@ -12,6 +12,8 @@ class Parameter(object):
         n: int, the number of the vertices in the graph.
         m: int, the number of the edges in the graph.
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
+        device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
         CSR: tuple, a 3-tuple of integers as (V, E, W) about the CSR of graph data. (more info please see the developer documentation).
         matrix: matrix, as (n,n), about adjacency matrix of graph data.
         edgeSet: tuple, a 3-tuple of integers as (src(list), des(list), val(list)) about the edge set.
@@ -32,7 +34,7 @@ class Parameter(object):
         None, but init.
             
     return 
-        class, Parameter object.
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     """
     
     def __init__(self):
@@ -49,6 +51,7 @@ class Parameter(object):
         self.device = None # 设备参数
 
         self.useCUDA = True # 是否使用 CUDA
+        self.useMultiPro = False # 是否使用 CPU 多线程
 
         self.CSR = None # 压缩邻接矩阵
         self.matrix = None # 邻接矩阵

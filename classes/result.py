@@ -23,7 +23,8 @@ class Result(object):
         drawPath: draw the path from vertices to the sources.
         calcPath: calc the path through the graph and dist.
     
-    return: Result object.
+    return: 
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
     def __init__(self, 
                 dist = None, 

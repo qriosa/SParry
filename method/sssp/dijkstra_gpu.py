@@ -26,14 +26,16 @@ def dijkstra(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result')    
     """
 
-    logger.info("turning to func dijkstra-gpu-apsp")
+    logger.info("turning to func dijkstra-gpu-sssp")
 
-    from utils.judgeDivide import judge
+    from utils.judgeDivide import judge_sssp
+
+    judge_sssp(para)
     
-    if judge(para):
+    if para.part != None:
         dist, timeCost = noStream(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
     else:
-        dist, timeCost = direct(para.CSR, para.n, para.srclist, para.pathRecordBool, para.BLOCK, para.GRID)
+        dist, timeCost = direct(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
 
     result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
 
@@ -42,21 +44,21 @@ def dijkstra(para):
 
     return result
 
-def direct(CSR, n, s, pathRecordBool, BLOCK, GRID):
+def direct(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
     """
     function: 
         use dijkstra algorithm in GPU to solve the SSSP. 
     
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertices in the graph.
-        s: the source vertex.
-        pathRecordBool: record the path or not.
+        n: int, the number of the vertices in the graph.
+        s: int, the source vertex.
+        pathRecordBool: bool, record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return: 
-        Result(class).(more info please see the developer documentation) .
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
     logger.info("turning to func dijkstra-gpu-sssp no-divide")
@@ -117,15 +119,15 @@ def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
     
     parameters:  
         CSR: CSR graph data. (more info please see the developer documentation) .
-        n: the number of the vertices in the graph.
-        m: the number of edges in the graph.
-        s: the source vertex.
-        pathRecordBool: record the path or not.
+        n: int, the number of the vertices in the graph.
+        m: int, the number of edges in the graph.
+        s: int, the source vertex.
+        pathRecordBool: bool, record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return: 
-        Result(class).(more info please see the developer documentation) .
+        class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
     logger.info("turning to func dijkstra-gpu-sssp divide")
@@ -236,6 +238,8 @@ def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
     return dist, timeCost
 
 
+# 下面是没有使用的
+'''
 
 # V 是全部进去了的 dist vis predist 都是全部进去了
 def divide(CSR, n, m, s, streamNum = None, part = None, pathRecordBool = False):
@@ -531,3 +535,4 @@ def useStream(CSR, n, m, s, part = None, pathRecordBool = False):
         result.calcPath(CSR = CSR)
 
     return result
+'''

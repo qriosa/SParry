@@ -36,7 +36,7 @@ class Graph(object):
         reshape: convert data to numpy.int32.
 
     return: 
-        class, Graph object.
+        class, Result object. (see the 'SPoon/classes/graph.py/Graph') 
     """
 
     # 只可以接受一个delta 和 s

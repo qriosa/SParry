@@ -11,7 +11,7 @@ import numpy as np
 logger = Logger(__name__)
 
 
-def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, useCUDA=True):
+def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None, directed=False, useCUDA=True, useMultiPro = False):
     """
     function: 
         an interface to prove the correctness of this algorithm with the standard input&output graph data that user provides
@@ -25,10 +25,12 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
         graphType: type of the input graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         outputGraph:the graph data of answer that you want to get the shortest path. [only in matrix format]
         method: the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        directed: bool, directed or not. only valid in read graph from file.
         useCUDA: use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
     
     return:
-        no return but print the result of proving 
+        no return but print the result of proving.
     """
     
     logger.info(f"begin to test: inputGraph={inputGraph}, graphType={graphType}, outputGraph={outputGraph}, method={method}, useCUDA={useCUDA}")
@@ -38,7 +40,7 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
     # 跳转到 dispatch 函数进行分发
     # we only accept inputGraph data in edgeSet format 
     if(type(inputGraph) == str):
-        graphObj=read(inputGraph)
+        graphObj=read(inputGraph, directed = directed)
         if(graphType=='CSR'):
             inputGraph = graphObj.CSR
         else:
@@ -56,11 +58,11 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
         usage = [ True,False]
         for msz in methods:
             for use in usage:
-                result = dispatch(inputGraph, graphType, msz, use, False, None, None, None)
+                result = dispatch(inputGraph, graphType, msz, use, useMultiPro, directed, False, None, None, None)
                 return check(result.dist, outputGraph, f'answer[{msz} {pltform[use]}]','stdout')
                 # print(result.dist,outputGraph)
     else:
-        result = dispatch(inputGraph, graphType, method, useCUDA, False, None, None, None)
+        result = dispatch(inputGraph, graphType, method, useCUDA, useMultiPro, directed, False, None, None, None)
         return check(result.dist, outputGraph, f'answer[{methods} {pltform[useCUDA]}]','stdout')
         # print(result.dist,outputGraph)
 

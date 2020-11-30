@@ -33,7 +33,7 @@ class Device(object):
         get_attributes: the pycuda's get_attributes.
 
     return 
-        class, Device object.
+        class, Result object. (see the 'SPoon/classes/device.py/Device') 
     """
     def __init__(self):
         self.device = drv.Device(0) # pycuda 的 device 类

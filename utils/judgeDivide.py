@@ -1,11 +1,30 @@
 # 该模块是为了判断是否要进行大图分割跳转
 # 同时如果需要则进行相应的参数的计算
+'''
+返回是 0/1 单源需要/不需要分图
+
+返回 2 全/多源不需要分解为单源
+返回 0/1 全/多源需要分解单源 且是否分图
+'''
 from utils.debugger import Logger
 from classes.device import Device
 from utils.settings import forceDivide
 
 from math import sqrt
 import numpy as np
+
+logger = Logger(__name__)
+
+def getPart(FREE, N, M):
+    # 只使用多少倍的空闲空间
+    K = 0.8 
+    b = 2*N - K/8*FREE
+    c = M / 2
+    x = (-b + sqrt(b ** 2 - 4 * c)) / 2
+
+    x /= 2 # 本来算出来就是 x 的，但是还是报错于是就强制除以 2 了
+    
+    return np.int32(x)
 
 
 def judge_sssp(para):
@@ -14,10 +33,10 @@ def judge_sssp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object.
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return:
-        bool, True/False. (more info please see the developer documentation).  
+        bool, [0/1/2]. (more info please see the developer documentation).  
     """
 
     """
@@ -41,41 +60,56 @@ def judge_sssp(para):
             part = ((3.6*free - 3*n - 4) + sqrt((3.6*free - 3*n - 4)² - 4 * (2*n))) / 2 / 2 * 10 // 10 # 向下取整
     """
     
-
+    # 这个 if 说明是从 APSP 或者 MSSP 中来的
+    if para.device == None:
+        # 获取设备的显卡信息
+        para.device = Device()
+        freeGpuMem = para.device.free
+        logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
+        
     device = para.device
-    freeGpuMem = device.free
+    freeGpuMem = para.device.free
+
+    # 避免溢出
+    n = int(para.n)
+    m = int(para.m)
 
     # 判断是否满足
-    lowLimit = lambda PART, N, FREE: 2*PART + (2*N)/(2*PART) <= 3.6*FREE - 3*N - 4
-    getPart = lambda FREE, N: ((3.6*FREE - 3*N - 4) + sqrt((3.6*FREE - 3*N - 4) ** 2 - 4 * (2*N))) / 2 / 2 * 10 // 10
+    lowLimit = lambda PART, N, FREE: 2*PART + (4*N) <= 0.225*FREE
+    # getPart = lambda FREE, N, M: np.int32(0.05*freeGpuMem - N + 0.5*(sqrt((0.1*freeGpuMem - 2*N)**2 - 2*M)))
 
-    assert lowLimit(0.5 * sqrt(2*para.n), para.n, device.free), "该算法目前无法在此设备上解决此规模的问题"
+    assert 0.1*freeGpuMem - 2*n >= sqrt(m/2) * 2, "该算法目前无法在此设备上解决此规模的问题"
 
     # # 整个 m 条边可以放进去
-    if lowLimit(para.m, para.n, device.free) and forceDivide == False:
-        return False # 不用分图跳转
+    if lowLimit(m, n, device.free) and forceDivide == False:
+        return 0
 
     # 如果没有指定一次拷贝的边的数量，则每次拷贝的值我们来定
     # 暂时是写死的 但是 后面应按照实际运行中不超过最大的值来确定每次拷贝进去的边的数量
     # 如果给定了 part 就要计算其给的 part 是否符合要求
     if para.part != None:
         # 超过边总数是没有意义的
-        para.part = np.int32(min(para.m, para.part))
-        if lowLimit(0.5 * sqrt(2*para.n), para.n, device.free) == False:
-            para.part = getPart(device.free, para.n)
+        para.part = np.int32(min(m, para.part))
+        if lowLimit(0.5 * sqrt(2*n), n, device.free) == False:
+            para.part = getPart(device.free, n, m)
             logger.warnning(f"你给的 part 不行 我已经给你修正为一个可以的了 part = {para.part}")
     else:
         # 如果整个能进去就可以直接整个放进去
-        if lowLimit(para.m, para.n, device.free):
-            para.part = para.m
+        if lowLimit(m, n, device.free):
+            para.part = m
+            
+            return 0
         else:
             # 获取 part
-            para.part = getPart(device.free, para.n) # 一个流拷贝进去的边的数量
+            para.part = getPart(device.free, n, m) # 一个流拷贝进去的边的数量
     
     # print part
-    # print(f'part = {para.part}, m = {para.m}') 
+    logger.info(f'part = {para.part}, m = {m}') 
     
-    return True # 需要分图跳转
+    # 需要分图跳转
+    para.part = np.int32(para.part)
+
+    return 1
 
 
 def judge_mssp(para):
@@ -84,18 +118,27 @@ def judge_mssp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object.
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return:
-        bool, True/False. (more info please see the developer documentation).  
+        bool, [0/1/2]. (more info please see the developer documentation).  
     """
     
+    # 获取设备的显卡信息
+    para.device = Device()
     freeGpuMem = para.device.free
+    logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
 
-    if forceDivide == False and (para.n * para.n + para.n + 2 * para.m) <= 0.9 * freeGpuMem:
-        return False # 不需要分图 
-    else:
-        return judge_sssp(para)
+    # 源点的数量
+    sNum = len(para.srclist)
+    n = int(para.n)
+    m = int(para.m)
+
+    # 不需要分图 
+    if forceDivide == False and ((3 * sNum + 1) * n + 2 * m) <= 0.8 * freeGpuMem:
+        return 2
+    
+    return judge_sssp(para)
 
 def judge_apsp(para):
     """
@@ -103,48 +146,58 @@ def judge_apsp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object.
+        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return:
-        bool, True/False. (more info please see the developer documentation).    
+        bool, [0/1/2]. (more info please see the developer documentation).    
     """
-
-    freeGpuMem = para.device.free
-    
-    if forceDivide == False and (para.n * para.n + para.n + 2 * para.m) <= 0.9 * freeGpuMem:
-        return False # 不需要分图 
-    else:
-        return judge_sssp(para)
-
-
-def judge(para):
-    """
-    function: 
-        determine whether the current graph needs to use graph segmentation.
-    
-    parameters: 
-        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
-    
-    return:
-        bool, True/False. (more info please see the developer documentation).
-    """
-
-    # logger
-    logger = Logger(__name__)   
 
     # 获取设备的显卡信息
-    device = Device()
-    freeGpuMem = device.free
+    para.device = Device()
+    freeGpuMem = para.device.free
+
     logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
     
-    para.device = device
+    # 不需要分图
+    # 这个乘法居然还有数据溢出的问题 目前解决了
+    if forceDivide == False:
+        n = int(para.n)
+        m = int(para.m)
 
-    if para.sourceType == "SSSP":
-        return judge_sssp(para)
+        # 直接相乘 n ** 2 溢出了 32 位整型了
+        temp = (3 * n * n + 2 * n + 2 * m)
 
-    elif para.sourceType == "MSSP":
-        return judge_mssp(para)
+        if temp < 0.8 * freeGpuMem:
+            return 2
     
-    elif para.sourceType == "APSP":
-        return judge_apsp(para)
+    return judge_sssp(para)
+
+
+# def judge(para):
+#     """
+#     function: 
+#         determine whether the current graph needs to use graph segmentation.
+    
+#     parameters: 
+#         para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+    
+#     return:
+#         bool, True/False. (more info please see the developer documentation).
+#     """
+
+#     # 获取设备的显卡信息
+#     device = Device()
+#     freeGpuMem = device.free
+#     logger.info(f"freeGpuMem = {freeGpuMem} Bytes = {freeGpuMem / 1024} KB = {freeGpuMem / 1024 / 1024} MB = {freeGpuMem / 1024 / 1024 / 1024} GB")
+    
+#     para.device = device
+
+#     if para.sourceType == "SSSP":
+#         return judge_sssp(para)
+
+#     elif para.sourceType == "MSSP":
+#         return judge_mssp(para)
+    
+#     elif para.sourceType == "APSP":
+#         return judge_apsp(para)
         

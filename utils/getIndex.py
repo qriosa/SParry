@@ -1,6 +1,8 @@
 import numpy as np
 
 from utils import settings
+from utils.debugger import Logger
+logger = Logger(__name__)
 
 # 0 号结点开始编号
 
@@ -16,6 +18,9 @@ def getIndex(para):
     return: 
         None, no return.
     """
+    
+    logger.info(f"turn into getIndex ... ")
+
     if para.graphType == 'matrix':
 
         para.matrix = np.array(para.matrix,dtype=np.int32)

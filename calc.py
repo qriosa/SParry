@@ -23,7 +23,7 @@ def INF():
     return inf
 
 
-def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directed = False, pathRecordBool = False, srclist = None, block = None, grid = None):
+def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, useMultiPro = False, directed = False, pathRecordBool = False, srclist = None, block = None, grid = None):
     
     """
     function: 
@@ -34,6 +34,7 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         directed: bool, directed or not. only valid in read graph from file.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
@@ -51,11 +52,11 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, directe
     if(type(graph) == str):
         graphObj=read(graph, directed = directed)
         if(graphType=='edgeSet'):
-            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, pathRecordBool, srclist, graphObj.msg, block, grid)
+            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, graphObj.msg, block, grid)
         else:
-            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, pathRecordBool, srclist, graphObj.msg, block, grid)
+            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, useMultiPro, pathRecordBool, srclist, graphObj.msg, block, grid)
     else:
-        result = dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, "", block, grid)
+        result = dispatch(graph, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, "", block, grid)
      
     return result
     

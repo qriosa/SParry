@@ -7,7 +7,7 @@ import numpy as np
 
 logger = Logger(__name__)
 
-def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, block, grid):
+def dispatch(graph, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, msg, block, grid):
     """
     function: 
         schedule the program by passing in parameters.
@@ -17,6 +17,7 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
         method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
         useCUDA: bool, use CUDA to speedup or not.
+        useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
         msg: the info of the graph.
@@ -24,27 +25,26 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.info(f"begin to dispatch ... ")
 
     ## 输入变量判断是否合法 ##
     graph = np.array(graph)
-    assert graph.shape != (), "图数据不能为空"
+    assert graph.shape != (), "graph data can not be None."
 
     assert (graphType == 'CSR'
             or graphType == 'matrix'
             or graphType == 'edgeSet'
-            or graphType == None), "graphType 仅可以是 [CSR, matrix, edgeSet] 之一,None指示默认为CSR"
+            or graphType == None), "graphType can only be one of [CSR, matrix, edgeSet] , default 'CSR'."
 
     assert (method == 'dij' 
             or method == 'spfa' 
             or method == 'delta' 
             or method == 'fw'
             or method == 'edge'
-            or method == None), "method 仅可是 [dij, spfa, delta, fw, edge] 之一,默认为dij"
-
+            or method == None), "method can only be one of [dij, spfa, delta, fw, edge], default 'dij'."
 
     # 实例化一个 parameter
     para = Parameter()
@@ -95,6 +95,11 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         para.sourceType = 'SSSP'
     else:
         raise Exception("undefined srclist type")
+
+    if useMultiPro and useCUDA == False and (method != 'dij' or para.sourceType == 'SSSP'):
+        raise Exception("can only support dijkstra algorithm to solve APSP and MSSP.")
+    
+    para.useMultiPro = useMultiPro
 
     para.msg += f'''
 计算方法\tmethod = {para.method}, 
@@ -179,36 +184,18 @@ def dispatch(graph, graphType, method, useCUDA, pathRecordBool, srclist, msg, bl
         if para.method == 'dij':
             # GPU dijkstra
             if useCUDA == True:
-                from utils.judgeDivide import judge
-                if False:#judge(para):
-                    # 跳转到需要分图
-                    # 暂时不导入这个
-                    # 才写到这里 目前也只写了dij的sssp的 另外的还需要判断
-                    if para.sourceType == 'APSP':
-                        from method.apsp.dijkstra_gpu import noStream as dij
-                        return dij(para)
+                
+                if para.sourceType == 'APSP':
+                    from method.apsp.dijkstra_gpu import dijkstra as dij
+                    return dij(para)
 
-                    elif para.sourceType == 'MSSP':
-                        from method.mssp.dijkstra_gpu import dijkstra as dij
-                        return dij(para)
+                elif para.sourceType == 'MSSP':
+                    from method.mssp.dijkstra_gpu import dijkstra as dij
+                    return dij(para)
 
-                    else:
-                        from method.sssp.dijkstra_gpu import dijkstra as dij
-                        return dij(para)
                 else:
-                    if para.sourceType == 'APSP':
-                        from method.apsp.dijkstra_gpu import dijkstra as dij
-                        return dij(para)
-
-                    elif para.sourceType == 'MSSP':
-                        from method.mssp.dijkstra_gpu import dijkstra as dij
-                        return dij(para)
-
-                    else:
-                        from method.sssp.dijkstra_gpu import dijkstra as dij
-                        return dij(para)
-                        
-                        
+                    from method.sssp.dijkstra_gpu import dijkstra as dij
+                    return dij(para)    
     
             # CPU dijkstra
             else:
