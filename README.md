@@ -205,6 +205,8 @@ Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/t
 > logging 0.5.1.2
 >
 > pynvml 8.0.4
+>
+> multiprocessing
 
 **linux**
 
@@ -221,6 +223,8 @@ Please see the [developer tutorials](https://github.com/LCX666/SPoon/blob/main/t
 > logging 0.5.1.2
 >
 > pynvml 8.0.4
+>
+> multiprocessing
 
 <br>
 

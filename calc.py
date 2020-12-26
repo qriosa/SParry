@@ -1,4 +1,5 @@
-#encoding=utf-8
+import numpy as np
+
 from utils.dispatcher import dispatch
 from utils.readGraph import read
 from utils.debugger import Logger
@@ -6,7 +7,7 @@ from utils.debugger import Logger
 # set logging test update lcx added by wenake
 logger = Logger(__name__)
 
-def INF():
+def getINF():
     """
     function: 
         return the INF of this tool.
@@ -23,7 +24,7 @@ def INF():
     return inf
 
 
-def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, useMultiPro = False, directed = False, pathRecordBool = False, srclist = None, block = None, grid = None):
+def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = False, srclist = None, block = None, grid = None, namename = None):
     
     """
     function: 
@@ -47,20 +48,11 @@ def calc(graph = None, graphType = None, method = 'dij', useCUDA = True, useMult
     # 跳转到 dispatch 函数进行分发
     # we only accept graphic data in edgeSet format 
 
-    logger.info(f"go to func 'dispatch', method is {method}, useCUDA is {useCUDA}, pathRecord is {pathRecordBool}, srclist is {srclist}")
-  
-    if(type(graph) == str):
-        graphObj=read(graph, directed = directed)
-        if(graphType=='edgeSet'):
-            result = dispatch(graphObj.edgeSet, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, graphObj.msg, block, grid)
-        else:
-            result = dispatch(graphObj.CSR, 'CSR', method, useCUDA, useMultiPro, pathRecordBool, srclist, graphObj.msg, block, grid)
-    else:
-        result = dispatch(graph, graphType, method, useCUDA, useMultiPro, pathRecordBool, srclist, "", block, grid)
+    logger.info(f"entering calc func...")
      
-    return result
+    return dispatch(graph = graph, useCUDA = useCUDA, useMultiPro = useMultiPro, pathRecordBool = pathRecordBool, srclist = srclist, block = block, grid = grid, namename = namename)
     
 
 
 if __name__ == "__main__":
-    calc()
+    calc(namename = __name__)

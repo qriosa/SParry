@@ -42,8 +42,10 @@ class Logger(object):
         return 
             None, no return. 
         """
-        if self.debugger == False:
+        if self.debugger == 0 or self.debugger > 1:
             return
+
+        # 优先级为 1
         self.logger.notset(strings)
 
     def debug(self, strings):
@@ -57,8 +59,10 @@ class Logger(object):
         return 
             None, no return. 
         """
-        if self.debugger == False:
+        if self.debugger == 0 or self.debugger > 2:
             return
+        
+        # 优先级为  2
         self.logger.debug(strings)
 
     def info(self, strings):
@@ -72,8 +76,10 @@ class Logger(object):
         return 
             None, no return . 
         """
-        if self.debugger == False:
+        if self.debugger == 0 or self.debugger > 3:
             return
+
+        # 优先级为 3
         self.logger.info(strings)
 
     def warning(self, strings):
@@ -87,8 +93,10 @@ class Logger(object):
         return 
             None, no return. 
         """
-        if self.debugger == False:
+        if self.debugger == 0 or self.debugger > 4:
             return
+
+        # 优先级为 4    
         self.logger.warning(strings)
 
     def error(self, strings):
@@ -102,8 +110,11 @@ class Logger(object):
         return 
             None, no return. 
         """
-        if self.debugger == False:
-            return
+        # 小于 6 就输出
+        if self.debugger == 0 or self.debugger > 5:
+            return 
+
+        # 优先级为5
         self.logger.error(strings)
 
     def critical(self, strings):
@@ -117,6 +128,6 @@ class Logger(object):
         return 
             None, no return. 
         """
-        if self.debugger == False:
-            return
-        self.logger.critical(strings)
+        # 优先级为最高
+        if self.debugger != 0:
+            self.logger.critical(strings)

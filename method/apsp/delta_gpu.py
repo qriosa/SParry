@@ -27,12 +27,12 @@ def delta_stepping(para):
         cuf = f.read()
     mod = SourceModule(cuf)
 
-    logger.info("turning to func delta_stepping-gpu-apsp")
+    logger.debug("turning to func delta_stepping-gpu-apsp")
 
     # 起始时间
     t1 = time()
 
-    CSR, n, delta, pathRecordBool = para.CSR, para.n, para.delta, para.pathRecordBool
+    CSR, n, delta, pathRecordBool = para.graph.graph, para.graph.n, para.graph.delta, para.pathRecordBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
@@ -76,7 +76,7 @@ def delta_stepping(para):
     timeCost = time() - t1
     
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()

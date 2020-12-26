@@ -19,11 +19,11 @@ def dijkstra(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-cpu-mssp")
+    logger.debug("turning to func dijkstra-cpu-mssp")
 
     t1 = time()
 
-    CSR, n, srclist, pathRecordBool = para.CSR, para.n, para.srclist.copy(), para.pathRecordBool
+    srclist, pathRecordBool = para.srclist.copy(), para.pathRecordBool
 
     dist = []
 
@@ -38,7 +38,7 @@ def dijkstra(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()

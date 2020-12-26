@@ -10,6 +10,7 @@ import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 import pycuda.gpuarray as gpuarray
+from pycuda.autoinit import context
 
 cuFilepath = './method/sssp/cu/dijkstra.cu'
 logger = Logger(__name__)
@@ -26,18 +27,18 @@ def dijkstra(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result')    
     """
 
-    logger.info("turning to func dijkstra-gpu-sssp")
+    logger.debug("turning to func dijkstra-gpu-sssp")
 
     from utils.judgeDivide import judge_sssp
 
     judge_sssp(para)
     
     if para.part != None:
-        dist, timeCost = noStream(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
+        dist, timeCost = noStream(para.graph.graph, para.graph.n, para.graph.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
     else:
-        dist, timeCost = direct(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
+        dist, timeCost = direct(para.graph.graph, para.graph.n, para.graph.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID)
 
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if para.pathRecordBool:
         result.calcPath()
@@ -61,7 +62,7 @@ def direct(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-gpu-sssp no-divide")
+    logger.debug("turning to func dijkstra-gpu-sssp no-divide")
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -130,7 +131,7 @@ def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-gpu-sssp divide")
+    logger.debug("turning to func dijkstra-gpu-sssp divide")
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -161,10 +162,10 @@ def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
         # 相当于每个的断开点
         temp = np.full((n, ), i * part).astype(np.int32)
 
-        temp_gpu = drv.mem_alloc(temp.nbytes)
-        drv.memcpy_htod(temp_gpu, temp)
+        # temp_gpu = drv.mem_alloc(temp.nbytes)
+        # drv.memcpy_htod(temp_gpu, temp)
 
-        bases.append(temp_gpu)
+        bases.append(temp)
         
         Es.append(E[i * part:(i + 1) * part])
         Ws.append(W[i * part:(i + 1) * part])
@@ -206,18 +207,24 @@ def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
     flag = np.full((1, ), 0).astype(np.int32)
     flag_gpu = drv.mem_alloc(flag.nbytes)
 
+    # 基地址的空间申请
+    base_gpu = drv.mem_alloc(bases[0].nbytes)
+
     for j in range(n):
 
         flag[0] &= np.int32(0)
         drv.memcpy_htod(flag_gpu, flag)    
         
         for i in range(partNum):
+            # 拷贝基地址 bases[i] 到 GPU
+            drv.memcpy_htod(base_gpu, bases[i]) 
+
             noStream_cuda_fuc(V_gpu, 
                             drv.In(Es[i]),  
                             drv.In(Ws[i]), 
                             n_gpu, 
                             flag_gpu, 
-                            bases[i], 
+                            base_gpu, 
                             part_gpu, 
                             vis_gpu, 
                             dist_gpu,

@@ -1,7 +1,8 @@
 from time import time
 import numpy as np
 from queue import PriorityQueue
-from multiprocessing import Process, cpu_count, Manager, Pool
+from multiprocessing import Process, cpu_count, Queue
+from multiprocessing.sharedctypes import RawArray
 
 from classes.result import Result
 from utils.debugger import Logger
@@ -21,7 +22,7 @@ def dijkstra(para):
     return: 
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
-    logger.info("turning to func dijkstra-cpu-apsp")
+    logger.debug("turning to func dijkstra-cpu-apsp")
 
     if para.useMultiPro == True:
         return dijkstra_multi(para)
@@ -41,11 +42,11 @@ def dijkstra_single(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-cpu-apsp single-process")
+    logger.debug("turning to func dijkstra-cpu-apsp single-process")
 
     t1 = time()
 
-    CSR, n, pathRecordBool = para.CSR, para.n, para.pathRecordBool
+    CSR, n, pathRecordBool = para.graph.graph, para.graph.n, para.pathRecordBool
 
     dist = []
 
@@ -60,7 +61,7 @@ def dijkstra_single(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()
@@ -68,9 +69,7 @@ def dijkstra_single(para):
     return result
 
 
-# share_V, share_E, share_W, n = None, None, None, 
-
-def dijkstra_multi_sssp(args):
+def dijkstra_multi_sssp(V, E, W, n, sources, distQ):
     """
     function: 
         use dijkstra algorithm to solve a sssp as a process. 
@@ -86,34 +85,38 @@ def dijkstra_multi_sssp(args):
         dist, array, the distance array. 
     """
 
-    V, E, W, s, n = args[0], args[1], args[2], args[3], args[4]
-
     # 优先队列
     q = PriorityQueue()
 
-    dist = np.full((n,), INF).astype(np.int32)
-    dist[s] = 0
+    # 任务调度
+    while sources.empty() == False:
 
-    # vis 数组
-    vis = np.full((n, ), 0).astype(np.int32)
+        # 获取一个源点
+        s = sources.get()
 
-    # 开始计算
-    q.put((0, s))#放入s点
+        dist = np.full((n,), INF).astype(np.int32)
+        dist[s] = 0
 
-    while q.empty() == False:
-        p = q.get()[1]
+        # vis 数组
+        vis = np.full((n, ), 0).astype(np.int32)
 
-        if vis[p] == 1: #如果当前节点松弛已经过了，则不需要再松弛了
-            continue
+        # 开始计算
+        q.put((0, s))#放入s点
 
-        vis[p] = 1
+        while q.empty() == False:
+            p = q.get()[1]
 
-        for j in range(V[p], V[p + 1]):
-            if dist[E[j]] > dist[p] + W[j]:
-                dist[E[j]] = dist[p] + W[j]
-                q.put((dist[E[j]], E[j]))
+            if vis[p] == 1: #如果当前节点松弛已经过了，则不需要再松弛了
+                continue
+
+            vis[p] = 1
+
+            for j in range(V[p], V[p + 1]):
+                if dist[E[j]] > dist[p] + W[j]:
+                    dist[E[j]] = dist[p] + W[j]
+                    q.put((dist[E[j]], E[j]))
     
-    return dist
+        distQ.put((s, dist))
 
 
 def dijkstra_multi(para):
@@ -128,55 +131,58 @@ def dijkstra_multi(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-cpu-apsp multi-process")
+    logger.debug("turning to func dijkstra-cpu-apsp multi-process")
+    if para.namename == "__main__":
 
-    t1 = time()
+        t1 = time()
+        q = Queue()
 
-    CSR, n, pathRecordBool = para.CSR, para.n, para.pathRecordBool
+        CSR, n, pathRecordBool = para.graph.graph, para.graph.n, para.pathRecordBool
 
-    # share_V = CSR[0]
-    # share_E = CSR[1]
-    # share_W = CSR[2]
-    
-    tt = time()
+        shared_V = RawArray('i', CSR[0])
+        shared_E = RawArray('i', CSR[1])
+        shared_W = RawArray('i', CSR[2])
 
-    share_V = Manager().Array('i', CSR[0])
-    share_E = Manager().Array('i', CSR[1])
-    share_W = Manager().Array('i', CSR[2])
+        del CSR
+        
+        # 源点队列
+        sources = Queue()
 
-    print("convert time cost: ", time() - tt)
+        for i in range(n):
+            sources.put(i)
 
-    # del CSR
+        
+        # 创建 核心数 这么多个进程 通过队列实现任务调度
+        cores = cpu_count()
+        myProcesses = [Process(target = dijkstra_multi_sssp, args = (shared_V, shared_E, shared_W, n, sources, q)) for _ in range(cores)]
 
-    tt = time()
-    xs = []
-    for s in range(n):
-        xs.append([share_V, share_E, share_W, s, n])
-    print("append time cost: ", time() - tt)
+        for myProcess in myProcesses:
+            myProcess.start()
+        
+        for myProcess in myProcesses:
+            if myProcess.is_alive():
+                myProcess.join()
+        
+        dist = [None for i in range(n)]
 
-    cores = cpu_count()
-    with Pool(cores) as pool:
-        dist = np.array(pool.map(dijkstra_multi_sssp, xs))
-    
-    print("finish calc")
-    
-    # cores = cpu_count()
-    # myProcesses = [Process(target = dijkstra_multi_sssp, args=(share_V, share_E, share_W, share_dist, s, n)) for s in range(n)]
+        while q.empty() == False:
+            temp = q.get()
+            dist[temp[0]] = temp[1]
 
-    # for myProcess in myProcesses:
-    #     myProcess.start()
-    
-    # for myProcess in myProcesses:
-    #     myProcess.join()
-            
-    dist = np.array(dist)
+        dist = np.array(dist)
 
-    timeCost = time() - t1
+        timeCost = time() - t1
 
-    # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+        # 结果
+        result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
-    if pathRecordBool:
-        result.calcPath()
+        if pathRecordBool:
+            result.calcPath()
 
-    return result
+        return result
+    else:
+        print("herherherherhehr")
+        print(__name__)
+        print("jjjjjjjjjjjj")
+        print(para.namename)
+        print("qqqqqqqqqqqqqq")

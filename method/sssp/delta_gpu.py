@@ -23,7 +23,7 @@ def delta_stepping(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func delta_stepping-gpu-sssp")    
+    logger.debug("turning to func delta_stepping-gpu-sssp")    
     
     with open('./method/sssp/cu/delta.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -32,7 +32,7 @@ def delta_stepping(para):
     # 起始时间
     t1 = time()
 
-    CSR, n, s, delta, pathRecordBool = para.CSR, para.n, para.srclist, para.delta, para.pathRecordBool
+    CSR, n, s, delta, pathRecordBool = para.graph.graph, para.graph.n, para.srclist, para.graph.delta, para.pathRecordBool
 
     # 线程开启全局变量 
     if para.BLOCK != None:
@@ -61,6 +61,17 @@ def delta_stepping(para):
     # 获取函数
     delta_sssp_cuda_fuc = mod.get_function("delta_stepping")
 
+    # print(type(V), V)
+    # print(type(E), E)
+    # print(type(W), W)
+    # print(type(n), n)
+    # print(type(s), s)
+    # print(type(delta), delta)
+    # print(type(dist), dist)
+    # print(type(predist), predist)
+    # print(type(nowIsNull), nowIsNull)
+    # print(type(quickBreak), quickBreak)
+
     # 开始跑 
     delta_sssp_cuda_fuc(drv.In(V), 
                         drv.In(E), 
@@ -77,7 +88,7 @@ def delta_stepping(para):
     timeCost = time() - t1
     
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()

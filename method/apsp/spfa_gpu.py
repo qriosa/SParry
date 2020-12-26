@@ -33,10 +33,10 @@ def spfa(para):
         class, Result object.  (see the 'SPoon/classes/result.py/Result')   
     """
 
-    logger.info("turning to func spfa-gpu-apsp")
+    logger.debug("turning to func spfa-gpu-apsp")
 
-    CSR = para.CSR
-    n = para.n 
+    CSR = para.graph.graph
+    n = para.graph.n 
     pathRecording = para.pathRecordBool
 
     if(para.GRID is not None):
@@ -85,7 +85,7 @@ def spfa(para):
     )
     end_time = time.process_time()
     timeCost = end_time - start_time
-    result = Result(dist = DIST_np32, timeCost = timeCost)
+    result = Result(dist = DIST_np32, timeCost = timeCost, graph = para.graph)
     return result
 
     

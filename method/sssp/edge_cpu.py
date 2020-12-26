@@ -19,12 +19,12 @@ def edge(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func edge-cpu-sssp")
+    logger.debug("turning to func edge-cpu-sssp")
 
     t1 = time()
 
-    edgeSet, n, m, s, pathRecordBool = para.edgeSet, para.n, para.m, para.srclist, para.pathRecordBool
-    src, des, val = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2]
+    edgeSet, n, m, s, pathRecordBool = para.graph.graph, para.graph.n, para.graph.m, para.srclist, para.pathRecordBool
+    src, des, val = edgeSet[0], edgeSet[1], edgeSet[2]
 
     # 退出标识
     flag = 1
@@ -51,7 +51,7 @@ def edge(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.edgeSet, graphType = 'edgeSet')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
     
     if pathRecordBool:
         result.calcPath()

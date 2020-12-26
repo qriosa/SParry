@@ -19,11 +19,11 @@ def delta_stepping(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func delta_stepping-cpu-apsp")
+    logger.debug("turning to func delta_stepping-cpu-apsp")
 
     t1 = time()
     
-    CSR, n, delta, MAXN, pathRecordBool = para.CSR, para.n, para.delta, para.MAXN, para.pathRecordBool
+    n, pathRecordBool = para.graph.n, para.pathRecordBool
 
     dist = []
 
@@ -38,7 +38,7 @@ def delta_stepping(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()

@@ -37,7 +37,7 @@ def get_node_pos(node_list, radius=1, step=1, step_num=8, center=(0, 0), dim=2):
     all_pos = dict(zip(node_list, node_pos_list))
     return all_pos
 
-def draw(path, n, s, graph, graphType):
+def draw(path, s, graph):
     """
     function: 
         use path to draw a pic.
@@ -53,32 +53,29 @@ def draw(path, n, s, graph, graphType):
         None, no return.        
     """
 
-    assert (path is not None and n is not None and graph is not None and graphType is not None), "path, n, graph and graphType can not be None!"
+    assert (path is not None and s is not None and graph is not None), "path, s and graph can not be None!"
 
-    logger.info(f"entering to func draw, n = {n}, graphType = {graphType}")
+    logger.info(f"entering to func draw, n = {graph.n}")
+
+    n = graph.n
 
     G = nx.DiGraph()
     G.add_nodes_from(np.arange(n))
     matrix = np.full((n, n), INF)
 
     # 都转化为邻接矩阵 可以去重 毕竟这个画图会被覆盖。
-    if(graphType == 'CSR'):
-        V, E, W = graph[0], graph[1], graph[2]
+    if(graph.method != 'edge'):
+        V, E, W = graph.graph[0], graph.graph[1], graph.graph[2]
         for i in range(n):
             for j in range(V[i], V[i + 1]):
                 matrix[i][E[j]] = min(matrix[i][E[j]], W[j])
 
-    elif(graphType == 'matrix'):
-        matrix = graph
-
-    elif(graphType == 'edgeSet'):
-        src, des, w = graph[0], graph[1], graph[2]
+    else:
+        src, des, w = graph.graph[0], graph.graph[1], graph.graph[2]
         m = len(src)
         for i in range(m):
             matrix[src[i]][des[i]] = min(matrix[src[i]][des[i]], w[i])
 
-    else:
-        raise Exception("unknown graphType, can only be 'matrix', 'CSR' and 'edgeSet'")
 
     for i in range(n):
         for j in range(n):

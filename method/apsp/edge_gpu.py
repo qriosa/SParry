@@ -23,7 +23,7 @@ def edge(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func edge-gpu-apsp")
+    logger.debug("turning to func edge-gpu-apsp")
 
     with open('./method/apsp/cu/edge.cu', 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -32,8 +32,8 @@ def edge(para):
     # 开始计时
     t1 = time()
 
-    edgeSet, n, m, pathRecordBool = para.edgeSet, para.n, para.m, para.pathRecordBool
-    src, des, w = para.edgeSet[0], para.edgeSet[1], para.edgeSet[2] 
+    edgeSet, n, m, pathRecordBool = para.graph.graph, para.graph.n, para.graph.m, para.pathRecordBool
+    src, des, w = edgeSet[0], edgeSet[1], edgeSet[2] 
 
     if para.BLOCK != None:
         BLOCK = para.BLOCK
@@ -68,7 +68,7 @@ def edge(para):
     timeCost = time() - t1
     
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.edgeSet, graphType = 'edgeSet')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()

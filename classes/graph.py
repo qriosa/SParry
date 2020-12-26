@@ -6,7 +6,6 @@ from utils.debugger import Logger
 # set logging
 logger = Logger(__name__)
 
-
 class Graph(object):
     """
     function: 
@@ -39,132 +38,69 @@ class Graph(object):
         class, Result object. (see the 'SPoon/classes/graph.py/Graph') 
     """
 
-    # 只可以接受一个delta 和 s
-    def __init__(self, filename = None, directed = False):
+    def __init__(self):
 
-        # 预定义变量
+        logger.info("set a new Graph Object.")
+
+        # 预定义变量 图中的点和边
         self.n = -1
         self.m = -1
 
-        # 方向
-        self.directed = directed
+        # 图是否有方向
+        self.directed = "Unknown"
 
-        self.CSR = None
+        # 归一化为 graph
+        # CSR 图数据
+        # [src, des, w] 里面的每个边都将按照单向边来处理，并不会自己翻倍
+        self.graph = None
 
-        self.src = []
-        self.des = []
-        self.w = []
-        self.edgeSet = []
+        # 图数据类型 采用的算法 默认 dij
+        self.mathod = "dij"
+        self.delta = 3 # 若是 delta 则默认 delta 是 3
 
-        self.MAXW = -1 # 最大边权
-        self.MINW = INF # 最小边权
-        self.MAXD = -1 # 最大度
-        self.MAXU = -1 # 最大度的点(之一)
-        self.MIND = INF # 最小度
-        self.MINU = -1 # 最小度的点(之一)
+        # 最大边权
+        self.MAXW = -1 
+        # 最小边权
+        self.MINW = INF
+        # 最大度(仅有出度 因为无向图需要用两个有向边表示)
+        self.MAXD = -1 
+        # 最大度的点(之一)
+        self.MAXU = -1 
+        # 最小度
+        self.MIND = INF 
+        # 最小度的点(之一)
+        self.MINU = -1 
 
-        self.degree = None
+        # 各个点的度
+        self.degree = []
 
-        self.msg = '欢迎使用'
+
+        # 打印的提示信息
+        self.msg = "Welcome to use SPoon.\nIf you want see the detail of the Graph, you can set the parameter 'detail' of method 'read' as 'True'."
         
-        self.filename = filename
-        
-        self.read()
-
-
-    def read(self):
+    def setmsg(self):
         """
         function: 
-            read the graph from file.
-            only accept graphic data in edgeSet format and store it in memory in CSR/edgeSet format
-            by the way, we wanna to specify the edgeSet format as a variable with 3 array src/des/weight which are consistent with every edge in graph
+            set msg.
 
         parameters: 
             None, but 'self'.
 
         return:
-            None, no return.
+            None, no return.        
         """
-
-        if self.filename == None:
-            return
         
-        logger.info(f"reading graph from {self.filename}...")
-
-        try:
-            with open(self.filename, 'r') as f:
-                lines = f.readlines()
-        except:
-            filename = "./data/" + self.filename
-            try:
-                with open(filename, 'r') as f:
-                    lines = f.readlines()
-            except:
-                raise Exception("No such a file!")
-        
-        self.CSR = [[], [], []]
-
-        e = {}
-
-        self.n = int(lines[0].split(' ')[0])
-        self.m = int(lines[0].split(' ')[1])
-        
-        # 使用两个无向边表示有向边
-        if self.directed == False:
-            self.m *= 2
-
-        self.degree = np.full((self.n, ), 0).astype(np.int32)
-
-        lines = lines[1:]
-
-        for i in range(self.n):
-            e[str(i)] = []
-
-        for line in lines:
-            line = (line[:-1]).split(' ')
-            
-            e[line[0]].append((int(line[1]), int(line[2])))
-            
-            if self.directed == False:
-                e[line[1]].append((int(line[0]), int(line[2])))
-                self.src.append(int(line[1]))
-                self.des.append(int(line[0]))
-                self.w.append(int(line[2]))
-            
-            self.src.append(int(line[0]))
-            self.des.append(int(line[1]))
-            self.w.append(int(line[2]))
-
-            if int(line[2]) > self.MAXW:
-                self.MAXW = int(line[2])
-
-            if int(line[2]) < self.MINW:
-                self.MINW = int(line[2])
-
-
-            self.degree[self.src[-1]] += 1
-            self.degree[self.des[-1]] += 1
-
-        last = 0
-        for key in e:
-            self.CSR[0].append(last)
-            last += len(e[key])
-            
-            if len(e[key]) > self.MAXD:
-                self.MAXD = len(e[key])
-                self.MAXU = key
-
-            if len(e[key]) < self.MIND:
-                self.MIND = len(e[key])
-                self.MINU = key
-
-            for j in e[key]:
-                self.CSR[1].append(j[0])
-                self.CSR[2].append(j[1])
-
-        self.CSR[0].append(last)
-
-        self.reshape()
+        self.msg = f"""
+[+] the number of vertices in the Graph:\tn = {self.n}, 
+[+] the number of edges in the Graph:\t\tm = {self.m}, 
+[+] the max edge weight in the Graph:\t\tMAXW = {self.MAXW}, 
+[+] the min edge weight in the Graph:\t\tMINW = {self.MINW}, 
+[+] the max out degree in the Graph:\t\tdegree({self.MAXU}) = {self.MAXD}, 
+[+] the min out degree in the Graph:\t\tdegree({self.MINU}) = {self.MIND}, 
+[+] the average out degree of the Graph:\tavgDegree = {self.m/self.n},
+[+] the directed of the Graph:\t\t\tdirected = {self.directed}, 
+[+] the method of the Graph:\t\t\tmethod = {self.method}.
+"""
 
     def reshape(self):
         
@@ -184,14 +120,14 @@ class Graph(object):
         self.n = np.int32(self.n) # 结点数量
         self.m = np.int32(self.m) # 边的数量
 
-        self.CSR[0] = np.copy(self.CSR[0]).astype(np.int32) # CSR的V
-        self.CSR[1] = np.copy(self.CSR[1]).astype(np.int32) # CSR的E
-        self.CSR[2] = np.copy(self.CSR[2]).astype(np.int32) # CSR的W
+        # graph
+        # 不论是 CSR 还是 edgeSet 都是三元组
+        self.graph[0] = np.copy(self.graph[0]).astype(np.int32)
+        self.graph[1] = np.copy(self.graph[1]).astype(np.int32)
+        self.graph[2] = np.copy(self.graph[2]).astype(np.int32)
 
-        self.src = np.copy(self.src).astype(np.int32) # 每个边的起点
-        self.des = np.copy(self.des).astype(np.int32) # 每个边的终点
-        self.w = np.copy(self.w).astype(np.int32) # 每个边的边权
-        self.edgeSet = [self.src, self.des, self.w]
+        # delta
+        self.delta = np.int32(self.delta)
 
         self.MAXW = np.int32(self.MAXW) # 最大边权
         self.MINW = np.int32(self.MINW) # 最小边权
@@ -199,12 +135,4 @@ class Graph(object):
         self.MAXU = np.int32(self.MAXU) # 最大度的点(之一)
         self.MIND = np.int32(self.MIND) # 最小度
         self.MINU = np.int32(self.MINU) # 最小度的点(之一)
-
-        self.msg = f"""
-结点数量\tn = {self.n}, 
-无向边数量\tm = {self.m}, 
-最大边权\tMAXW = {self.MAXW}, 
-最大度\tdegree({self.MAXU}) = {self.MAXD}, 
-最小度\tdegree({self.MINU}) = {self.MIND}, 
-"""
 

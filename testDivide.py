@@ -1,20 +1,20 @@
 import numpy as np
 
-# filename = 'VEW_data20000000_109000000.txt_nodirected.npz'
-# temp = np.load(filename)
+filename = 'VEW_data20000000_109000000.txt_nodirected.npz'
+temp = np.load(filename)
 
-# V = temp['arr_0']
-# E = temp['arr_1']
-# W = temp['arr_2']
+V = temp['arr_0']
+E = temp['arr_1']
+W = temp['arr_2']
 
-filename = 'test.txt'
-from utils.readGraph import read
-g = read(filename)
-V, E, W = g.CSR[0], g.CSR[1], g.CSR[2]
+# filename = 'test.txt'
+# from utils.readGraph import read
+# g = read(filename)
+# V, E, W = g.CSR[0], g.CSR[1], g.CSR[2]
 
 from calc import calc
 
-srclist = None
+srclist = 0
 
 r1 = calc(graph = (V, E, W), graphType = 'CSR', method = 'dij', useCUDA = True, srclist = srclist)
 print(f"GPU finish, timeCost = {r1.timeCost}")

@@ -24,7 +24,7 @@ def dijkstra(para):
     return: 
         class, Result object. (see the 'SPoon/classes/result.py/Result')   
     """
-    logger.info("turning to func dijkstra-gpu-apsp")
+    logger.debug("turning to func dijkstra-gpu-apsp")
 
     from utils.judgeDivide import judge_apsp
 
@@ -32,13 +32,13 @@ def dijkstra(para):
 
     # 2 就是 能直接跑并行全源
     if tag == 2:
-        dist, timeCost = nodivide(para.CSR, para.n, para.pathRecordBool, para.BLOCK, para.GRID)
+        dist, timeCost = nodivide(para.graph.graph, para.graph.n, para.pathRecordBool, para.BLOCK, para.GRID)
     
     # 否则就是需要拆解成多个单源问题
     else:
-        dist, timeCost = divide(para.CSR, para.n, para.m, para.part, para.pathRecordBool, para.BLOCK, para.GRID, tag)
+        dist, timeCost = divide(para.graph.graph, para.graph.n, para.graph.m, para.part, para.pathRecordBool, para.BLOCK, para.GRID, tag)
 
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if para.pathRecordBool:
         result.calcPath()
@@ -66,7 +66,7 @@ def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
         cuf = f.read()
     mod = SourceModule(cuf)
     
-    logger.info("turning to func dijkstra-gpu-apsp no-divide")
+    logger.debug("turning to func dijkstra-gpu-apsp no-divide")
 
     t1 = time()
 
@@ -130,7 +130,7 @@ def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-gpu-apsp divide")
+    logger.debug("turning to func dijkstra-gpu-apsp divide")
 
     # 起始时间
     t1 = time()
@@ -187,7 +187,7 @@ def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
 #         cuf = f.read()
 #     mod = SourceModule(cuf)
 
-#     logger.info("turning to func dijkstra-gpu-apsp divide")
+#     logger.debug("turning to func dijkstra-gpu-apsp divide")
 
 #     # 起始时间
 #     t1 = time()

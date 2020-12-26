@@ -30,9 +30,9 @@ class Result(object):
                 dist = None, 
                 timeCost = None, 
                 memoryCost = None, 
-                graph = None,
-                graphType = None,
-                msg = ""):
+                graph = None): # class Graph
+
+        logger.info("class.Result initializing.")
 
         self.dist = np.array(dist).flatten() # 距离记录
         self.path = None # 路径记录
@@ -42,12 +42,8 @@ class Result(object):
         
         # 待补充 更多关于图的特点
         self.graph = graph # 图数据
-        self.graphType = graphType # 图类型
-        self.msg = msg # 图信息
-        self.n = None # 结点数
 
-        logger.info("class.Result initializing.")
-
+    
     def display(self):
         """
         function: 
@@ -59,7 +55,8 @@ class Result(object):
         return: 
             str, the msg info.       
         """
-        return f"{self.msg}计算用时\ttimeCost = {self.timeCost}"
+
+        return f"{self.graph.msg}\n\n[+] timeCost = {self.timeCost}"
     
     def drawPath(self):
         """
@@ -81,9 +78,9 @@ class Result(object):
         # 先就只展示一个源
         for i in range(self.dist.size):
             if self.dist[i] == 0:
-                s = i % self.n
+                s = i % self.graph.n
                 
-        draw(path = self.path, n = self.n, s = s, graph = self.graph, graphType = self.graphType)
+        draw(path = self.path, s = s, graph = self.graph)
 
     def calcPath(self):
         """
@@ -102,18 +99,14 @@ class Result(object):
         if(self.dist is None):
             raise Exception("can not calc path without dist")
         
-        if(self.graph is None or self.graphType is None):
-            raise Exception("can not calc path without graph and graphType")
+        if(self.graph is None):
+            raise Exception("can not calc path without graph")
 
         # calc path with dist and graphic data
-        if(self.graphType == "CSR"):
-            self.calcPathFromCSR()
-        elif(self.graphType == "matrix"):
-            self.calcPathFromMatrix()
-        elif(self.graphType == "edgeSet"):
+        if(self.graph.method == "edge"):
             self.calcPathFromEdgeSet()
         else:
-            raise Exception("you must give a right graphType.")
+            self.calcPathFromCSR()
 
     def calcPathFromCSR(self):
         """
@@ -127,15 +120,15 @@ class Result(object):
             None, no return.        
         """
 
-        V, E, W = self.graph[0], self.graph[1], self.graph[2]
-        self.n = len(V) - 1
+        V, E, W = self.graph.graph[0], self.graph.graph[1], self.graph.graph[2]
+        n = self.graph.n
         self.path = np.full((self.dist.size, ), -1)
-        sNum = self.dist.size // self.n # 源点个数
+        sNum = self.dist.size // n # 源点个数
 
-        for i in range(self.n):
+        for i in range(n):
             for j in range(V[i], V[i + 1]):
                 for k in range(sNum):
-                    kn = k * self.n
+                    kn = k * n
                     if(self.path[E[j] + kn] == -1 and self.dist[E[j] + kn] == self.dist[i + kn] + W[j]):
                         self.path[E[j] + kn] = i # E[j] 这个点在某个源的问题中的前驱是结点i
         
@@ -151,16 +144,18 @@ class Result(object):
             None, no return.         
         """
 
+        raise Exception("there should not be a matrix graph data.")
+
         # 这里就不再检验数据的正确性了
-        self.n = np.array(self.graph).shape[0]
+        n = np.array(self.graph).shape[0]
 
         self.path = np.full((self.dist.size, ), -1)
-        sNum = self.dist.size // self.n # 源点个数
+        sNum = self.dist.size // n # 源点个数
 
-        for i in range(self.n):
-            for j in range(self.n):
+        for i in range(n):
+            for j in range(n):
                 for k in range(sNum):
-                    kn = k * self.n
+                    kn = k * n
                     if(self.path[j + kn] == -1 and self.dist[j + kn] == self.dist[i + kn] + self.matrix[i][j]):
                         self.path[j + kn] = i # E[j] 这个点在某个源的问题中的前驱是结点i
 
@@ -177,20 +172,16 @@ class Result(object):
         """
 
         # 这里就不再检验数据的正确性了
-        src, des, w = self.graph[0], self.graph[1], self.graph[2]
-        m = len(src)
+        src, des, w = self.graph.graph[0], self.graph.graph[1], self.graph.graph[2]
+        m = self.graph.m
 
         self.path = np.full((self.dist.size, ), -1)
-        self.n = 0
+        n = self.graph.n
 
-        for i in range(m):
-            self.n = max(max(src[i], des[i]), self.n)
-        self.n += 1 # 从 0 开始因此得 +1
-
-        sNum = self.dist.size // self.n # 源点个数
+        sNum = self.dist.size // n # 源点个数
 
         for i in range(m):
             for k in range(sNum):
-                kn = k * self.n
+                kn = k * n
                 if(self.path[des[i] + kn] == -1 and self.dist[des[i] + kn] == self.dist[src[i] + kn] + w[i]):
                     self.path[des[i] + kn] = src[i]# E[j] 这个点在某个源的问题中的前驱是结点i        

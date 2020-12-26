@@ -21,7 +21,7 @@ def dijkstra(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result')     
     """
 
-    logger.info("turning to func dijkstra-cpu-sssp")
+    logger.debug("turning to func dijkstra-cpu-sssp")
 
     return dij_serial(para)
 
@@ -42,11 +42,11 @@ def dij_serial(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    # logger.info("turning to func dij_serial-sssp")
+    # logger.debug("turning to func dij_serial-sssp")
 
     t1 = time()
 
-    CSR, n, s, pathRecordBool = para.CSR, para.n, para.srclist, para.pathRecordBool
+    CSR, n, s, pathRecordBool = para.graph.graph, para.graph.n, para.srclist, para.pathRecordBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
@@ -79,7 +79,7 @@ def dij_serial(para):
     timeCost = time() - t1
 
     # 结果
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
         result.calcPath()
@@ -180,7 +180,7 @@ def dij_serial(para):
 #         class, Result object. (see the 'SPoon/classes/result.py/Result')     
 #     """
 
-#     logger.info("turning to func dij_concurrent-sssp")
+#     logger.debug("turning to func dij_concurrent-sssp")
 
 #     t1 = time()
 

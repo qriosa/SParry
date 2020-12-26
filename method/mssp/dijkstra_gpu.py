@@ -24,7 +24,7 @@ def dijkstra(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-gpu-mssp")
+    logger.debug("turning to func dijkstra-gpu-mssp")
 
     from utils.judgeDivide import judge_mssp
     
@@ -32,13 +32,13 @@ def dijkstra(para):
 
     # 这个多源问题可以直接解决
     if tag == 2:
-        dist, timeCost = nodivide(para.CSR, para.n, para.srclist, para.pathRecordBool, para.BLOCK, para.GRID)
+        dist, timeCost = nodivide(para.graph.graph, para.graph.n, para.srclist, para.pathRecordBool, para.BLOCK, para.GRID)
     
     # 这个多源问题需要拆分解决
     else:
-        dist, timeCost = divide(para.CSR, para.n, para.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID, tag)
+        dist, timeCost = divide(para.graph.graph, para.graph.n, para.graph.m, para.srclist, para.part, para.pathRecordBool, para.BLOCK, para.GRID, tag)
 
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if para.pathRecordBool:
         result.calcPath()
@@ -62,7 +62,7 @@ def nodivide(CSR, n, srclist, pathRecordBool, BLOCK, GRID):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-gpu-mssp no-divide")
+    logger.debug("turning to func dijkstra-gpu-mssp no-divide")
 
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
@@ -133,7 +133,7 @@ def divide(CSR, n, m, srclist, part, pathRecordBool, BLOCK, GRID, tag):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func dijkstra-gpu-mssp divide")
+    logger.debug("turning to func dijkstra-gpu-mssp divide")
 
     # 起始时间
     t1 = time()
@@ -181,7 +181,7 @@ def divide(CSR, n, m, srclist, part, pathRecordBool, BLOCK, GRID, tag):
 #         Result(class).(more info please see the developer documentation) .
 #     """
 
-#     logger.info("turning to func dijkstra-gpu-mssp divide")
+#     logger.debug("turning to func dijkstra-gpu-mssp divide")
 
 #     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
 #         cuf = f.read()

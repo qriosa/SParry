@@ -20,10 +20,10 @@ def spfa(para):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
-    logger.info("turning to func spfa-cpu-mssp")
+    logger.debug("turning to func spfa-cpu-mssp")
 
-    CSR = para.CSR
-    n = para.n 
+    CSR = para.graph.graph
+    n = para.graph.n 
     srclist = copy.deepcopy(para.srclist)
     pathRecording = para.pathRecordBool
 
@@ -39,7 +39,7 @@ def spfa(para):
     para.srclist = srclist
     end_time = time()
     timeCost = end_time - start_time
-    result = Result(dist = dist, timeCost = timeCost, msg = para.msg, graph = para.CSR, graphType = 'CSR')
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecording:
         result.calcPath()
