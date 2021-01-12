@@ -94,7 +94,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid, 
     else:
         raise Exception("undefined srclist type")
 
-    if useMultiPro and useCUDA == False and (method != 'dij' or para.sourceType == 'SSSP'):
+    if useMultiPro and useCUDA == False and (para.graph.method != 'dij' or para.sourceType == 'SSSP'):
         raise Exception("can only support dijkstra algorithm to solve APSP and MSSP.")
     
     para.useMultiPro = useMultiPro

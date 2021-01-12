@@ -76,7 +76,7 @@ class Graph(object):
 
 
         # 打印的提示信息
-        self.msg = "Welcome to use SPoon.\nIf you want see the detail of the Graph, you can set the parameter 'detail' of method 'read' as 'True'."
+        self.msg = "Welcome to use SPoon.\nIf you want see the detail of the Graph, you can set the parameter 'detail' of method 'read' in 'pretreat.py' as 'True'."
         
     def setmsg(self):
         """

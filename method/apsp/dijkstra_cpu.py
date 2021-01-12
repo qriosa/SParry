@@ -1,8 +1,10 @@
 from time import time
 import numpy as np
+
 from queue import PriorityQueue
-from multiprocessing import Process, cpu_count, Queue
+from multiprocessing import Process, cpu_count, Manager
 from multiprocessing.sharedctypes import RawArray
+
 
 from classes.result import Result
 from utils.debugger import Logger
@@ -69,7 +71,7 @@ def dijkstra_single(para):
     return result
 
 
-def dijkstra_multi_sssp(V, E, W, n, sources, distQ):
+def dijkstra_multi_sssp(V, E, W, n, sources, distQ, id0):
     """
     function: 
         use dijkstra algorithm to solve a sssp as a process. 
@@ -117,6 +119,8 @@ def dijkstra_multi_sssp(V, E, W, n, sources, distQ):
                     q.put((dist[E[j]], E[j]))
     
         distQ.put((s, dist))
+    
+    print(f"id = {id0} source = {s}, is finished....., source empty? {sources.empty()}")
 
 
 def dijkstra_multi(para):
@@ -135,7 +139,10 @@ def dijkstra_multi(para):
     if para.namename == "__main__":
 
         t1 = time()
-        q = Queue()
+        # q = Queue()
+        # 这样就可以退出了？ 如果不用 manager 的就会卡死掉子进程无法退出
+        manager = Manager()
+        q = manager.Queue()
 
         CSR, n, pathRecordBool = para.graph.graph, para.graph.n, para.pathRecordBool
 
@@ -146,7 +153,7 @@ def dijkstra_multi(para):
         del CSR
         
         # 源点队列
-        sources = Queue()
+        sources = manager.Queue()
 
         for i in range(n):
             sources.put(i)
@@ -154,7 +161,7 @@ def dijkstra_multi(para):
         
         # 创建 核心数 这么多个进程 通过队列实现任务调度
         cores = cpu_count()
-        myProcesses = [Process(target = dijkstra_multi_sssp, args = (shared_V, shared_E, shared_W, n, sources, q)) for _ in range(cores)]
+        myProcesses = [Process(target = dijkstra_multi_sssp, args = (shared_V, shared_E, shared_W, n, sources, q, _)) for _ in range(cores)]
 
         for myProcess in myProcesses:
             myProcess.start()
