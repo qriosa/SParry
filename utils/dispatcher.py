@@ -34,15 +34,15 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid, 
     parameter graph can only be Graph Object.
 
     -----------------------------------------------------------   
-    try use method in pretreat.py to pretreat your graph data.
+    try use func read() in pretreat.py to pretreat your graph data.
     such as:
         >>> from pretreat import read
-        >>> g = read(CSR = CSR, method = 'dij',[,])
+        >>> g = read(CSR = CSR, method = 'dij', [,])
         >>> from calc import calc
         >>> result = calc(graph = graph, [,])
 
     -----------------------------------------------------------
-    more infomation please see the tutorials.
+    Please see the tutorials for more infomation.
 """
     # graph = np.array(graph)
     # assert graph.shape != (), "graph data can not be None."

@@ -8,7 +8,7 @@
 '''
 from utils.debugger import Logger
 from classes.device import Device
-from utils.settings import forceDivide
+from utils.settings import forceDivide, noDivide
 
 from math import sqrt
 import numpy as np
@@ -156,6 +156,10 @@ def judge_apsp(para):
     return:
         bool, [0/1/2]. (more info please see the developer documentation).    
     """
+
+    # # 判断强制不分图
+    # if noDivide == True:
+    #     return 2
 
     # 获取设备的显卡信息
     para.device = Device()

@@ -1,0 +1,9 @@
+,n,m,method,timeGPU,checkGPU,timeCPU,checkCPU
+0,100,100,dij,0.0304,True,0.1653,True
+1,100,100,spfa,0.0258,True,0.0717,True
+2,100,100,delta,0.0352,True,0.2068,True
+3,100,100,edge,0.0251,True,0.1213,True
+4,100,200,dij,0.0289,True,0.1653,True
+5,100,200,spfa,0.0057,True,0.0843,True
+6,100,200,delta,0.0193,True,0.2019,True
+7,100,200,edge,0.0111,True,0.1704,True

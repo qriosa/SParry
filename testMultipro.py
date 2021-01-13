@@ -18,9 +18,9 @@ if __name__ == "__main__":
     t2 = time()
     print(f"全部串行计算完毕, timeCost = {t2 - t1}")
 
-    r1 = time()
+    t1 = time()
     res2 = calc(graph = g, useCUDA = False, useMultiPro = True, srclist = None, namename = __name__)
-    r2 = time()
+    t2 = time()
     print(f"多进程串行计算完毕, timeCost = {t2 - t1}")
 
     check(res1.dist, res2.dist, "single", "multipro")

@@ -6,6 +6,7 @@ from utils.myPrint import PRINT_red
 from utils.genAGraph import generate
 from utils.check import check
 from utils.settings import INF
+
 from calc import calc
 from pretreat import read
 
