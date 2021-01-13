@@ -1,7 +1,7 @@
 # use debugger level
 # 0~6
 # no, noset, debug, info, warnning, error, critical
-debugger = 4
+debugger = 2
 
 # the INF
 INF = 0x7f7f3f7f

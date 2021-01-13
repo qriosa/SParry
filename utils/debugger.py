@@ -46,7 +46,7 @@ class Logger(object):
             return
 
         # 优先级为 1
-        self.logger.notset(strings)
+        self.logger.info("notset: " + strings)
 
     def debug(self, strings):
         """
@@ -63,7 +63,7 @@ class Logger(object):
             return
         
         # 优先级为  2
-        self.logger.debug(strings)
+        self.logger.info("DEBUG: " + strings)
 
     def info(self, strings):
         """

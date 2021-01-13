@@ -85,19 +85,18 @@ def work(n, m):
 	TimeGPUs.append((t2 - t1) * 100000 // 10 / 10000)
 
 
-	print(res[0].dist.shape)
-	print(res[1].dist.shape)
+	print(res[0].dist)
+	print(res[1].dist)
+	print((res[0].dist == res[1].dist).all())
 
 
 if __name__ == '__main__':
 	
 	# 节点数的列表
-	# ns = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
-	ns = [100]
+	ns = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
 
 	# 度的列表, 有一个度为 1 可以展示稀疏图
-	# ds = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
-	ds = [1, 2]
+	ds = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 
 	# CSV name 每次运行都是一个新的文件名
 	filename = f"./testResult/apsp/test_{str(time())[11:]}.csv"
