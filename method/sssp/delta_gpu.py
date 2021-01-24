@@ -20,7 +20,7 @@ def delta_stepping(para):
         class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result')
     """
 
     logger.debug("turning to func delta_stepping-gpu-sssp")    

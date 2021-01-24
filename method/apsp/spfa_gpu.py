@@ -24,7 +24,7 @@ logger = Logger(__name__)
 def spfa(para):
     """
 	function: 
-        use Bellman-Ford algorithm in GPU to solve the APSP . 
+        use Bellman-Ford algorithm in GPU to solve the APSP. 
 	
 	parameters:  
 		class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')

@@ -13,7 +13,7 @@ __global__ void kernelForMSSP(int *V, int *E, int *W, int *n, int *src, int *sn,
     while(stInd < (*sn))
     {
         align = (stInd * (*n));
-        while(1){/*这个while里解决了一个单元最短路问题*/
+        while(1){/*这个while里解决了一个单元最短路问题*/ 
             QuickExit = 0;
             u = threadId;
             while(u < (*n)){

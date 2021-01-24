@@ -10,13 +10,13 @@ logger = Logger(__name__)
 def edge(para):
     """
     function: 
-        use edgeSet in CPU to solve the APSP.  (more info please see the developer documentation) .
+        use edgeSet in CPU to solve the APSP.  (more info please see the developer documentation).
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func edge-cpu-apsp")

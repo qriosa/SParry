@@ -6,7 +6,7 @@ __global__ void spfaKernelForSSSP(int *V, int *E, int *W, int *n, bool *visit,in
     const int threadId = threadIdx.z*(blockDim.x * blockDim.y)+ threadIdx.y* blockDim.x+ threadIdx.x;
     const int blockSize =blockDim.x * blockDim.y * blockDim.z;
     
-    while(1)/*这个while里解决了一个单源最短路问题*/
+    while(1)/*这个while里解决了一个单源最短路问题 */
     {
         u = threadId;
         QuickExit = 0;

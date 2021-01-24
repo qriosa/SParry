@@ -26,7 +26,7 @@ def spfa(para):
         use spfa algorithm in GPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
     
     return: 
         class, Result object. (see the 'SPoon/classes/result.py/Result') 

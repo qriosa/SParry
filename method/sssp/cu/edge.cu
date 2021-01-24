@@ -1,4 +1,4 @@
-// 普通 edge 不记录路径
+// 普通 edge 不记录路径 
 __global__ void edge(int* src, int* des, int* w, int* m, int* dist){ // 每个线程作为一条边 判断两个端点是否发生了改变 w可以不用每次都传吧
 	
 	const int e0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 

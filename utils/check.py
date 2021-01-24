@@ -16,7 +16,7 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
         name2: str, the name of data2.
     
     return: 
-        str, the EQUAL or NOT.
+        str, the EQUAL or NOT. 
     """
     m1 = hashlib.md5()
     m2 = hashlib.md5()

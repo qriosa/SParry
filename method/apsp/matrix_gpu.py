@@ -14,10 +14,11 @@ def matrix(matrix, n, pathRecordBool = False):
     """
     function: 
         use Floyd-Warshall algorithm in GPU to solve the APSP. 
-        (more info please see the developer documentation) .
+        (more info please see the developer documentation).
     
     parameters:  
-        matrix: adjacency matrix of the graph data. (more info please see the developer documentation) .
+        matrix: adjacency matrix of the graph data. 
+            (more info please see the developer documentation) .
         n: the number of the vertices in the graph.
         pathRecordBool: record the path or not.
     

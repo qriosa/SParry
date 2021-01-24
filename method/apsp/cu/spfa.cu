@@ -31,6 +31,7 @@
 //                 }
 //                 u+=blockSize;
 //             }
+
 //             __syncthreads();
 //             u=threadId;
 //             while(u < (*n)){

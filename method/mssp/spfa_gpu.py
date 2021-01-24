@@ -22,7 +22,7 @@ logger = Logger(__name__)
 def spfa(para):
     """
     function: 
-        use spfa algorithm in GPU to solve the MSSP. 
+        use spfa algorithm in GPU to solve the MSSP.
     
     parameters:  
         class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 

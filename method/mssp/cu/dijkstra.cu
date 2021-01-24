@@ -9,7 +9,7 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, 
 	// const int blockNum = (const int)(gridDim.x); // block总数 也即是 一次最多解决多少和单源问题
 
 	int u = -1;
-	int sn = -1;
+	int sn = -1; 
 	// int sIndex = blockIdx.x; // s是源点的问题
 	int sIndex = blockIdx.z * (gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
 

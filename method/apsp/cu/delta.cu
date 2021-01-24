@@ -39,7 +39,6 @@ __global__ void delta_stepping(int* V, int* E, int* W, int* n, int* delta, int* 
 
 		__syncthreads();
 		
-
 		// 不可以通过放入的时候来判断 因为有可能某个桶是很久很久前放入了点的 不是直接的上一轮放的
 		// 但是可以通过所有放的桶中最大的哪个是谁来判断
 		while(1){ // 当前想要计算的桶必须小于等于最大桶 

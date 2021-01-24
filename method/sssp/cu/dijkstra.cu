@@ -1,4 +1,4 @@
-// 简单并行 的 dijkstra
+// 简单并行 的 dijkstra 
 __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, int* predist){
 	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
 	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread

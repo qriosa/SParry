@@ -14,6 +14,6 @@ def deviceinfo():
         class, Device object.(see the 'SPoon/classes/device.py/Device')
     """
 
-    # 实例化类
+    # 实例化类 
     device = device()
     return device

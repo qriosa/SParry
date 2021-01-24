@@ -42,7 +42,7 @@ class Graph(object):
 
         logger.info("set a new Graph Object.")
 
-        # 预定义变量 图中的点和边
+        # 预定义变量 图中的点和边 
         self.n = -1
         self.m = -1
 

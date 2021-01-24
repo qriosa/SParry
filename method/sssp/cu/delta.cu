@@ -8,7 +8,7 @@ __global__ void delta_stepping(int* V, int* E, int* W, int* n, int* s, int* delt
 	const int localSize = 100; // 用这个来调控开启的多少
 
 	// nowIsNull 全局变量 用于标记当前轮的桶是否是空的 1就是非空
-	// quickBreak 为1 就说明有桶有点
+	// quickBreak 为1 就说明有桶有点 
 
 	int B[localSize]; // 最多支持1024 * localSize 个点 也够了吧？ u 线程的 B[i] 实际意义是 代表点 i * blockDimx.x + u 归属于哪个桶
 	bool hadin[localSize]; // 同理表示某个点是否曾经在当前桶中呆过  主要用于重边

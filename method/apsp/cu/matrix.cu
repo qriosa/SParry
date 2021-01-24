@@ -32,4 +32,5 @@ __global__ void vectorAdd_MinSharedMemory(int* a, int* b, int* c, int* INF_globa
             __syncthreads();
     }
     c[row*(*b)+col] = INF;
+    
 }

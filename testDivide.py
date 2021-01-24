@@ -9,7 +9,7 @@ W = temp['arr_2']
 
 # filename = 'test.txt'
 # from utils.readGraph import read
-# g = read(filename)
+# g = read(filename) 
 # V, E, W = g.CSR[0], g.CSR[1], g.CSR[2]
 
 from calc import calc

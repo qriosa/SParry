@@ -12,7 +12,7 @@ __global__ void edge(int* src, int* des, int* w, int* n, int* m, int* srcNum, in
     
     __shared__ int quickBreak[1]; // block 内部的退出标识
     
-    while(s < (*srcNum)){ // 源点也必须有效才行
+    while(s < (*srcNum)){ // 源点也必须有效才行 
         
         sn = (s * (*n)); // 计算出当前源点的偏移
         

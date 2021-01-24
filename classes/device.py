@@ -149,6 +149,7 @@ class Device(object):
         return:        
             None, no return.        
         """
+        
         # 获取设备的信息, 并返回 deviceinfo 的类    
 
         # 初始化

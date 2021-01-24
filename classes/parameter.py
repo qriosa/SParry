@@ -4,7 +4,7 @@ class Parameter(object):
         transfer the parameters in the functions.
 
     parameters: 
-        None, but 'self'.
+        None, but 'self'. 
 
     attributes:
         graph: class Graph, must, the graph data that you want to get the shortest path.

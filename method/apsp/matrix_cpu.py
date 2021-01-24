@@ -17,7 +17,7 @@ def matrix(matrix, n, pathRecordBool = False):
     """
     function: 
         use Floyd-Warshall algorithm in CPU to solve the APSP. 
-        (more info please see the developer documentation) .
+        (more info please see the developer documentation).
     
     parameters:  
         matrix: adjacency matrix of the graph data. (more info please see the developer documentation) .

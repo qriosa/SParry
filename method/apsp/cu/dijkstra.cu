@@ -29,6 +29,7 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, in
 				}
 				u += offset;
 			}
+			
 			__syncthreads(); 
 
 			u = u0;

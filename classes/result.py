@@ -7,7 +7,7 @@ logger = Logger(__name__)
 class Result(object):
     """
     function: 
-        to store the result of different algorithm.
+        to store the result of different algorithm. 
 
     parameters:
         dist: list, the shortest path distance answer for algorithm.

@@ -5,6 +5,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 logger = Logger(__name__)
 
 def get_node_pos(node_list, radius=1, step=1, step_num=8, center=(0, 0), dim=2):
@@ -92,6 +93,7 @@ def draw(path, s, graph):
     for i in range(n):
         if pathi[i] != -1:
             red_edges.append((i, pathi[i]))
+            
             # 无向图暂时先这样写 怕颜色被覆盖了 但是有向图这样写也没有关系 
             red_edges.append((pathi[i], i))
     

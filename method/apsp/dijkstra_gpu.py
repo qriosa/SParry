@@ -294,4 +294,4 @@ def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
 #     timeCost = time() - t1
 
 #     # 结果
-#     return dist, timeCost
+#     return dist, timeCost 

@@ -20,7 +20,7 @@ def delta_stepping(para):
         class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result')
     """
 
     with open('./method/mssp/cu/delta.cu', 'r', encoding = 'utf-8') as f:
