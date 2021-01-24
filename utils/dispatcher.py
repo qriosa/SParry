@@ -6,20 +6,19 @@ import numpy as np
 
 logger = Logger(__name__)
 
-def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid, namename):
+def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
     """
     function: 
         schedule the program by passing in parameters.
     
     parameters: 
-        graph: str/list/tuple, must, the graph data that you want to get the shortest path.(more info please see the developer documentation).
-        graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
-        method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        graph: str/list/tuple, must, the graph data that you want to get the shortest path.
+            (more info please see the developer documentation).
         useCUDA: bool, use CUDA to speedup or not.
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         pathRecordBool: bool, record the path or not.
-        srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
-        msg: the info of the graph.
+        srclist: int/lsit/None, the source list, can be [None, list, number].
+            (more info please see the developer documentation).
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
@@ -98,7 +97,6 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid, 
         raise Exception("can only support dijkstra algorithm to solve APSP and MSSP.")
     
     para.useMultiPro = useMultiPro
-    para.namename = namename
 
     # 依据使用的方法来选择图数据的类型
     # 矩阵相乘

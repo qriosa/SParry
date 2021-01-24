@@ -24,19 +24,17 @@ def getINF():
     return inf
 
 
-def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = False, srclist = None, block = None, grid = None, namename = None):
+def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = False, srclist = None, block = None, grid = None):
     
     """
     function: 
         a calculate interface.
     
     parameters: 
-        graph: str/list/tuple, must, the graph data that you want to get the shortest path.(more info please see the developer documentation).
-        graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
-        method: str, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+        graph: class Graph, must, the graph data that you want to get the shortest path.
+            (more info please see the developer documentation).
         useCUDA: bool, use CUDA to speedup or not.
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
-        directed: bool, directed or not. only valid in read graph from file.
         pathRecordBool: bool, record the path or not.
         srclist: int/lsit/None, the source list, can be [None, list, number].(more info please see the developer documentation).
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
@@ -50,9 +48,9 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
 
     logger.info(f"entering calc func...")
      
-    return dispatch(graph = graph, useCUDA = useCUDA, useMultiPro = useMultiPro, pathRecordBool = pathRecordBool, srclist = srclist, block = block, grid = grid, namename = namename)
+    return dispatch(graph = graph, useCUDA = useCUDA, useMultiPro = useMultiPro, pathRecordBool = pathRecordBool, srclist = srclist, block = block, grid = grid)
     
 
 
 if __name__ == "__main__":
-    calc(namename = __name__)
+    calc()

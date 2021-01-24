@@ -62,11 +62,11 @@ def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
 
+    logger.debug("turning to func dijkstra-gpu-apsp no-divide")
+
     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
         cuf = f.read()
     mod = SourceModule(cuf)
-    
-    logger.debug("turning to func dijkstra-gpu-apsp no-divide")
 
     t1 = time()
 

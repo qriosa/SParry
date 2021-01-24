@@ -10,7 +10,8 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, 
 
 	int u = -1;
 	int sn = -1;
-	int sIndex = blockIdx.x; // s是源点的问题
+	// int sIndex = blockIdx.x; // s是源点的问题
+	int sIndex = blockIdx.z * (gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
 
 	__shared__ int quickBreak[1];
 
@@ -49,6 +50,7 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, 
 			if(quickBreak[0] == 0){
 				break;
 			}
+			__syncthreads(); // 这里不同步一下，有可能跑的快的线程去开头给它设置为 0 了，后面的线程本应该不退出的就提前退出了。
 		}
 		sIndex += blockNum; // 调向下一个源点 
 	}	

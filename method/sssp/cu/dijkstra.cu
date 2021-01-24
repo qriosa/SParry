@@ -34,6 +34,7 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, in
 		__syncthreads(); 
 		if(quickBreak[0] == 0)
 			break;
+		__syncthreads(); // 这里不同步一下，有可能跑的快的线程去开头给它设置为 0 了，后面的线程本应该不退出的就提前退出了。
 	}	
 }
 

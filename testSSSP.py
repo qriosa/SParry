@@ -4,12 +4,13 @@ from utils.myPrint import PRINT_blue
 from utils.myPrint import PRINT_red
 from utils.check import checkBool
 
+from time import time
+import pandas as pd
+from random import randint
+
 from calc import calc
 from pretreat import read
 
-import pandas as pd
-from time import time
-import numpy as np
 
 # 写入CSV中
 Ns = []
@@ -20,21 +21,23 @@ CheckGPUs = []
 TimeGPUs = []
 TimeCPUs = []
 
-def work(n, m, s):
+def work(n, m):
 	"""
 	接收一个文件进行读取并进行用时测算
 	"""
+	
+	filename = f"./data/data_{n}_{m}"
+	g = read(filename = filename)
 
-	temp = np.load(f'./predata/data_{n}_{m}_CSV.npz')
-	V, E, W = temp['arr_0'], temp['arr_1'],temp['arr_2']
-	CSR = [V, E, W]
-	g = read(CSR = CSR)
 
 	methods = ['dij', 'spfa', 'delta']
 	res = []
 
 	# GPU  存在一个启动慢问题 所以先启动了
-	r = calc(graph = g, useCUDA = True, srclist = s)
+	r = calc(graph = g, useCUDA = True, srclist = 2)
+
+	# 随机源点
+	s = randint(0, n-2)
 
 	for method in methods:
 		g.method = method
@@ -63,10 +66,7 @@ def work(n, m, s):
 
 
 	# edge
-	temp = np.load(f'./predata/data_{n}_{m}_edge.npz')
-	V, E, W = temp['arr_0'], temp['arr_1'],temp['arr_2']
-	edgeSet = [V, E, W]
-	g = read(edgeSet = edgeSet, method = 'edge')
+	g = read(filename = filename, method = 'edge')
 
 	Ns.append(n)
 	Ms.append(m)
@@ -91,30 +91,26 @@ def work(n, m, s):
 	TimeGPUs.append((t2 - t1) * 100000 // 10 / 10000)
 
 
-	# print(res[0].dist)
-	# print(res[1].dist)
-	# print((res[0].dist == res[1].dist).all())
+	print(res[0].dist)
+	print(res[1].dist)
+	print((res[0].dist == res[1].dist).all())
 
 
 if __name__ == '__main__':
 	
 	# 节点数的列表
-	# ns = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
-	ns = [800]
+	ns = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
 
 	# 度的列表, 有一个度为 1 可以展示稀疏图
-	# ds = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
-	ds = [16]
-
-	s = [i for i in range(100)]
+	ds = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 
 	# CSV name 每次运行都是一个新的文件名
-	filename = f"./testResult/apsp/test_{str(time())[11:]}.csv"
+	filename = f"./testResult/sssp/test_{str(time())[11:]}.csv"
+
 
 	for n in ns:
 		for d in ds:
-			work(n, n * d, s)
+			work(n, n * d)
 			# save
 			df = pd.DataFrame({'n':Ns, 'm':Ms, 'method':Methods, 'timeGPU':TimeGPUs, 'checkGPU':CheckGPUs, 'timeCPU':TimeCPUs, 'checkCPU':CheckCPUs})
-			# df.to_csv(filename)
-			print(df)
+			df.to_csv(filename)

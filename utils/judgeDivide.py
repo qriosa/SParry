@@ -93,7 +93,7 @@ def judge_sssp(para):
         # 超过边总数是没有意义的
         para.part = np.int32(min(m, para.part))
         
-        print(sqrt(2*n) + 4 * n)
+        # print(sqrt(2*n) + 4 * n)
 
         if lowLimit(para.part, n, device.free) == False:
             para.part = getPart(device.free, n)

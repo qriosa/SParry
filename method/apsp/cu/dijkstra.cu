@@ -1,5 +1,4 @@
 // dijkstra 算法的并行自全源加未更新快速退出 
-
 __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, int* predist){
 	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
 	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
@@ -7,7 +6,8 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, in
 
 	int u = -1;
 	int sn = -1;
-	int s = blockIdx.z *(gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
+	int s = blockIdx.z * (gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
+	// int s = blockIdx.x;
 
 	__shared__ int quickBreak[1];
 
@@ -42,10 +42,12 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* vis, int* dist, in
 				u += offset;
 			}
 
-			__syncthreads(); 
+			__syncthreads();
+
 			if(quickBreak[0] == 0){
 				break;
 			}
+			__syncthreads(); // 这里不同步一下，有可能跑的快的线程去开头给它设置为 0 了，后面的线程本应该不退出的就提前退出了。
 		}
 		s += blockNum; // 调向下一个源点 
 	}	

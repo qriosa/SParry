@@ -121,20 +121,20 @@ array([[0, 1, 2, 3],
        [1, 0, 2, 3],
        [2, 2, 0, 4],
        [3, 3, 4, 0]], dtype=int32)
-
+>>>
 >>> graph = read(matrix = matrix, # the data passed in is the adjacency matrix
 ...              method = "dij", # the calculation method uses Dijkstra
 ...              detail = True # record the details of the graph
 ...             ) # process the graph data
-
+>>>
 >>> res = calc(graph = graph, # class to pass in graph data
 ...            useCUDA = True, # use CUDA acceleration
 ...            srclist = 0, # set source to node 0
 ...            )
-
+>>>
 >>> res.dist # output shortest path
 array([0, 1, 2, 3], dtype=int32)
-
+>>>
 >>> print(res.display()) # print related parameters
 
 [+] the number of vertices in the Graph:                n = 4,
@@ -167,8 +167,8 @@ When your graph data is in **memory** and **compliant with the [CSR data](https:
 >>> from pretreat import read
 >>>
 >>> CSR = np.array([np.array([0, 2, 3, 4, 4]), 
-                    np.array([1, 2, 3, 1]), 
-                    np.array([1, 3, 4, 5])])
+...                 np.array([1, 2, 3, 1]), 
+...                 np.array([1, 3, 4, 5])])
 >>> CSR # simulation already has CSR format is graph data
 array([array([0, 2, 3, 4, 4]), array([1, 2, 3, 1]), array([1, 3, 4, 5])],
       dtype=object)
@@ -281,7 +281,7 @@ code is below:
 >>>
 >>> res.dist # calculated shortest path
 array([0, 1, 2, 3], dtype=int32)
-
+>>>
 >>> print(res.display()) # print related parameters
 
 [+] the number of vertices in the Graph:                n = 4,
@@ -295,8 +295,7 @@ array([0, 1, 2, 3], dtype=int32)
 [+] the method of the Graph:                            method = spfa.
 
 
-[+] calc the shortest path timeCost = 0.003 sec
->>>
+[+] calc the shortest path timeCost = 0.002 sec
 >>> res.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
 ```
 
@@ -332,7 +331,7 @@ This function is the only calculation interface of this tool. By calling this me
 
 #### func read()
 
-This function is used to pre-process graphs in this tool. By calling this method, you can normalize the user's various graph data into a uniform class. See func read()=== for more information
+This function is used to pre-process graphs in this tool. By calling this method, you can normalize the user's various graph data into a uniform class. See [func read()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-read-1) for more information.
 
 
 
@@ -378,8 +377,8 @@ The above graph, when stored in a file, should be in the following format.
 - First row: 2 parameters
   - parameter 1, n = 4, this means that there are 4 nodes in this graph.
   - parameter 2, m = 4, indicates that the graph has 4 directional/non-directional edges.
-    - If you set the `directed = False` in `func clac` ，which means the graph is undirected. The tool automatically converts the above unidirectional edges into bidirectional edges and automatically doubles the number of edges in the tool, since it uses two directed edges to represent a directionless edge.
-    - If you set the `directed = True` in `func clac` ，which means the graph is directed. This tool will read the map strictly in one direction, one way.
+    - If you set the `directed = False` in `func calc` ，which means the graph is undirected. The tool automatically converts the above unidirectional edges into bidirectional edges and automatically doubles the number of edges in the tool, since it uses two directed edges to represent a directionless edge.
+    - If you set the `directed = True` in `func calc` ，which means the graph is directed. This tool will read the map strictly in one direction, one way.
     - Default parameter directed = False. The default graph is an undirected graph.
 - Second row to fifth row: 3 integers, representing an edge.
   - The first parameter represents the start of the current edge.
@@ -1330,20 +1329,20 @@ array([[0, 1, 2, 3],
        [1, 0, 2, 3],
        [2, 2, 0, 4],
        [3, 3, 4, 0]], dtype=int32)
-
+>>>
 >>> graph = read(matrix = matrix, # 传入的数据是邻接矩阵
 ...              method = "dij", # 计算方法使用 Dijkstra
 ...              detail = True # 记录图中的详细信息
 ...             ) # 处理图数据
-
+>>>
 >>> res = calc(graph = graph, # 传入图数据的类
 ...            useCUDA = True, # 使用 CUDA 加速
 ...            srclist = 0, # 设置源点为 0 号结点
 ...            )
-
+>>>
 >>> res.dist # 输出最短路径
 array([0, 1, 2, 3], dtype=int32)
-
+>>>
 >>> print(res.display()) # 打印相关参数
 
 [+] the number of vertices in the Graph:                n = 4,
@@ -1374,8 +1373,8 @@ array([0, 1, 2, 3], dtype=int32)
 >>> from pretreat import read
 >>>
 >>> CSR = np.array([np.array([0, 2, 3, 4, 4]), 
-                    np.array([1, 2, 3, 1]), 
-                    np.array([1, 3, 4, 5])])
+...                 np.array([1, 2, 3, 1]), 
+...                 np.array([1, 3, 4, 5])])
 >>> CSR # 模拟已经拥有了CSR格式是图数据
 array([array([0, 2, 3, 4, 4]), array([1, 2, 3, 1]), array([1, 3, 4, 5])],
       dtype=object)
@@ -1486,9 +1485,9 @@ array([         0,          1, 2139045759,          2], dtype=int32)
 ...            useCUDA = True, # 使用 CUDA 并行加速
 ...            srclist = 0) # 源点为 0 号结点
 >>>
->>> res.dist # 计算的最短路径
+>>> res.dist # calculated shortest path
 array([0, 1, 2, 3], dtype=int32)
-
+>>>
 >>> print(res.display()) # 打印相关参数
 
 [+] the number of vertices in the Graph:                n = 4,
@@ -1502,8 +1501,7 @@ array([0, 1, 2, 3], dtype=int32)
 [+] the method of the Graph:                            method = spfa.
 
 
-[+] calc the shortest path timeCost = 0.003 sec
->>>
+[+] calc the shortest path timeCost = 0.002 sec
 >>> res.drawPath() # 红色的线表示此条边在最短路径上；橙色的点为源点；箭头表示边的方向；边上的数字表示边权。
 ```
 
@@ -1535,13 +1533,13 @@ array([0, 1, 2, 3], dtype=int32)
 
 #### func calc()
 
-该函数是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-3)。
+该函数是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-3) 。
 
 
 
 #### func read()
 
-该函数是本工具中用于预处理图的函数，通过调用此方法可以将用户的各种图数据归一化为统一的类。更多信息请参阅 func read()===
+该函数是本工具中用于预处理图的函数，通过调用此方法可以将用户的各种图数据归一化为统一的类。更多信息请参阅 [func read()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-read-3) 。
 
 
 
@@ -1584,8 +1582,8 @@ array([0, 1, 2, 3], dtype=int32)
 - 第一行：  2个参数
   - 第一个参数 n = 4 表示此图一共有4个结点。 
   - 第二个参数 m = 4  表示此图一共有**4**条**有向/无向**边。
-    - 若在 `func clac` 中指定 `directed = False` 时，即指定为无向图，本工具会自动将上述单向边转化为双向边，同时工具中的边数会自动翻倍，即用两条有向边表示一条无向边。
-    - 若在 `func clac` 中指定 `directed = True` 时，即指定为有向图，本工具会严格按照单向边方向读图。
+    - 若在 `func calc` 中指定 `directed = False` 时，即指定为无向图，本工具会自动将上述单向边转化为双向边，同时工具中的边数会自动翻倍，即用两条有向边表示一条无向边。
+    - 若在 `func calc` 中指定 `directed = True` 时，即指定为有向图，本工具会严格按照单向边方向读图。
     - 默认参数 `directed = False` 默认图为无向图。
 - 第二行~第五行： 3个整数，表示一条边
   - 第一个参数  表示当前边的起点

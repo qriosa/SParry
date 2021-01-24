@@ -14,14 +14,16 @@ class Result(object):
         timeCostNum: float, a float data of time cost of getting the answer, so it can use to calculate.
         timeCost: str, a str data of time cost of getting the answer.
         memoryCost: str, memory cost of getting the answer.
-        graph: str/list/tuple, must, the graph data that you want to get the shortest path.(more info please see the developer documentation).
-        graphType: str, must, type of the graph data, only can be [matrix, CSR, edgeSet].(more info please see the developer documentation).
-        msg: str, the info of the graph.
+        graph: class Graph, must, the graph data that you want to get the shortest path.
+            (more info please see the developer documentation).
     
     method:
-        display: show the detail of this calculation.
-        drawPath: draw the path from vertices to the sources.
-        calcPath: calc the path through the graph and dist.
+        display: 
+            show the detail of this calculation.
+        drawPath: 
+            draw the path from vertices to the sources.
+        calcPath:  
+            calc the path through the graph and dist.
     
     return: 
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
@@ -56,7 +58,7 @@ class Result(object):
             str, the msg info.       
         """
 
-        return f"{self.graph.msg}\n\n[+] timeCost = {self.timeCost}"
+        return f"{self.graph.msg}\n\n[+] calc the shortest path timeCost = {self.timeCost}"
     
     def drawPath(self):
         """

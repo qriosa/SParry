@@ -120,7 +120,7 @@ def dijkstra_multi_sssp(V, E, W, n, sources, distQ, id0):
     
         distQ.put((s, dist))
     
-    print(f"id = {id0} source = {s}, is finished....., source empty? {sources.empty()}")
+    # print(f"id = {id0} is finished....., source empty? {sources.empty()}")
 
 
 def dijkstra_multi(para):
@@ -136,60 +136,54 @@ def dijkstra_multi(para):
     """
 
     logger.debug("turning to func dijkstra-cpu-apsp multi-process")
-    if para.namename == "__main__":
+    
 
-        t1 = time()
-        # q = Queue()
-        # 这样就可以退出了？ 如果不用 manager 的就会卡死掉子进程无法退出
-        manager = Manager()
-        q = manager.Queue()
+    t1 = time()
+    # q = Queue()
+    # 这样就可以退出了？ 如果不用 manager 的就会卡死掉子进程无法退出
+    manager = Manager()
+    q = manager.Queue()
 
-        CSR, n, pathRecordBool = para.graph.graph, para.graph.n, para.pathRecordBool
+    CSR, n, pathRecordBool = para.graph.graph, para.graph.n, para.pathRecordBool
 
-        shared_V = RawArray('i', CSR[0])
-        shared_E = RawArray('i', CSR[1])
-        shared_W = RawArray('i', CSR[2])
+    shared_V = RawArray('i', CSR[0])
+    shared_E = RawArray('i', CSR[1])
+    shared_W = RawArray('i', CSR[2])
 
-        del CSR
-        
-        # 源点队列
-        sources = manager.Queue()
+    del CSR
+    
+    # 源点队列
+    sources = manager.Queue()
 
-        for i in range(n):
-            sources.put(i)
+    for i in range(n):
+        sources.put(i)
 
-        
-        # 创建 核心数 这么多个进程 通过队列实现任务调度
-        cores = cpu_count()
-        myProcesses = [Process(target = dijkstra_multi_sssp, args = (shared_V, shared_E, shared_W, n, sources, q, _)) for _ in range(cores)]
+    
+    # 创建 核心数 这么多个进程 通过队列实现任务调度
+    cores = cpu_count()
+    myProcesses = [Process(target = dijkstra_multi_sssp, args = (shared_V, shared_E, shared_W, n, sources, q, _)) for _ in range(cores)]
 
-        for myProcess in myProcesses:
-            myProcess.start()
-        
-        for myProcess in myProcesses:
-            if myProcess.is_alive():
-                myProcess.join()
-        
-        dist = [None for i in range(n)]
+    for myProcess in myProcesses:
+        myProcess.start()
+    
+    for myProcess in myProcesses:
+        if myProcess.is_alive():
+            myProcess.join()
+    
+    dist = [None for i in range(n)]
 
-        while q.empty() == False:
-            temp = q.get()
-            dist[temp[0]] = temp[1]
+    while q.empty() == False:
+        temp = q.get()
+        dist[temp[0]] = temp[1]
 
-        dist = np.array(dist)
+    dist = np.array(dist)
 
-        timeCost = time() - t1
+    timeCost = time() - t1
 
-        # 结果
-        result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
+    # 结果
+    result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
-        if pathRecordBool:
-            result.calcPath()
+    if pathRecordBool:
+        result.calcPath()
 
-        return result
-    else:
-        print("herherherherhehr")
-        print(__name__)
-        print("jjjjjjjjjjjj")
-        print(para.namename)
-        print("qqqqqqqqqqqqqq")
+    return result

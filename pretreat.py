@@ -9,6 +9,40 @@ logger = Logger(__name__)
 
 def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij", detail = False, directed = "Unknown", delta = 3):
     """
+    function: 
+        convert a graph from [CSR/matrix/edgeSet/file] 
+            to Graph object(see the 'SPoon/classes/graph.py/Graph')
+            as the paremeter 'graph' of the func calc(see the 'SPoon/calc.py/calc')
+    
+    parameters: 
+        CSR: tuple, optional, a 3-tuple of integers as (V, E, W) about the CSR of graph data.
+            (more info please see the developer documentation).
+        matrix: matrix/list, optional, the adjacency matrix of the graph.
+            (more info please see the developer documentation).
+        edgeSet: tuple, optional, a 3-tuple of integers as (src(list), des(list), val(list)) about the edge set.
+            (more info please see the developer documentation).
+        filename: str, optional, the name of the graph file, optional, and the graph should be list as edgeSet.
+            (more info please see the developer documentation).
+        method: str, optional, the shortest path algorithm that you want to use, only can be [dij, spfa, delta, fw, edge].
+            (more info please see the developer documentation).
+        detail: bool, optional, default 'False', whether you need to read the detailed information of this picture or not.
+            If you set True, it will cost more time to get the detail information.
+        directed: bool, optional, default 'False', the graph is drected or not.
+            It will be valid, only the 'filename' parameter is set.
+        delta: int, optional, default 3, the delta of the delta-stepping algorithom.
+            It will be valid, only you choose method is delta-stepping.
+
+        ATTENTION:
+            CSR, matrix, edgeSet and filename cann't be all None. 
+            You must give at least one graph data.
+            And the priority of the four parameters is:
+                CSR > matrix > edgeSet > filename.
+
+    return:
+        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')     
+    """
+    
+    """
     暂时是用于读图 默认读图是转化为 CSR  detail 是否需要求图中的各种细节
     delta 是默认的 3
     优先级 CSR -> matrix -> edgeSet -> filename

@@ -7,28 +7,17 @@ class Parameter(object):
         None, but 'self'.
 
     attributes:
+        graph: class Graph, must, the graph data that you want to get the shortest path.
+            (more info please see the developer documentation).
         BLOCK: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         GRID: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
-        n: int, the number of the vertices in the graph.
-        m: int, the number of the edges in the graph.
         useCUDA: bool, use CUDA to speedup or not.
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
         device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
-        CSR: tuple, a 3-tuple of integers as (V, E, W) about the CSR of graph data. (more info please see the developer documentation).
-        matrix: matrix, as (n,n), about adjacency matrix of graph data.
-        edgeSet: tuple, a 3-tuple of integers as (src(list), des(list), val(list)) about the edge set.
-        graphType: str, type of graph. [edgeSet, matrix, CSR].
-        method: str, the algorithm. [dij, delta, spfa, fw, edge]
         srclist: list/int, the source of shortest path problem.
-        sourceType: str, the type of the problem. [APSP, SSSP, MSSP]
+        sourceType: str, the type of the source.
         pathRecordBool: bool, record the path or not.
-        delta: int, the delta of delta-stepping algorithm.
-        MAXW: int, the max value of the edges.
-        MAXU: int, the vertex has the maxOutDegree.
-        maxOutDegree: int, the max out degree of the graph.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
-        streamNum: int, the number of streams used.
-        msg: str, the info of the graph.
     
     method:
         None, but init.
@@ -44,9 +33,6 @@ class Parameter(object):
         self.GRID = None
 
         self.device = None # 设备参数
-
-        # 多进程的一个问题 
-        self.namename = None
 
         self.useCUDA = True # 是否使用 CUDA
         self.useMultiPro = False # 是否使用 CPU 多线程

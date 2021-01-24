@@ -91,15 +91,15 @@ class Graph(object):
         """
         
         self.msg = f"""
-[+] the number of vertices in the Graph:\tn = {self.n}, 
-[+] the number of edges in the Graph:\t\tm = {self.m}, 
-[+] the max edge weight in the Graph:\t\tMAXW = {self.MAXW}, 
-[+] the min edge weight in the Graph:\t\tMINW = {self.MINW}, 
-[+] the max out degree in the Graph:\t\tdegree({self.MAXU}) = {self.MAXD}, 
-[+] the min out degree in the Graph:\t\tdegree({self.MINU}) = {self.MIND}, 
-[+] the average out degree of the Graph:\tavgDegree = {self.m/self.n},
-[+] the directed of the Graph:\t\t\tdirected = {self.directed}, 
-[+] the method of the Graph:\t\t\tmethod = {self.method}.
+[+] the number of vertices in the Graph:\t\tn = {self.n}, 
+[+] the number of edges(directed) in the Graph:\t\tm = {self.m}, 
+[+] the max edge weight in the Graph:\t\t\tMAXW = {self.MAXW}, 
+[+] the min edge weight in the Graph:\t\t\tMINW = {self.MINW}, 
+[+] the max out degree in the Graph:\t\t\tdegree({self.MAXU}) = {self.MAXD}, 
+[+] the min out degree in the Graph:\t\t\tdegree({self.MINU}) = {self.MIND}, 
+[+] the average out degree of the Graph:\t\tavgDegree = {self.m/self.n},
+[+] the directed of the Graph:\t\t\t\tdirected = {self.directed}, 
+[+] the method of the Graph:\t\t\t\tmethod = {self.method}.
 """
 
     def reshape(self):
