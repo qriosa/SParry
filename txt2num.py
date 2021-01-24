@@ -53,7 +53,7 @@ def read(filename):
 
 if __name__ == '__main__':
 
-	filenames = ['data10000_20000.txt', 'data4100000_82000000.txt', 'data6900000_101000000.txt', 'data18000000_109000000.txt', 'data20000000_109000000.txt', ]
+	filenames = ['data10000_20000.txt',  'data4100000_82000000.txt', 'data6900000_101000000.txt', 'data18000000_109000000.txt', 'data20000000_109000000.txt', ]
 	for filename in filenames:
 
 		n, m, V, E, W = read(filename)

@@ -30,7 +30,7 @@ def userTest(inputGraph = None, graphType = None, outputGraph=None, method=None,
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
     
     return:
-        no return but print the result of proving.
+        no return but print the result of proving. 
     """
     
     logger.info(f"begin to test: inputGraph={inputGraph}, graphType={graphType}, outputGraph={outputGraph}, method={method}, useCUDA={useCUDA}")
