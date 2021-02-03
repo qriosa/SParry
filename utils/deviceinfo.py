@@ -11,9 +11,9 @@ def deviceinfo():
         None.
     
     return: 
-        class, Device object.(see the 'SPoon/classes/device.py/Device')
+        class, Device object.(see the 'SPoon/classes/device.py/Device').
     """
 
-    # 实例化类 
+    # instantiation
     device = device()
     return device

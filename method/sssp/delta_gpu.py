@@ -17,10 +17,10 @@ def delta_stepping(para):
         use delta_stepping algorithm in GPU to solve the SSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter'). 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func delta_stepping-gpu-sssp")    
@@ -29,12 +29,11 @@ def delta_stepping(para):
         cuf = f.read()
     mod = SourceModule(cuf)
 
-    # 起始时间
+    # start time
     t1 = time()
 
     CSR, n, s, delta, pathRecordBool = para.graph.graph, para.graph.n, para.srclist, para.graph.delta, para.pathRecordBool
-
-    # 线程开启全局变量 
+ 
     if para.BLOCK != None:
         BLOCK = para.BLOCK
     else:
@@ -58,21 +57,10 @@ def delta_stepping(para):
     dist = np.full((n, ), INF).astype(np.int32)
     dist[s] = np.int32(0)
 
-    # 获取函数
+    # get function
     delta_sssp_cuda_fuc = mod.get_function("delta_stepping")
 
-    # print(type(V), V)
-    # print(type(E), E)
-    # print(type(W), W)
-    # print(type(n), n)
-    # print(type(s), s)
-    # print(type(delta), delta)
-    # print(type(dist), dist)
-    # print(type(predist), predist)
-    # print(type(nowIsNull), nowIsNull)
-    # print(type(quickBreak), quickBreak)
-
-    # 开始跑 
+    # run!
     delta_sssp_cuda_fuc(drv.In(V), 
                         drv.In(E), 
                         drv.In(W), 
@@ -87,7 +75,7 @@ def delta_stepping(para):
 
     timeCost = time() - t1
     
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

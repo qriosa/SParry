@@ -1,34 +1,28 @@
-// 普通的 dijkstra 算法的并行 拥有未更新退出 一个 block 代表着第 i 个源点的计算结果
 __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, int* dist, int* predist){
-	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
-	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
-	const int blockNum = (const int) gridDim.x * gridDim.y; // block 的数量
-		
-	// const int u0 = (const int)threadIdx.x;
-	// const int offset = (const int)(blockDim.x);
-	// const int blockNum = (const int)(gridDim.x); // block总数 也即是 一次最多解决多少和单源问题
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; // the number of threads in a block.
+	const int blockNum = (const int) gridDim.x * gridDim.y; // the number of block
 
 	int u = -1;
 	int sn = -1; 
-	// int sIndex = blockIdx.x; // s是源点的问题
 	int sIndex = blockIdx.z * (gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
 
 	__shared__ int quickBreak[1];
 
-	while(sIndex < (*srcNum)){ // 源点也必须有效才行
+	while(sIndex < (*srcNum)){
 
 		sn = (sIndex * (*n));
 
 		for(int i = 0; i < (*n); i++){
 
-			quickBreak[0] = 0; //应该是不需要原子操作，原子操作应该是更慢些。
+			quickBreak[0] = 0; 
 			
 			u = u0;
 			while(u < *n){ 
 				if(vis[u + sn] == 0){ 
 					vis[u + sn] = 1;
-					for(int j = V[u]; j < V[u + 1]; j++){ // 枚举u的终点，j是E和W数组的下标 E[j]是这条边的终点 W[j]是这条边的边权。	
-						atomicMin(&predist[E[j] + sn], dist[u + sn] + W[j]); // s 为源点
+					for(int j = V[u]; j < V[u + 1]; j++){ // for the end vertex of u,j is the index of E and W. E[j] is the end vertex of this edge, W[j] is the weight of this edge	
+						atomicMin(&predist[E[j] + sn], dist[u + sn] + W[j]); // s is source
 					}
 				}
 				u += offset;
@@ -39,7 +33,7 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, 
 			while(u < (*n)){
 				if(predist[u + sn] < dist[u + sn]){ 
 					dist[u + sn] = predist[u + sn];
-					vis[u + sn] = 0; //后面再考虑把这个vis独立为自己的局部block变量 dist呢？
+					vis[u + sn] = 0; 
 
 					quickBreak[0] = 1;
 				}
@@ -50,19 +44,18 @@ __global__ void dijkstra(int* V, int* E, int* W, int* n, int* srcNum, int* vis, 
 			if(quickBreak[0] == 0){
 				break;
 			}
-			__syncthreads(); // 这里不同步一下，有可能跑的快的线程去开头给它设置为 0 了，后面的线程本应该不退出的就提前退出了。
+			__syncthreads(); 
 		}
-		sIndex += blockNum; // 调向下一个源点 
+		sIndex += blockNum; // turn to next source vertex 
 	}	
 }
 
 
-/* 下面这个是 divide 也就是不使用多流的 使用默认流的*/
-// 现在这个base是E中的起点 
+// base is start index of E 
 __global__ void divide(int* V, int* E, int* W, int* n, int* flag, int* base, int* part, int* vis, int* dist, int* predist){
 	
-	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; // 每个thread有自己的编号 
-	const int offset = blockDim.x * blockDim.y * blockDim.z; // 一个 block 里面有多少的thread
+	const int u0 = threadIdx.z * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x; 
+	const int offset = blockDim.x * blockDim.y * blockDim.z; 
 	
 	int u = -1;
 	int l = -1;
@@ -70,30 +63,27 @@ __global__ void divide(int* V, int* E, int* W, int* n, int* flag, int* base, int
 	int localBase = base[0];
 	int localPart = part[0];
 	
-	u = u0; // 此时的 u 不再是真的结点编号 来看是不是会超出 part 的范围, u + l 是 真的结点编号
-	while(u < (*n)){ // 当前线程所代表的点在显存中
+	u = u0; // u is not true vertex, but indicate whether this time it will over part, and u + l is the true vertex
+	while(u < (*n)){ // this vertex is in video memory
 
-		if(V[u + 1] <= localBase){ // 自己右边
+		if(V[u + 1] <= localBase){ // self right
 			u += offset;
-			continue; // 这个结点的边不在合法范围内
+			continue; // this vertex is illegal
 		}
-		else if(V[u] >= localBase + localPart){ // 自己的左边
+		else if(V[u] >= localBase + localPart){ // self left
 			u += offset;
-			continue; // 这个结点的边不在合法范围内
+			continue; // this vertex is illegal
 		}
 
-		// 在上一轮更新过
+		// is updated before
 		if(vis[u]){ 
-			// 这个地方就不好判断了 因为分成的多块和多流之间的无先后顺序 故 vis 无法再使用
-			//vis[u] -= 1; // 标记其松驰能力减一
-			atomicSub(&vis[u], 1);
+			atomicSub(&vis[u], 1); // sub the update ability of the vertex
 
-			// 对区间进行缩减
 			l = localBase>V[u]?localBase:V[u];
 			r = (localBase + localPart)<V[u + 1]?(localBase + localPart):V[u + 1];
 			
-			for(int j = l; j < r; j++){ // 枚举u的终点，j是E和W数组的下标 E[j]是这条边的终点 W[j]是这条边的边权。	
-				atomicMin(&predist[E[j - localBase]], dist[u] + W[j - localBase]); // 注意原始的下标在现在的部分数组中是不对的 因此得映射一下
+			for(int j = l; j < r; j++){ 
+				atomicMin(&predist[E[j - localBase]], dist[u] + W[j - localBase]);
 			}
 		}
 		
@@ -105,7 +95,7 @@ __global__ void divide(int* V, int* E, int* W, int* n, int* flag, int* base, int
 	while(u < (*n)){
 		if(predist[u] < dist[u]){ 
 			dist[u] = predist[u];
-			vis[u] = (V[u + 1] + localPart - 1) / localPart - V[u] / localPart; // 重新计算其更新能力 
+			vis[u] = (V[u + 1] + localPart - 1) / localPart - V[u] / localPart; // re calc the update ability. 
 			flag[0] = 1;
 		}
 		u += offset;

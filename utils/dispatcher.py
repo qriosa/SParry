@@ -28,7 +28,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
 
     logger.info(f"entering to dispatch ... ")
 
-    ## 输入变量判断是否合法 ##
+    ## input it's valid or not ##
     assert type(graph) == Graph, """
     parameter graph can only be Graph Object.
 
@@ -58,17 +58,17 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
     #         or method == 'edge'
     #         or method == None), "method can only be one of [dij, spfa, delta, fw, edge], default 'dij'."
 
-    # 实例化一个 parameter
+    # instantiation parameter
     para = Parameter()
 
-    # 记录图
+    # recording graph
     para.graph = graph
 
-    # 填入指定的grid和block参数，未指定则为空
+    # put grid and block
     para.GRID = grid
     para.BLOCK = block
 
-    # 记录路径否
+    # recording path or not
     para.pathRecordBool = pathRecordBool
 
     # useCUDA 
@@ -80,7 +80,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
     else:
         para.srclist = None
 
-    # 判断源点类型
+    # tell the source vertex type
     if srclist == None:
         para.sourceType = 'APSP'
     elif type(srclist) == list or type(srclist) == np.ndarray:
@@ -98,23 +98,21 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
     
     para.useMultiPro = useMultiPro
 
-    # 依据使用的方法来选择图数据的类型
-    # 矩阵相乘
+    # choose graph type based on method
+    # matrix
     if para.graph.method == 'fw':
-        # 进入 cuda 的函数
+        #  cuda 
         if useCUDA == True:
-            # 打印警告 此方法仅仅提供全源计算 其余的计算没有优势可言 可以利用其他方法
             from method.apsp.matrix_gpu import matrix
             return matrix(para) 
-        # 使用CPU跑 
+        # CPU
         else:
-            # 打印警告 此方法仅仅提供全源计算 其余的计算没有优势可言 可以利用其他方法
             from method.apsp.matrix_cpu import matrix
             return matrix(para)
     
-    # 边细粒度
+    # edgebased
     elif para.graph.method == 'edge':
-        # 进入 cuda 的函数 的 edge
+        # CUDA
         if useCUDA == True:
             if para.sourceType == 'APSP':
                 from method.apsp.edge_gpu import edge
@@ -126,7 +124,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
                 from method.sssp.edge_gpu import edge
                 return edge(para)
 
-        # 只是使用 CPU 的 edge
+        # CPU
         else:
             if para.sourceType == 'APSP':
                 from method.apsp.edge_cpu import edge
@@ -137,7 +135,6 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
             else:
                 from method.sssp.edge_cpu import edge
                 return edge(para)
-
 
     # dij spfa delta
     else:

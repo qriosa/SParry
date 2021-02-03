@@ -1,7 +1,6 @@
 import numpy as np
 
 from utils.dispatcher import dispatch
-from utils.readGraph import read
 from utils.debugger import Logger
 
 # set logging test update lcx added by wenake
@@ -43,7 +42,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
     return:
         class, Result object. (see the 'SPoon/classes/result.py/Result') 
     """
-    # 跳转到 dispatch 函数进行分发
+    # turn to dispatch to dispatch
     # we only accept graphic data in edgeSet format 
 
     logger.info(f"entering calc func...")

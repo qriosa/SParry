@@ -10,7 +10,7 @@ logger = Logger(__name__)
 def spfa(para):
     """
     function: 
-        use spfa algorithm in CPU to solve the APSP. 
+        use spfa algorithm in CPU to solve the APSP.
     
     parameters:  
         class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').

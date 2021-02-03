@@ -19,10 +19,10 @@ def dijkstra(para):
         use dijkstra algorithm in GPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')   
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
     logger.debug("turning to func dijkstra-gpu-apsp")
 
@@ -30,11 +30,11 @@ def dijkstra(para):
 
     tag = judge_apsp(para)
 
-    # 2 就是 能直接跑并行全源
+    # 2 is can run apsp directly. put all to the video memory. 
     if tag == 2:
         dist, timeCost = nodivide(para.graph.graph, para.graph.n, para.pathRecordBool, para.BLOCK, para.GRID)
     
-    # 否则就是需要拆解成多个单源问题
+    # otherwise it's necessary to devide it into many sssp.
     else:
         dist, timeCost = divide(para.graph.graph, para.graph.n, para.graph.m, para.part, para.pathRecordBool, para.BLOCK, para.GRID, tag)
 
@@ -52,14 +52,14 @@ def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
         use dijkstra algorithm in GPU to solve the APSP. 
     
     parameters:  
-        CSR: CSR graph data. (more info please see the developer documentation) .
+        CSR: CSR graph data. (more info please see the developer documentation).
         n: int, the number of the vertices in the graph.
         pathRecordBool: bool, record the path or not.
         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-apsp no-divide")
@@ -78,20 +78,20 @@ def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
     if GRID == None:
         GRID = (512, 1)  
 
-    # 申请变量空间
+    # malloc the space
     dist = np.full((n * n, ), INF).astype(np.int32)
     vis = np.full((n * n, ), 1).astype(np.int32)
     predist = np.full((n * n, ), INF).astype(np.int32)
 
-    # 为各个源点初始化
+    # init the all sources
     for i in range(n):
-        # i为源点的情况下 
+        # i is the source
         dist[i * n + i] = np.int32(0)
         vis[i * n + i] = np.int32(0)    
 
     dij_apsp_cuda_fuc = mod.get_function('dijkstra')
 
-    # 开始跑
+    # run!
     dij_apsp_cuda_fuc(drv.In(V),
                         drv.In(E),
                         drv.In(W), 
@@ -104,12 +104,11 @@ def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
 
     timeCost = time() - t1
     
-    # 结果
+    # result
     return dist, timeCost
 
 
-# 多源就不给其分图了 就通过多次调用一次一个单源来解决吧
-# 这个实现了
+# I will not divide the apsp, just call sssp many times to solve it. 
 
 def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
     """
@@ -127,25 +126,25 @@ def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
         tag: bool, convert APSP to SSSP, then the SSSP need to devide or not.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-apsp divide")
 
-    # 起始时间
+    # start time
     t1 = time()
 
-    # 拆分的单源不需要分图
+    # devide sssp is not necessary to divide.
     if tag == 0:
         from method.sssp.dijkstra_gpu import direct as dij
-    # 拆分的单源需要分图
+    # divided sssp need to divide graph.
     else:
         from method.sssp.dijkstra_gpu import noStream as dij
     
-    # 距离数组
+    # the distence array.
     dist = []
 
-    # 跳入单源则多的 block 并没有用了， 于是给它设置成一维就好了
+    # goto sssp, so the other block is no use, so I set it as one block.
     if GRID != None:
         temp = 1
         for i in GRID:
@@ -159,139 +158,5 @@ def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     return dist, timeCost
-
-# 更进一步可以根据实际的数据：
-# 一次多个源，一次一个源但是都是拷贝了全图，
-# 一次多个源，一次一个源但是都是使用了分图。
-# 这还没有实现
-# def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID):
-#     """
-#     function: 
-#         use dijkstra algorithm in GPU to solve the APSP, but this func can devide the graph if it's too large to put it in GPU memory. 
-    
-#     parameters:  
-#         CSR: CSR graph data. (more info please see the developer documentation) .
-#         n: the number of the vertices in the graph.
-#         m: the number of the edge in the graph.
-#         part: the number of the edges that will put to GPU at a time.
-#         pathRecordBool: record the path or not.
-#         block: tuple, a 3-tuple of integers as (x, y, z), the block size, to shape the kernal threads.
-#         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks
-    
-#     return: 
-#         Result(class).(more info please see the developer documentation) .
-#     """
-#     with open(cuFilepath, 'r', encoding = 'utf-8') as f:
-#         cuf = f.read()
-#     mod = SourceModule(cuf)
-
-#     logger.debug("turning to func dijkstra-gpu-apsp divide")
-
-#     # 起始时间
-#     t1 = time()
-
-#     V, E, W = CSR[0], CSR[1], CSR[2]
-
-#     if BLOCK == None:
-#         BLOCK = (1024, 1, 1)
-    
-#     if GRID == None:
-#         GRID = (1, 1)
-
-#     # 这里的 m 无需再乘 2 因为传入的数据必须针对无向边用两条有向边来表示了
-#     partNum = (m + part - 1) // part # 计算一共有多少边的块数据需要拷贝
-
-#     bases = [] # 本流拷贝的数据 part 是从哪个点开始计算偏移的
-
-#     Es = []# 切好的 E, S
-#     Ws = []
-        
-#     # 按照分块构建图的各个部分 同时切分好每个部分的起点 并拷贝到GPU中
-#     for i in range(partNum):
-
-#         # 相当于每个的断开点
-#         temp = np.full((n, ), i * part).astype(np.int32)
-
-#         temp_gpu = drv.mem_alloc(temp.nbytes)
-#         drv.memcpy_htod(temp_gpu, temp)
-
-#         bases.append(temp_gpu)
-        
-#         Es.append(E[i * part:(i + 1) * part])
-#         Ws.append(W[i * part:(i + 1) * part])
-
-
-#     dist = []
-
-#     n_gpu = drv.mem_alloc(n.nbytes)
-#     drv.memcpy_htod(n_gpu, n)
-
-#     part_gpu = drv.mem_alloc(part.nbytes)
-#     drv.memcpy_htod(part_gpu, part)
-
-#     V_gpu = drv.mem_alloc(V.nbytes)
-#     drv.memcpy_htod(V_gpu, V)
-
-#     # 多/全源的时候 若直接把 dist 放入太大 则可能只能通过多次单源来解决了
-#     # 为各个源点初始化
-#     for i in range(n):
-#         # 申请变量空间
-#         disti = np.full((n, ), INF).astype(np.int32)
-#         vis = np.full((n, ), 0).astype(np.int32)
-#         predist = np.full((n, ), INF).astype(np.int32)
-        
-#         # i为源点的情况下 
-#         disti[i] = np.int32(0)
-#         vis[i] = np.int32((V[i + 1] + part - 1) // part - (V[i]) // part)
-
-#         # copy to device
-#         dist_gpu = drv.mem_alloc(disti.nbytes)
-#         drv.memcpy_htod(dist_gpu, disti)
-
-#         predist_gpu = drv.mem_alloc(predist.nbytes)
-#         drv.memcpy_htod(predist_gpu, predist)
-
-#         vis_gpu = drv.mem_alloc(vis.nbytes)
-#         drv.memcpy_htod(vis_gpu, vis)
-
-#         # 获取kernal函数
-#         noStream_cuda_fuc = mod.get_function('divide')
-
-#         flag = np.full((n, ), 0).astype(np.int32)
-#         flag_gpu = drv.mem_alloc(flag.nbytes)
-
-#         for j in range(n):
-
-#             # 此时的 flag 是一个 n 维数组 每个表示每个源是否更新完毕
-#             flag &= np.int32(0)
-#             drv.memcpy_htod(flag_gpu, flag)    
-            
-#             for ii in range(partNum):
-#                 noStream_cuda_fuc(V_gpu, 
-#                                 drv.In(Es[ii]),  
-#                                 drv.In(Ws[ii]), 
-#                                 n_gpu, 
-#                                 flag_gpu, 
-#                                 bases[ii], 
-#                                 part_gpu, 
-#                                 vis_gpu, 
-#                                 dist_gpu,
-#                                 predist_gpu, 
-#                                 block = BLOCK, 
-#                                 grid = GRID)
-
-#             drv.memcpy_dtoh(flag, flag_gpu)
-
-#             # 确保所有的源都是松驰完毕了才行 
-#             if (flag == 0).all():
-#                 break
-
-#         drv.memcpy_dtoh(disti, dist_gpu)
-#         dist.append(disti)
-
-#     timeCost = time() - t1
-
-#     # 结果
-#     return dist, timeCost 

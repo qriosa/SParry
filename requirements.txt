@@ -1,7 +1,0 @@
-nvidia-ml-py3
-numpy
-pycuda
-logging
-networkx
-multiprocessing
-pynvml 

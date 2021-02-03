@@ -43,14 +43,14 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
     """
     
     """
-    暂时是用于读图 默认读图是转化为 CSR  detail 是否需要求图中的各种细节
-    delta 是默认的 3
-    优先级 CSR -> matrix -> edgeSet -> filename
+    only use to read graph, and translate to CSR, detail is calc the detail info of the graph.
+    delta default is 3
+    priority: CSR -> matrix -> edgeSet -> filename
     """
 
     logger.info("entering pretreat.read func.")
 
-    # 不能全为空
+    # can not be all None
     if(type(CSR) == type(None) and type(matrix) == type(None) and type(edgeSet) == type(None) and filename == ""):
         raise Exception("CSR, matrix, edgeSet and filename can not be all NULL!") 
 
@@ -58,26 +58,25 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
     edgeSet = np.array(edgeSet)
     matrix = np.array(matrix)
 
-    # 实例化一个图
     g = Graph()
-    # 是否有向图
+    # directed or not
     g.directed = directed
-    # delta 的 delta 值
+    # delta's delta val
     g.delta = delta
 
-    # 修改本图数据将会采用的方法
+    # set method
     if(method == "dij" or method == "spfa" or method == "delta" or method == "edge"):
         g.method = method
     else:
         raise Exception("method can only be one of ['dij', 'spfa', 'delta', 'edge'], not " + method)
 
-    # 进行类型判断
-    # CSR 被输入了
+    # check type
+    # CSR 
     if((CSR.shape == ()) == False):
         if(type(CSR) != np.ndarray):
             raise Exception("CSR can only be list or numpy.ndarray")
 
-        # 需要将 CSR 修改为 edgeSet
+        # need to transfer CSR to edgeSet
         if g.method == "edge":
 
             logger.info("processing CSR to edgeSet")
@@ -86,11 +85,10 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
             E = CSR[1]
             W = CSR[2]
             
-            # 赋值给 g
+            # set it to g
             g.n = len(V)-1
             g.m = len(E)
 
-            # 记录各个点的度
             g.degree = np.zeros(g.n, dtype = np.int32)
 
             src = []
@@ -100,15 +98,15 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
             MAXW = -1
 
             for u in range(g.n):
-                # 修改度
+                # change degree
                 d = V[u + 1] - V[u]
                 g.degree[u] = d
 
-                # 最大度
+                # max degree
                 if d > g.MAXD:
                     g.MAXD = d
                     g.MAXU = u
-                # 最小度
+                # min degree
                 if d < g.MIND:
                     g.MIND = d
                     g.MINU = u
@@ -119,77 +117,74 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                     des.append(E[ind])
                     val.append(W[ind])
 
-                    # 最大边权
+                    # max edge weight
                     g.MAXW = max(g.MAXW, W[ind])
-                    # 最小边权
+                    # min edge  weight
                     g.MINW = min(g.MINW, W[ind])
             
             # edgeSet
             g.graph = [src, des, val]
-            # 提示信息
+            # msg
             g.setmsg()
 
-        # 保持 CSR 的数据格式
+        # keep CSR 
         else:
             logger.info("processing CSR")
 
-            g.n = len(CSR[0]) - 1 # 从上次的代码中看到的需要-1的 毕竟默认的
-            g.m = len(CSR[1]) # 从上次的代码中看到的是不需要加减的
+            g.n = len(CSR[0]) - 1 
+            g.m = len(CSR[1]) 
             g.graph = CSR
 
-            # 求图中的各种细节
+            # get detail info of the graph
             if detail:
-                # 记录各个点的度
+                # get the degree
                 g.degree = np.zeros(g.n, dtype = np.int32)
-                # 平均度
+                # average degree
                 g.avgDegree = g.m / g.n 
 
                 for i in range(g.n):
-                    # 记录当前点的度
+                    # degree
                     d = CSR[0][i+1] - CSR[0][i]
                     g.degree[i] = d
 
-                    # 最大度
+                    # max degree
                     if d > g.MAXD:
                         g.MAXD = d
                         g.MAXU = i
-                    # 最小度
+                    # min degree
                     if d < g.MIND:
                         g.MIND = d
                         g.MINU = i
                     
                     for j in range(CSR[0][i], CSR[0][i+1]):
-                        # 最大边权
                         g.MAXW = max(g.MAXW, CSR[2][j])
-                        # 最小边权
                         g.MINW = min(g.MINW, CSR[2][j])
                 
-                # 提示信息
+                # msg
                 g.setmsg()
 
-    # edgeSet 被输入了
+    # edgeSet
     elif((edgeSet.shape == ()) == False):
         if(type(edgeSet) != np.ndarray):
             raise Exception("edgeSet can only be list or numpy.ndarray")
-        # 输入的数据都不一样长 显示是非法的
+        # the length must be equal
         if not (len(edgeSet[0]) == len(edgeSet[1]) == len(edgeSet[2])):
             raise Exception("invalid edgeSet data")
         
-        # 不需要切换格式
+        # keep edge
         if g.method == "edge":
             logger.info("processing edgeSet")
 
-            # 从 0 开始编号 所以点的个数就是需要最大的点编号+1
+            # from 0 to n, so the number of the vertex need to add one.
             g.n = max(max(edgeSet[0]), max(edgeSet[1])) + 1
             g.m = len(edgeSet[0])
             g.graph = edgeSet
 
-            # 求图中的各种细节
+            # detail
             if detail:
-                # 平均度
+                # average degree
                 g.avgDegree = g.m / g.n 
 
-                # 各个点的度
                 g.degree = np.zeros(g.n, dtype = np.int32)
 
                 src = g.graph[0]
@@ -197,27 +192,20 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                 w = g.graph[2]
 
                 for i in range(g.m):
-                    # 记录最大边权
                     g.MAXW = max(g.MAXW, w[i])
-                    #记录最小边权
                     g.MINW = min(g.MINW, w[i])
 
-                    # 当前点的度加一
                     g.degree[src[i]] += 1 
                 
-                # 更新最大度
                 g.MAXD = g.degree.max()
-                # 更新最大度的结点
                 g.MAXU = g.degree.argmax()
-                # 更新最小度
                 g.MIND = g.degree.min()
-                # 更新最小度的结点
                 g.MINU = g.degree.argmin()
 
-                # 提示信息
+                # msg
                 g.setmsg()
 
-        # 需要切换为 CSR 数据格式
+        # change to CSR
         else:
             logger.info("processing edgeSet to CSR")
 
@@ -225,71 +213,61 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
             des = edgeSet[1]
             w = edgeSet[2]
 
-            # 设置结点数量和边的数量
             g.n = max(max(src), max(des)) + 1
             g.m = len(src)
 
-            # 构建 V E W
-            V = np.zeros(g.n + 1, dtype = np.int32) # 从 0 开始编号，因此需要加一个 1 制造一个多余的点
+            #  V E W
+            V = np.zeros(g.n + 1, dtype = np.int32) # so need add one
             E = np.full((g.m,), -1).astype(np.int32)
             W = np.full((g.m,), INF).astype(np.int32)
 
-            # 每个点的度
+            # degree
             g.degree = np.zeros(g.n, dtype = np.int32)
 
             for i in range(g.m):
-                # 统计各个点的度
                 g.degree[src[i]] += 1
 
             for u in range(g.n):
-                # 先设置 V 数组
                 V[u + 1] = V[u] + g.degree[u]
                 
-                # 最大度和最大度的点
                 if g.MAXD < g.degree[u]:
                     g.MAXD = g.degree[u]
                     g.MAXU = u
-                # 最小度和最小度的点
+
                 if g.MIND > g.degree[u]:
                     g.MIND = g.degree[u]
                     g.MINU = u
             
-            # 记录每个结点已经放置的边数
+
             edgeOfV = np.zeros(g.n, dtype = np.int32)
             for i in range(g.m):
-                # 再设置 E 和 W
+
                 u = src[i]
 
                 E[V[u] + edgeOfV[u]] = des[i]
                 W[V[u] + edgeOfV[u]] = w[i]
 
-                # 当前起点的已经添加了一条边了
                 edgeOfV[u] += 1
 
-                # 最大边权
                 g.MAXW = max(g.MAXW, w[i])
-                # 最小边权
                 g.MINW = min(g.MINW, w[i])
 
-            # 设置 graph
             g.graph = [V, E, W]
 
-            # 提示信息
+            # msg
             g.setmsg()        
 
-    # 邻接矩阵
+    # matrix
     elif((matrix.shape == ()) == False):
         if(matrix.shape[0] != matrix.shape[1]):
             raise Exception("Matrix must be matrix, not a wrong shape " + str(matrix.shape))
         
-        # 结点数量
         g.n = matrix.shape[0]
         g.m = 0
 
-        # 各个点的度
         g.degree = np.zeros(g.n, dtype = np.int32)
 
-        # 转化为 edgeSet
+        # change to edgeSet
         if(g.method == "edge"):
 
             logger.info("processing matrix to edgeSet")
@@ -306,20 +284,16 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                         des.append(j)
                         w.append(matrix[i][j])
 
-                        # 边的数量和度
                         g.m += 1
                         g.degree[i] += 1
 
-                        # 最大边权 
                         g.MAXW = max(g.MAXW, w[-1])
-                        # 最小边权
                         g.MINW = min(g.MINW, w[-1])
                 
-                # 最大度和最大度的点
                 if g.MAXD < g.degree[i]:
                     g.MAXD = g.degree[i]
                     g.MAXU = i
-                # 最小度和最小度的点
+
                 if g.MIND > g.degree[i]:
                     g.MIND = g.degree[i]
                     g.MINU = i
@@ -327,42 +301,36 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
             # graph
             g.graph = [src, des, w]
 
-            # 提示信息
+            # msg
             g.setmsg()
 
-        # 转化为 CSR
+        # change to CSR
         else:
             logger.info("processing matrix to CSR")
 
-            # 构建 V E W
-            V = np.zeros(g.n + 1, dtype = np.int32) # 从 0 开始编号，因此需要加一个 1 制造一个多余的点
+            #  V E W
+            V = np.zeros(g.n + 1, dtype = np.int32) # add one as Virtual
             E = []
             W = []
 
             for i in range(g.n):
                 for j in range(g.n):
                     if matrix[i][j] < INF:
-                        # 边的数量和度
                         g.degree[i] += 1
                         g.m += 1
 
-                        # 构建E和W
                         E.append(j)
                         W.append(matrix[i][j])
 
-                        # 最大边权 
                         g.MAXW = max(g.MAXW, W[-1])
-                        # 最小边权
                         g.MINW = min(g.MINW, W[-1])
 
-                # 构建 V 当前点的起点加上度就是下个点的
                 V[i + 1] = V[i] + g.degree[i] 
 
-                # 最大度和最大度的点
                 if g.MAXD < g.degree[i]:
                     g.MAXD = g.degree[i]
                     g.MAXU = i
-                # 最小度和最小度的点
+               
                 if g.MIND > g.degree[i]:
                     g.MIND = g.degree[i]
                     g.MINU = i
@@ -370,47 +338,44 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
             # graph
             g.graph = [V, E, W]
 
-            # 提示信息
+            # msg
             g.setmsg()
 
-    # filename 被输入了
+    # filename 
     elif(filename != ""):
         if(os.path.exists(filename) == False):
             raise Exception("no such a file or dictionary named " + filename)
-        # 只有输入不是 True 就是无向图 
-        # 这样写可以将我们判断的是无/有向图的显示为无/有向图
-        # 我们没有判断的就显示为 Unknown 
+        # direct not true is undirect 
+        # If we don't know, then show Unknown 
         if(g.directed != True):
             g.directed = False
 
-        # 尝试打开文件
+        # open file
         try:
             with open(filename, 'r') as f:
                 content = f.read()    
         except:
             raise Exception("fail to open file " + filename)
 
-        # 切成列表 同时去掉末尾可能的空行
+        # split to list and get rid of "\n" in the end
         contenList = content.split("\n")
         contenList.remove("")
 
-        # 第一行 结点数量和(无)边的数量
         nm_str = contenList[0].split(" ")
-        g.n = np.int32(nm_str[0]) # n 不需要额外+1只需要在V里面虚拟结点就好了
+        g.n = np.int32(nm_str[0]) 
         g.m = np.int32(nm_str[1])
-        # 是有向
+        
+        # directed
         if g.directed == False:
             g.m *= 2
-        # 所有点的度
+        # degree
         g.degree = np.zeros(g.n, dtype=np.int32)
-        # 后面的其余的边
+
         lines = contenList[1:]
-        # 暂时存储每条边的起点、终点、边权 
         src = []
         des = []
         w = []
 
-        # 有向边 只有指定有向图才是 否则就是无向图
         if g.directed:
             for line in lines:
                 edge = line.split(" ")
@@ -424,7 +389,6 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
 
                 g.degree[temp1] += 1
 
-                # 最大边权
                 g.MINW = min(g.MINW, temp3)
                 g.MAXW = max(g.MAXW, temp3)
         else:
@@ -445,79 +409,70 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                 g.degree[temp1] += 1
                 g.degree[temp2] += 1
 
-                # 最大边权
                 g.MINW = min(g.MINW, temp3)
                 g.MAXW = max(g.MAXW, temp3)
 
-        # 读作 edgeSet
+        # read as edgeSet
         if g.method == "edge":
             logger.info("processing filelist to edgeSet")
 
             if detail:
-                # 更新最大度
                 g.MAXD = g.degree.max()
-                # 更新最大度的结点
                 g.MAXU = g.degree.argmax()
-                # 更新最小度
                 g.MIND = g.degree.min()
-                # 更新最小度的结点
                 g.MINU = g.degree.argmin()
 
-                # 提示信息
+                # msg
                 g.setmsg()
             
             g.graph = [src, des, w]
 
-        # 读做 CSR       
+        # read as CSR       
         else:
             logger.info("processing filelist to CSR")
 
-            # 构建 V E W
-            V = np.zeros(g.n + 1, dtype=np.int32) # 从 0 开始编号，因此需要加一个 1 制造一个多余的点
+            #  V E W
+            V = np.zeros(g.n + 1, dtype=np.int32) 
             E = np.full((g.m,), -1).astype(np.int32)
             W = np.full((g.m,), INF).astype(np.int32)
-            # 添加多余的点
+            
             V[g.n] = g.m
         
             for u in range(g.n):
-                # 先设置 V 数组
+                
                 V[u + 1] = V[u] + g.degree[u]
-
-                # 最大度和最大度的点
+                
                 if g.MAXD < g.degree[u]:
                     g.MAXD = g.degree[u]
                     g.MAXU = u
-                # 最小度和最小度的点
+              
                 if g.MIND > g.degree[u]:
                     g.MIND = g.degree[u]
                     g.MINU = u       
             
-            # 记录每个结点已经放置的边数
             edgeOfV = np.zeros(g.n, dtype = np.int32)
 
             for i in range(g.m):
-                # 再设置 E 和 W
                 u = src[i]
 
                 E[V[u] + edgeOfV[u]] = des[i]
                 W[V[u] + edgeOfV[u]] = w[i]
 
-                # 当前起点的已经添加了一条边了
                 edgeOfV[u] += 1
 
-            # 设置 graph
+            #  graph
             g.graph = [V, E, W]
 
-            # 提示信息
+            # msg
             g.setmsg()
 
     else:
         raise Exception("What happend??")
 
-    # 设置数据格式
+    # reshape
     g.reshape()
 
-    # 返回图类
+    # g
     return g
 
 if __name__ == "__main__":

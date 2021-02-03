@@ -13,10 +13,10 @@ def dijkstra(para):
         use dijkstra algorithm in CPU to solve the MSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-cpu-mssp")
@@ -37,7 +37,7 @@ def dijkstra(para):
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

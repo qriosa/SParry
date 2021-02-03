@@ -29,7 +29,7 @@ def edge(para):
         cuf = f.read()
     mod = SourceModule(cuf)
 
-    # 开始计时
+    # start time
     t1 = time()
 
     edgeSet, n, m, pathRecordBool = para.graph.graph, para.graph.n, para.graph.m, para.pathRecordBool
@@ -45,18 +45,18 @@ def edge(para):
     else:
         GRID = (512, 1) 
 
-    # 申请变量空间
+    # malloc array
     dist = np.full((n * n, ), INF).astype(np.int32)
 
-    # 为各个源点初始化
+    # init all source
     for i in range(n):
-        # i为源点的情况下 
+        # i is the source vertex 
         dist[i * n + i] = np.int32(0) 
 
        
     edge_apsp_cuda_fuc = mod.get_function('edge')
 
-    # 开始跑
+    # run!
     edge_apsp_cuda_fuc(drv.In(src),
                         drv.In(des),
                         drv.In(w), 
@@ -67,7 +67,7 @@ def edge(para):
 
     timeCost = time() - t1
     
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

@@ -1,4 +1,3 @@
-
 # print red
 def PRINT_red(chars = None, ptype = "\033[0;31;40m"):
     """

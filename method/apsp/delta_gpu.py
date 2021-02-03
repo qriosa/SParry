@@ -17,10 +17,10 @@ def delta_stepping(para):
         use delta_stepping algorithm in GPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     with open('./method/apsp/cu/delta.cu', 'r', encoding = 'utf-8') as f:
@@ -29,14 +29,14 @@ def delta_stepping(para):
 
     logger.debug("turning to func delta_stepping-gpu-apsp")
 
-    # 起始时间
+    # start time
     t1 = time()
 
     CSR, n, delta, pathRecordBool = para.graph.graph, para.graph.n, para.graph.delta, para.pathRecordBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
-    # 线程开启全局变量 
+    # global parameters of block and grid 
     if para.BLOCK != None:
         BLOCK = para.BLOCK
     else:
@@ -52,15 +52,15 @@ def delta_stepping(para):
     B = np.full((n * GRID[0], ), -1).astype(np.int32)
     hadin = np.full((n * GRID[0], ), 0).astype(np.int32)
 
-    # 为各个源点初始化
+    # init all source vertex
     for i in range(n):
-        # i为源点的情况下 
+        # i is the source vertex 
         dist[i * n + i] = np.int32(0)
 
-    # 获取函数
+    # get function
     delta_apsp_cuda_fuc = mod.get_function("delta_stepping")
 
-    # 开始跑
+    # run!
     delta_apsp_cuda_fuc(drv.In(V),
                         drv.In(E),
                         drv.In(W),
@@ -75,7 +75,7 @@ def delta_stepping(para):
 
     timeCost = time() - t1
     
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

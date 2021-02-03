@@ -64,7 +64,7 @@ def draw(path, s, graph):
     G.add_nodes_from(np.arange(n))
     matrix = np.full((n, n), INF)
 
-    # 都转化为邻接矩阵 可以去重 毕竟这个画图会被覆盖。
+    # transfer into matrix
     if(graph.method != 'edge'):
         V, E, W = graph.graph[0], graph.graph[1], graph.graph[2]
         for i in range(n):
@@ -85,7 +85,7 @@ def draw(path, s, graph):
 
     pathi = np.array(path[:n]) 
     values = ['green' for i in range(n)]
-    values[s] = 'orange'# 源点 
+    values[s] = 'orange' # source 
     
     edge_labels=dict([((u,v,),d['weight']) for u,v,d in G.edges(data=True)])
 
@@ -94,13 +94,12 @@ def draw(path, s, graph):
         if pathi[i] != -1:
             red_edges.append((i, pathi[i]))
             
-            # 无向图暂时先这样写 怕颜色被覆盖了 但是有向图这样写也没有关系 
+            # undirected
             red_edges.append((pathi[i], i))
     
     edge_colors = ['black' if not edge in red_edges else 'red' for edge in G.edges()]
 
-    # pos=nx.spring_layout(G)
-    pos = get_node_pos(G.nodes()) # 按照同心圆分布点
+    pos = get_node_pos(G.nodes()) # Distribute points according to concentric circles
 
     fig, ax = plt.subplots(figsize=(13, 13))
     nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)

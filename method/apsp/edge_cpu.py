@@ -37,7 +37,7 @@ def edge(para):
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

@@ -1,5 +1,4 @@
 __global__ void kernelForMSSP(int *V, int *E, int *W, int *n, int *src, int *sn, bool *visit, int *dist, int *predist){
-    /*thread 和 block 的两级复用 ，由于是不定多源，所以不能使用dist矩阵对称特性的利用，也不开启随机计算优化*/
     int u=0, stInd=0, st=0, align=0, old=0;
     __shared__ int QuickExit;
     const int blockId  = blockIdx.z *(gridDim.x *  gridDim.y) + blockIdx.y * gridDim.x + blockIdx.x;
@@ -13,7 +12,7 @@ __global__ void kernelForMSSP(int *V, int *E, int *W, int *n, int *src, int *sn,
     while(stInd < (*sn))
     {
         align = (stInd * (*n));
-        while(1){/*这个while里解决了一个单元最短路问题*/ 
+        while(1){ /* this while can solve a sssp*/ 
             QuickExit = 0;
             u = threadId;
             while(u < (*n)){
@@ -41,16 +40,6 @@ __global__ void kernelForMSSP(int *V, int *E, int *W, int *n, int *src, int *sn,
             }
         }
         __syncthreads();
-        // /*这里开始dist中间结果利用*/
-        // u=threadId;
-        // while(u < (*n)){
-        //     int ualign = u * (*n);
-        //     old=atomicMin(&dist[ualign + st],dist[align + u]);
-        //     if(old > dist[ualign + st]){
-        //         visit[ualign + st]=1;
-        //     }
-        //     u+=blockSize;
-        // }
         stInd += gridSize;
     }
 }

@@ -13,10 +13,10 @@ def spfa(para):
         use spfa algorithm in CPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func spfa-cpu-sssp")
@@ -36,7 +36,7 @@ def spfa(para):
     dist[s]=0
     inQ[s]=1
     head=0
-    #MultiThread
+    
     while(len(Que)-head>0):
         nowVer=Que[head]
         head=head+1

@@ -10,13 +10,13 @@ logger = Logger(__name__)
 def edge(para):
     """
     function: 
-        use edgeSet in CPU to solve the SSSP.  (more info please see the developer documentation) .
+        use edgeSet in CPU to solve the SSSP.  (more info please see the developer documentation).
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func edge-cpu-sssp")
@@ -26,21 +26,20 @@ def edge(para):
     edgeSet, n, m, s, pathRecordBool = para.graph.graph, para.graph.n, para.graph.m, para.srclist, para.pathRecordBool
     src, des, val = edgeSet[0], edgeSet[1], edgeSet[2]
 
-    # 退出标识
+    # exit flag
     flag = 1
 
     # dist
     dist = np.full((n, ), INF).astype(np.int32)
     dist[s] = 0 
-    # print(dist.shape)  
+ 
     while True:
-        # 如果没有点的距离发生改变，则退出遍历
+        # if there is not a vertex updated, then break
         if flag == 0:
             break
 
         flag = 0
 
-        # edge = (u, v, w): u -> v = w
         for i in range(len(src)):
             u, v, w = src[i], des[i], val[i]
             if dist[v] > dist[u] + w:
@@ -50,7 +49,7 @@ def edge(para):
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
     
     if pathRecordBool:

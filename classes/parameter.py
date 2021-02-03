@@ -23,25 +23,24 @@ class Parameter(object):
         None, but init.
             
     return 
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     """
     
     def __init__(self):
 
-        # 指定kernel使用的grid block
+        # appoint the grid and block of the kernel
         self.BLOCK = None
         self.GRID = None
 
-        self.device = None # 设备参数
+        self.device = None # devide parameter
 
-        self.useCUDA = True # 是否使用 CUDA
-        self.useMultiPro = False # 是否使用 CPU 多线程
+        self.useCUDA = True # use CUDA or not
+        self.useMultiPro = False # use multiple process or not
 
-        self.graph = None # Graph 类
-        self.srclist = None # 源点的集合 单个源点的[数字编号]、全源的[无]、多源的[list] 
+        self.graph = None # Graph Object
+        self.srclist = None # source vertices 
         self.sourceType = None # SSSP APSP MSSP
-        self.pathRecordBool = False # 是否记录路径
+        self.pathRecordBool = False # recording path or not
 
-        # 以下是分块的参数
-        self.part = None # 分块中一次拷贝的边的数目
+        self.part = None # batch size
         

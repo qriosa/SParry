@@ -14,13 +14,13 @@ logger = Logger(__name__)
 def edge(para):
     """
     function: 
-        use edgeSet in GPU to solve the MSSP.  (more info please see the developer documentation) .
+        use edgeSet in GPU to solve the MSSP.  (more info please see the developer documentation).
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func edge-gpu-mssp")
@@ -44,21 +44,20 @@ def edge(para):
     else:
         GRID = (128, 1)
 
-    # 源点的个数
+    # source vertex number
     srcNum = np.int32(len(srclist))
     srclist = np.copy(srclist).astype(np.int32)
 
-    # 申请变量空间
+    # malloc 
     dist = np.full((n * srcNum, ), INF).astype(np.int32)
 
-    # 为各个源点初始化 此时的 i 不再是 i 点 而是第 i 个源点
-    for i in range(srcNum):
-        # i为源点的情况下  这里需要注意下 
+    # init each source vertex, and this time i is not vertex i, but i-th source in srclist.
+    for i in range(srcNum): 
         dist[i * n + srclist[i]] = np.int32(0) 
        
     edge_mssp_cuda_fuc = mod.get_function('edge')
 
-    # 开始跑
+    # run!
     edge_mssp_cuda_fuc(drv.In(src),
                         drv.In(des),
                         drv.In(w), 
@@ -71,10 +70,7 @@ def edge(para):
 
     timeCost = time() - t1
     
-    # dist 和 path 都遵循着 在第i个单源问题中的真的值
-    # path 则具体是第i个单源问题中的真的路径中的点的编号就不考虑某个点是当前的源点的不会用i来表示这个源点了
-
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

@@ -14,13 +14,13 @@ logger = Logger(__name__)
 def edge(para):
     """
     function: 
-        use edgeSet in GPU to solve the SSSP.  (more info please see the developer documentation) .
+        use edgeSet in GPU to solve the SSSP.  (more info please see the developer documentation).
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')  
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func edge-gpu-sssp")
@@ -29,13 +29,12 @@ def edge(para):
         cuf = f.read()
     mod = SourceModule(cuf)
 
-    # 起始时间
+    # start
     t1 = time()
 
     edgeSet, n, m, s, pathRecordBool = para.graph.graph, para.graph.n, para.graph.m, para.srclist, para.pathRecordBool
     src, des, w = edgeSet[0], edgeSet[1], edgeSet[2] 
 
-    # 线程开启全局变量 
     if para.BLOCK != None:
         BLOCK = para.BLOCK
     else:
@@ -49,10 +48,10 @@ def edge(para):
     dist = np.full((n, ), INF).astype(np.int32)
     dist[s] = np.int32(0)
 
-    # 获取函数
+    # get function
     edge_sssp_cuda_fuc = mod.get_function('edge')  
 
-    # 开始跑
+    # run!
     edge_sssp_cuda_fuc(drv.In(src),
                         drv.In(des),
                         drv.In(w),
@@ -63,7 +62,7 @@ def edge(para):
     
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

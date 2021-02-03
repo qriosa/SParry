@@ -14,10 +14,10 @@ def spfa(para):
         use spfa algorithm in CPU to solve the MSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter'). 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result')
+        class, Result object. (see the 'SPoon/classes/result.py/Result'). 
     """
 
     logger.debug("turning to func spfa-cpu-mssp")
@@ -45,23 +45,3 @@ def spfa(para):
         result.calcPath()
 
     return result
-
-# def spfa_iterator(n,st):
-#     global Va,Ea,Wa
-#     Que=[]
-#     dist=[0x7f7f7f7f for i in range(0,n+1)]
-#     inQ=[0 for i in range(0,n+1)]
-#     Que.append(st)
-#     dist[st]=0
-#     inQ[st]=1
-#     head=0
-#     while(len(Que)-head>0):
-#         nowVer=Que[head]
-#         head=head+1
-#         inQ[nowVer]=0
-#         for i in range(Va[nowVer],Va[nowVer+1]):
-#             if(dist[Ea[i]]>dist[nowVer]+Wa[i]):
-#                 dist[Ea[i]]=dist[nowVer]+Wa[i]
-#                 if(inQ[Ea[i]]==0):
-#                     inQ[Ea[i]]=1
-#                     Que.append(Ea[i])

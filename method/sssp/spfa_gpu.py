@@ -26,10 +26,10 @@ def spfa(para):
         use spfa algorithm in GPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func spfa-gpu-sssp")
@@ -47,7 +47,7 @@ def spfa(para):
         BLOCK = para.BLOCK
     else:
         BLOCK=(1024,1,1)
-    # print(BLOCK,GRID)
+
     start_time = time.process_time()
     RST_V_np32 = CSR[0]
     RST_E_np32 = CSR[1]
@@ -61,10 +61,6 @@ def spfa(para):
     DIST = [INF for i in range(n)]
     DIST[st] = 0
     DIST_np32  = np.copy(DIST).astype(np.int32)
-
-    # randomSeq = [x for x in range(n)]
-    # random.shuffle(randomSeq)
-    # RANDOMSEQ_np32 = np.copy(randomSeq).astype(np.int32)
 
     KERNEL(
         drv.In(RST_V_np32), drv.In(RST_E_np32), drv.In(RST_W_np32),

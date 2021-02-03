@@ -19,10 +19,10 @@ def dijkstra(para):
         use dijkstra algorithm in CPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
     logger.debug("turning to func dijkstra-cpu-apsp")
 
@@ -38,10 +38,10 @@ def dijkstra_single(para):
         use dijkstra algorithm in A SINGLE CPU core to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-cpu-apsp single-process")
@@ -62,7 +62,7 @@ def dijkstra_single(para):
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
@@ -87,28 +87,28 @@ def dijkstra_multi_sssp(V, E, W, n, sources, distQ, id0):
         dist, array, the distance array. 
     """
 
-    # 优先队列
+    # priority queue
     q = PriorityQueue()
 
-    # 任务调度
+    # job scheduling
     while sources.empty() == False:
 
-        # 获取一个源点
+        # get a resource vertex
         s = sources.get()
 
         dist = np.full((n,), INF).astype(np.int32)
         dist[s] = 0
 
-        # vis 数组
+        # vis list
         vis = np.full((n, ), 0).astype(np.int32)
 
-        # 开始计算
-        q.put((0, s))#放入s点
+        # run!
+        q.put((0, s)) # put the source vertex s
 
         while q.empty() == False:
             p = q.get()[1]
 
-            if vis[p] == 1: #如果当前节点松弛已经过了，则不需要再松弛了
+            if vis[p] == 1: # if the vertex is done, the continue.
                 continue
 
             vis[p] = 1
@@ -129,10 +129,10 @@ def dijkstra_multi(para):
         use dijkstra algorithm in ALL CPU cores to solve the APSP PARALLEL. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter')
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SPoon/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-cpu-apsp multi-process")
@@ -140,7 +140,8 @@ def dijkstra_multi(para):
 
     t1 = time()
     # q = Queue()
-    # 这样就可以退出了？ 如果不用 manager 的就会卡死掉子进程无法退出
+    # maybe as this I can exit? 
+    # but if not there may be a bug to "running forever of the son thread and can't exit" without using 'manager'
     manager = Manager()
     q = manager.Queue()
 
@@ -152,14 +153,14 @@ def dijkstra_multi(para):
 
     del CSR
     
-    # 源点队列
+    # the queue of sources
     sources = manager.Queue()
 
     for i in range(n):
         sources.put(i)
 
     
-    # 创建 核心数 这么多个进程 通过队列实现任务调度
+    # create as many as the number of the cores threads, and schecule them through queue.
     cores = cpu_count()
     myProcesses = [Process(target = dijkstra_multi_sssp, args = (shared_V, shared_E, shared_W, n, sources, q, _)) for _ in range(cores)]
 
@@ -180,7 +181,7 @@ def dijkstra_multi(para):
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:

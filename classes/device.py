@@ -33,29 +33,29 @@ class Device(object):
         get_attributes: the pycuda's get_attributes.
 
     return 
-        class, Result object. (see the 'SPoon/classes/device.py/Device') 
+        class, Result object. (see the 'SPoon/classes/device.py/Device').
     """
     def __init__(self):
-        self.device = drv.Device(0) # pycuda 的 device 类
+        self.device = drv.Device(0) # device of pyCUDA
 
-        self.CUDAVersion = None # 编译 pyCUDA CUDA 的版本
-        self.driverVersion = None # 运行 CUDA 的驱动的版本
+        self.CUDAVersion = None # compile CUDA version of pyCUDA 
+        self.driverVersion = None # running driver version of CUDA 
         
-        self.deviceName = None # gpu 设备的型号
-        self.deviceNum = None # CUDA 设备的数量
-        self.globalMem = None # global memory 的容量
-        self.sharedMem = None # shared memory 的容量
-        self.processNum = None # 处理器的数量
+        self.deviceName = None # gpu device model
+        self.deviceNum = None # the number of CUDA device
+        self.globalMem = None # capacity of global memory
+        self.sharedMem = None # capacity of shared memory
+        self.processNum = None # the number of processors
 
-        self.SMNum = None # SM 的数量
-        self.gridSize = None # 一个元组 grid 分别表示 grid 两个方向是最大值
-        self.blockSize = None # 同上 block 的三个方向的最大值
+        self.SMNum = None # the number of SM
+        self.gridSize = None # A tuple grid indicates that the two directions of the grid are the maximum values
+        self.blockSize = None # The maximum value of the three directions of the same block
 
-        self.total = None # GPU 中的显存总容量 单位是 Byte
-        self.free = None # GPU 中的目前剩余总量
-        self.used = None # 已经使用了的显存
-        self.temperature = None # 温度
-        self.powerStstus = None # 电源状态
+        self.total = None # The total capacity of video memory in GPU, in bytes
+        self.free = None # Current total remaining in GPU
+        self.used = None # video memory that be used
+        self.temperature = None # temperature
+        self.powerStstus = None # state of battery
 
         self.getDeviceInfo()
 
@@ -148,17 +148,15 @@ class Device(object):
 
         return:        
             None, no return.        
-        """
-        
-        # 获取设备的信息, 并返回 deviceinfo 的类    
+        """ 
 
-        # 初始化
+        # init
         nvmlInit()
 
-        # 驱动信息
+        # driver info
         nvmlSystemGetDriverVersion()
 
-        #查看设备名字
+        # device name
         self.deviceNum = nvmlDeviceGetCount()
         self.deviceType = []
 
@@ -166,11 +164,11 @@ class Device(object):
             handle = nvmlDeviceGetHandleByIndex(i)
             self.deviceType.append(nvmlDeviceGetName(handle))
 
-        #查看显存、温度、风扇、电源
+        # show the video memory, temperature, power, fan
         handle = nvmlDeviceGetHandleByIndex(0)
         info = nvmlDeviceGetMemoryInfo(handle)
 
-        # 单位是 Byte
+        # in Byte
         self.total = info.total
         self.free = info.free
         self.used = info.used
@@ -178,6 +176,6 @@ class Device(object):
         self.temperature = nvmlDeviceGetTemperature(handle,0)
         self.powerStstus = nvmlDeviceGetPowerState(handle)
 
-        #最后要关闭管理工具
+        # close
         nvmlShutdown()
 

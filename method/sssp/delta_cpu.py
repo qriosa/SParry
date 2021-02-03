@@ -5,7 +5,6 @@ from utils.settings import INF
 from utils.debugger import Logger
 from classes.result import Result
 
-# CSR 结点数 源点 delta 最大边权
 logger = Logger(__name__)
 
 def delta_stepping(para):
@@ -14,7 +13,7 @@ def delta_stepping(para):
         use delta_stepping algorithm in CPU to solve the SSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
     
     return: 
         class, Result object. (see the 'SPoon/classes/result.py/Result'). 
@@ -22,14 +21,14 @@ def delta_stepping(para):
 
     logger.debug("turning to func delta_stepping-cpu-sssp")
 
-    # 起始时间
+    # start time
     t1 = time()
 
     CSR, n, s, delta, pathRecordBool = para.graph.graph, para.graph.n, para.srclist, para.graph.delta, para.pathRecordBool
 
     V, E, W = CSR[0], CSR[1], CSR[2]
 
-    # 最大边权
+    # the max weight
     if para.graph.MAXW <= 0:
         MAXN = max(W)
     else:
@@ -41,34 +40,34 @@ def delta_stepping(para):
 
     B = []
 
-    #初始化源点距离信息
-    isin = np.full((n, ), -1).astype(np.int32) # 标记当前点在哪个桶里面 
+    # init
+    isin = np.full((n, ), -1).astype(np.int32)
 
-    maxidB = MAXN * (n - 2) // delta + 1 #计算出桶的最大上限
+    maxidB = MAXN * (n - 2) // delta + 1 # calc the maxid of bucket
 
     for i in range(maxidB):
         B.append([])
 
-    B[0].append(s) # 源点放入第一个桶中
+    B[0].append(s) # put source into bucket 0
     isin[s] = 0
 
 
-    idB = 0 #当前桶的id 从0开始，直到后面没有了
+    idB = 0 # current id start from 0
     while True:
         
         tag = 0 
 
         for i in range(idB, maxidB):
-            if B[i] != []: # 向后找到第一个非空的
+            if B[i] != []: # find the first bucket that is not empty
                 tag = 1
-                idB = i # 快速跳过中间的空桶
+                idB = i # goto the first bucket that is not empty quickly
                 break
 
-        if tag == 0: # 全桶都空了
+        if tag == 0: # all bucket is empty
             break
         
-        head = 0 # 已经用了多少点
-        tail = len(B[idB]) # 桶中一共多少点
+        head = 0 # the number of vertices that have been used
+        tail = len(B[idB]) # the number of vertex in the bucket
 
         while head < tail:
 
@@ -113,11 +112,11 @@ def delta_stepping(para):
                         
                         B[isin[E[i]]].append(E[i])
                             
-        idB += 1 # 下一个桶
+        idB += 1 # the next bucket
 
     timeCost = time() - t1
 
-    # 结果
+    # result
     result = Result(dist = dist, timeCost = timeCost, graph = para.graph)
 
     if pathRecordBool:
