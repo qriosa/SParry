@@ -11,8 +11,8 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
     """
     function: 
         convert a graph from [CSR/matrix/edgeSet/file] 
-            to Graph object(see the 'SPoon/classes/graph.py/Graph')
-            as the paremeter 'graph' of the func calc(see the 'SPoon/calc.py/calc')
+            to Graph object(see the 'SParry/classes/graph.py/Graph')
+            as the paremeter 'graph' of the func calc(see the 'SParry/calc.py/calc')
     
     parameters: 
         CSR: tuple, optional, a 3-tuple of integers as (V, E, W) about the CSR of graph data.
@@ -39,7 +39,7 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                 CSR > matrix > edgeSet > filename.
 
     return:
-        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')     
+        class, Graph object. (see the 'SParry/classes/graph.py/Graph')     
     """
     
     """

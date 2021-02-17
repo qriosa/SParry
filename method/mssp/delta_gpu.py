@@ -17,10 +17,10 @@ def delta_stepping(para):
         use delta_stepping algorithm in GPU to solve the MSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter'). 
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter'). 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     with open('./method/mssp/cu/delta.cu', 'r', encoding = 'utf-8') as f:

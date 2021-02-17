@@ -13,10 +13,10 @@ def delta_stepping(para):
         use delta_stepping algorithm in CPU to solve the SSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result'). 
+        class, Result object. (see the 'sparry/classes/result.py/Result'). 
     """
 
     logger.debug("turning to func delta_stepping-cpu-sssp")

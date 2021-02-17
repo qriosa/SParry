@@ -27,7 +27,7 @@ def judge_sssp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter'). 
+        para: class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter'). 
     
     return:
         bool, [0/1/2]. (more info please see the developer documentation).  
@@ -86,7 +86,7 @@ def judge_mssp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        para: class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return:
         bool, [0/1/2]. (more info please see the developer documentation).  
@@ -114,7 +114,7 @@ def judge_apsp(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        para: class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return:
         bool, [0/1/2]. (more info please see the developer documentation).    

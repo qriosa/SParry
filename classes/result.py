@@ -26,7 +26,7 @@ class Result(object):
             calc the path through the graph and dist.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     def __init__(self, 

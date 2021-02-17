@@ -23,7 +23,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.info(f"entering to dispatch ... ")

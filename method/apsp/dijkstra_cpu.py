@@ -19,10 +19,10 @@ def dijkstra(para):
         use dijkstra algorithm in CPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
     logger.debug("turning to func dijkstra-cpu-apsp")
 
@@ -38,10 +38,10 @@ def dijkstra_single(para):
         use dijkstra algorithm in A SINGLE CPU core to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-cpu-apsp single-process")
@@ -129,10 +129,10 @@ def dijkstra_multi(para):
         use dijkstra algorithm in ALL CPU cores to solve the APSP PARALLEL. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-cpu-apsp multi-process")

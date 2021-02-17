@@ -21,10 +21,10 @@ def dijkstra(para):
         use dijkstra algorithm in GPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-sssp")
@@ -59,7 +59,7 @@ def direct(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-sssp no-divide")
@@ -123,7 +123,7 @@ def noStream(CSR, n, m, s, part, pathRecordBool, BLOCK, GRID):
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-sssp divide")

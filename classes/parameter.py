@@ -13,7 +13,7 @@ class Parameter(object):
         GRID: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
         useCUDA: bool, use CUDA to speedup or not.
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
-        device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
+        device: class, Device object. (see the 'sparry/classes/device.py/Device') 
         srclist: list/int, the source of shortest path problem.
         sourceType: str, the type of the source.
         pathRecordBool: bool, record the path or not.
@@ -23,7 +23,7 @@ class Parameter(object):
         None, but init.
             
     return 
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     """
     
     def __init__(self):

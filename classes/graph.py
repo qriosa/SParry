@@ -35,7 +35,7 @@ class Graph(object):
         reshape: convert data to numpy.int32.
 
     return: 
-        class, Result object. (see the 'SPoon/classes/graph.py/Graph').
+        class, Result object. (see the 'sparry/classes/graph.py/Graph').
     """
 
     def __init__(self):
@@ -74,7 +74,7 @@ class Graph(object):
 
 
         # printable msg
-        self.msg = "Welcome to use SPoon.\nIf you want see the detail of the Graph, you can set the parameter 'detail' of method 'read' in 'pretreat.py' as 'True'."
+        self.msg = "Welcome to use sparry.\nIf you want see the detail of the Graph, you can set the parameter 'detail' of method 'read' in 'pretreat.py' as 'True'."
         
     def setmsg(self):
         """

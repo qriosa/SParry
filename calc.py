@@ -40,7 +40,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
 
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'sparry/classes/result.py/Result') 
     """
     # turn to dispatch to dispatch
     # we only accept graphic data in edgeSet format 

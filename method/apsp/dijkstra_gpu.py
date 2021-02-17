@@ -19,10 +19,10 @@ def dijkstra(para):
         use dijkstra algorithm in GPU to solve the APSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter').
+        class, Parameter object. (see the 'sparry/classes/parameter.py/Parameter').
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
     logger.debug("turning to func dijkstra-gpu-apsp")
 
@@ -59,7 +59,7 @@ def nodivide(CSR, n, pathRecordBool, BLOCK, GRID):
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-apsp no-divide")
@@ -126,7 +126,7 @@ def divide(CSR, n, m, part, pathRecordBool, BLOCK, GRID, tag):
         tag: bool, convert APSP to SSSP, then the SSSP need to devide or not.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'sparry/classes/result.py/Result').
     """
 
     logger.debug("turning to func dijkstra-gpu-apsp divide")

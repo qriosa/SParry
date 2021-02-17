@@ -34,6 +34,7 @@ def check(data1, data2, name1 = 'data1', name2 = 'data2'):
         return res
 
 
+
 def checkBool(data1, data2):
     """
     function: 

@@ -1,8 +1,9 @@
-# [SPoon](https://github.com/LCX666/SPoon)
+# [SParry](https://github.com/LCX666/SParry)
 
-![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_logo.jpg)
+![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/sparry.png)
 
-**SPoon** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+[English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%AE%89%E8%A3%85)
 
 It's **developing**.
 
@@ -10,7 +11,7 @@ It's **developing**.
 
 ------
 
-`SPoon` is a **shortest path calculation toolkit**, the main shortest path algorithms, including `Dijkstra`, `Bellman-Ford`, `Delta-Stepping`, and `Edge-Based`, are encapsulated.  **A parallel accelerated version based on CUDA is provided** to improve development efficiency.
+`SParry` is a **shortest path calculation toolkit**, the main shortest path algorithms, including `Dijkstra`, `Bellman-Ford`, `Delta-Stepping`, and `Edge-Based`, are encapsulated.  **A parallel accelerated version based on CUDA is provided** to improve development efficiency.
 
 At the same time, it can divide the graph data into parts, and solve it more quickly than using the CPU when the graph is too large to put it in the GPU directly.
 
@@ -70,7 +71,7 @@ Download the file package directly and run the `calc` interface function **in th
 
 ## flow chart
 
-![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
+![image](https://raw.githubusercontent.com/LCX666/SParry/main/chart.svg)
 
 
 
@@ -78,15 +79,34 @@ Download the file package directly and run the `calc` interface function **in th
 
 ## Test&Result
 
-We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs to solve the **single-source shortest path (SSSP) and all-pairs shortest path (APSP)**. The following shows the running effect diagram of each algorithm in the figure of `M=10*N`. For more detailed data, please refer to [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult) .
+We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs to solve the **single-source shortest path (SSSP) and all-pairs shortest path (APSP)**. The following shows the time variation of each algorithm with the number of nodes when the average degree is 4, please refer to [SParry/testResult](https://github.com/LCX666/SParry/tree/main/testResult) .
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
+![SSSPTimeConsumptionByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/SSSPTimeConsumptionByDegree4.png)
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_gpu_timecost_by_N_M=10N.png" alt="spoon_gpu_timecost_by_N_M=10N" style="zoom:50%;" />
+<center>SSSP time consumption by degree=4</center>
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_GPUoverCPU_by_N_M=10N.png" alt="spoon_speedUp_GPUoverCPU_by_N_M=10N" style="zoom:50%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N.png" alt="spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N" style="zoom:50%;" />
+
+![SSSPSpeedupRatioByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/SSSPSppedupRatioByDegree4.png)
+
+<center>SSSP speedup ratio by degree=4</center>
+
+![APSPTimeConsumptionByDegreeAPSP4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/APSPTimeConsumptionByDegreeAPSP4.png)
+
+<center>APSP time consumption by degree=4</center>
+
+![APSPSpeedupRatioByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/APSPSpeedupRatioByDegree4.png)
+
+<center>APSP speedup ratio by degree=4</center>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -94,12 +114,12 @@ We have conducted a lot of tests on this tool, and no errors occurred in the tes
 
 ## Quick start tutorial
 
-This section is an introduction to help beginners of `SPoon` get started quickly.
+This section is an introduction to help beginners of `SParry` get started quickly.
 
 ### step1. cd to the current root directory
 
 ```powershell
-cd XXX/SPoon/
+cd XXX/SParry/
 ```
 
 
@@ -108,7 +128,7 @@ cd XXX/SPoon/
 
 #### In Memory-matrix
 
-When your graph data is in **memory** and **meets the [adjacency-matrix data](https://github.com/LCX666/SPoon/blob/main/tutorials.md#adjacency-matrix)** requirements, you can import your data as below to quickly calculate the results.
+When your graph data is in **memory** and **meets the [adjacency-matrix data](https://github.com/LCX666/SParry/blob/main/tutorials.md#adjacency-matrix)** requirements, you can import your data as below to quickly calculate the results.
 
 ```python
 >>> from calc import calc
@@ -159,7 +179,7 @@ array([0, 1, 2, 3], dtype=int32)
 
 #### In Memory-CSR
 
-When your graph data is in **memory** and **compliant with the [CSR data](https://github.com/LCX666/SPoon/blob/main/tutorials.md#csr) requirements**, you can import your data as below to quickly calculate the results.
+When your graph data is in **memory** and **compliant with the [CSR data](https://github.com/LCX666/SParry/blob/main/tutorials.md#csr) requirements**, you can import your data as below to quickly calculate the results.
 
 ```python
 >>> from calc import calc
@@ -204,7 +224,7 @@ array([0, 1, 3, 5], dtype=int32)
 
 #### In Memory-edgeSet
 
-When your graph data is in **memory** and **compliant with the [edgeSet data](https://github.com/LCX666/SPoon/blob/main/tutorials.md#edgeset)** requirements, you can import your data as below to quickly calculate the results.
+When your graph data is in **memory** and **compliant with the [edgeSet data](https://github.com/LCX666/SParry/blob/main/tutorials.md#edgeset)** requirements, you can import your data as below to quickly calculate the results.
 
 ```python
 >>> from calc import calc
@@ -247,7 +267,7 @@ array([         0,          1, 2139045759,          2], dtype=int32)
 
 #### In File
 
-When your graph data is stored in a **file** and **meets the data requirements** ([file data](https://github.com/LCX666/SPoon/blob/main/tutorials.md#file-format)) , you can also pass in a file to calculate the shortest path.
+When your graph data is stored in a **file** and **meets the data requirements** ([file data](https://github.com/LCX666/SParry/blob/main/tutorials.md#file-format)) , you can also pass in a file to calculate the shortest path.
 
 The file in this example is as follows, `test.txt` .
 
@@ -325,13 +345,13 @@ All error reports in the software will be reported with `Python` error messages,
 
 #### func calc()
 
-This function is the only calculation interface of this tool. By calling this method, you can directly calculate the shortest path of the graph. See [func calc()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-1) for more information.
+This function is the only calculation interface of this tool. By calling this method, you can directly calculate the shortest path of the graph. See [func calc()](https://github.com/LCX666/SParry/blob/main/tutorials.md#func-calc-1) for more information.
 
 
 
 #### func read()
 
-This function is used to pre-process graphs in this tool. By calling this method, you can normalize the user's various graph data into a uniform class. See [func read()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-read-1) for more information.
+This function is used to pre-process graphs in this tool. By calling this method, you can normalize the user's various graph data into a uniform class. See [func read()](https://github.com/LCX666/SParry/blob/main/tutorials.md#func-read-1) for more information.
 
 
 
@@ -355,7 +375,7 @@ This function returns the positive infinity in the tool.
 
 ### Graph Data  Specification
 
-The graph data received in the tool is available in **both [file formats](https://github.com/LCX666/SPoon/blob/main/tutorials.md#file-format) and memory formats** (three types: [adjacency matrix (matrix)](https://github.com/LCX666/SPoon/blob/main/tutorials.md#adjacency-matrix), [compressed adjacency matrix (CSR)](https://github.com/LCX666/SPoon/blob/main/tutorials.md#csr), and [edgeSet array (edgeSet)](https://github.com/LCX666/SPoon/blob/main/tutorials.md#edgeset)).
+The graph data received in the tool is available in **both [file formats](https://github.com/LCX666/SParry/blob/main/tutorials.md#file-format) and memory formats** (three types: [adjacency matrix (matrix)](https://github.com/LCX666/SParry/blob/main/tutorials.md#adjacency-matrix), [compressed adjacency matrix (CSR)](https://github.com/LCX666/SParry/blob/main/tutorials.md#csr), and [edgeSet array (edgeSet)](https://github.com/LCX666/SParry/blob/main/tutorials.md#edgeset)).
 
 The following is an example of a common graph:
 
@@ -483,8 +503,8 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
     """
     function: 
         convert a graph from [CSR/matrix/edgeSet/file] 
-            to Graph object(see the 'SPoon/classes/graph.py/Graph')
-            as the paremeter 'graph' of the func calc(see the 'SPoon/calc.py/calc')
+            to Graph object(see the 'SParry/classes/graph.py/Graph')
+            as the paremeter 'graph' of the func calc(see the 'SParry/calc.py/calc')
     
     parameters: 
         CSR: tuple, optional, a 3-tuple of integers as (V, E, W) about the CSR of graph data.
@@ -511,16 +531,16 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                 CSR > matrix > edgeSet > filename.
 
     return:
-        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')     
+        class, Graph object. (see the 'SParry/classes/graph.py/Graph')     
     """
 ```
 
 #### Parameters
 
-- CSR, graph data, optional, meets the CSR data format as detailed in [CSR Data Format Specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#csr).
-- matrix, graph data, optional, satisfies the data format of the adjacency matrix, see [matrix data format specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#adjacency-matrix).
-- edgeSet, graph data, optional, satisfies the data format of the edge set array, see [edgeSet data format specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#edgeset).
-- filename, graph file name, optional, satisfies the data format of the file format, see [file data format specification](https://github.com/LCX666/SPoon/blob/main/tutorials.md#file-format).
+- CSR, graph data, optional, meets the CSR data format as detailed in [CSR Data Format Specification](https://github.com/LCX666/SParry/blob/main/tutorials.md#csr).
+- matrix, graph data, optional, satisfies the data format of the adjacency matrix, see [matrix data format specification](https://github.com/LCX666/SParry/blob/main/tutorials.md#adjacency-matrix).
+- edgeSet, graph data, optional, satisfies the data format of the edge set array, see [edgeSet data format specification](https://github.com/LCX666/SParry/blob/main/tutorials.md#edgeset).
+- filename, graph file name, optional, satisfies the data format of the file format, see [file data format specification](https://github.com/LCX666/SParry/blob/main/tutorials.md#file-format).
 - **Note! The above four parameters are optional, but all four cannot be None. priority is: CSR > matrix > edgeSet > filename.**
 - method, the shortest path calculation method used, default is 'dij'. str. can only be of the following types: 
   1. dij: Indicates that the shortest path is solved using the `dijkstra` algorithm. 
@@ -533,7 +553,7 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
 
 #### Return
 
-The return value is an instance of `class Graph`. See [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph) for details.
+The return value is an instance of `class Graph`. See [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph) for details.
 
 <br>
 
@@ -541,7 +561,7 @@ The return value is an instance of `class Graph`. See [class Graph](https://gith
 
 #### Function 
 
-This function is an interface function of `SPoon`. Through this function, users can pass in their own graph data and some necessary parameters to calculate the shortest path of the graph.
+This function is an interface function of `SParry`. Through this function, users can pass in their own graph data and some necessary parameters to calculate the shortest path of the graph.
 
 #### Structure
 
@@ -562,7 +582,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
 
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SParry/classes/result.py/Result') 
     """
 ```
 
@@ -570,7 +590,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
 
 This method is an interface function with the following meaning of each parameter.
 
-- graph, graph data, required, the graph data or graph data storage file where the shortest path needs to be calculated. This function accepts this parameter must be [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph).
+- graph, graph data, required, the graph data or graph data storage file where the shortest path needs to be calculated. This function accepts this parameter must be [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph).
 
 - useCUDA, whether to use CUDA acceleration, defaults to True. bool. can only be of the following types.
 
@@ -602,7 +622,7 @@ This method is an interface function with the following meaning of each paramete
 
 #### Return
 
-The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
+The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-result) for details.
 
 <br>
 
@@ -632,7 +652,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'SParry/classes/result.py/Result').
     """
    
     return result
@@ -642,7 +662,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
 
 This method is the transfer function undertaken by the interface function, the meaning of each parameter is consistent with the interface function, the meaning of each parameter is as follows.
 
-- graph, graph data, required, need to calculate the shortest path of the graph data or graph data storage file. this function accepts this parameter must be [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph).
+- graph, graph data, required, need to calculate the shortest path of the graph data or graph data storage file. this function accepts this parameter must be [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph).
 
 - useCUDA, whether to use CUDA acceleration, defaults to True. bool. can only be of the following types.
 
@@ -674,7 +694,7 @@ This method is the transfer function undertaken by the interface function, the m
 
 #### Return
 
-The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
+The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-result) for details.
 
 <br>
 
@@ -693,7 +713,7 @@ def judge(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        para: class, Parameter object. (see the 'SParry/classes/parameter.py/Parameter') 
     
     return:
         bool, [0/1/2]. (more info please see the developer documentation).  
@@ -702,7 +722,7 @@ def judge(para):
 
 #### Parameters
 
-- para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter) for details. The type is fixed.
+- para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-parameter) for details. The type is fixed.
 
 #### Return
 
@@ -742,7 +762,7 @@ def draw(path, s, graph):
 
 - path, the precursor array of the shortest path, required. list.
 - s, the number of the source vertex, required. int.
-- graph, graph data, required. [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph). the graph data needed to calculate the shortest path.
+- graph, graph data, required. [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph). the graph data needed to calculate the shortest path.
 
 #### Return
 
@@ -805,21 +825,21 @@ def dijkstra(para):
         use dijkstra algorithm in CPU to solve the SSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SParry/classes/parameter.py/Parameter') 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SParry/classes/result.py/Result') 
 	"""
 	...
 ```
 
 #### Parameters
 
-- para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter) for details. The type is fixed.
+- para, the parameter class passed between functions. `class Parameter`.  Please refer to [class Parameter](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-parameter) for details. The type is fixed.
 
 #### Return
 
-The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result) for details.
+The return value is an instance of `class Result`. Please refer to [class Result](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-result) for details.
 
 
 
@@ -857,7 +877,7 @@ class Result(object):
             calc the path through the graph and dist.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SParry/classes/result.py/Result') 
 	"""
 	def __init__(self, 
                 dist = None, 
@@ -911,7 +931,7 @@ class Result(object):
 - dist, array of shortest paths. numpy.ndarray.
 - timeCost, the time taken to calculate the shortest path. float.
 - ~~memoryCost, the memory consumption during the calculation. None for now.~~
-- graph, graph data, required, the graph data or graph data storage file to be used for calculating the shortest path. this function accepts this parameter must be [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph).
+- graph, graph data, required, the graph data or graph data storage file to be used for calculating the shortest path. this function accepts this parameter must be [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph).
 
 
 
@@ -927,7 +947,7 @@ class Result(object):
   3. If we compute the full source shortest path, then it is a two-dimensional array of `n × n`, `path[i][j]` which means that in the single source shortest path problem for source `i`, source `i` needs to go from node `path[i][j]` to reach node `j`.
 - timeCost, time spent. float. indicates the time in seconds spent on the shortest path problem.
 - memoryCost, space cost. int. denotes the space in bytes used to compute the shortest path problem.
-- graph, graph data, required, the graph data or graph data storage file to be used to compute the shortest path. This function accepts this parameter must be [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph).
+- graph, graph data, required, the graph data or graph data storage file to be used to compute the shortest path. This function accepts this parameter must be [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph).
 
 #### Methods
 
@@ -966,7 +986,7 @@ class Prameter(object):
         GRID: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
         useCUDA: bool, use CUDA to speedup or not.
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
-        device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
+        device: class, Device object. (see the 'SParry/classes/device.py/Device') 
         srclist: list/int, the source of shortest path problem.
         pathRecordBool: bool, record the path or not.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
@@ -975,7 +995,7 @@ class Prameter(object):
         None, but init.
             
     return 
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SParry/classes/parameter.py/Parameter') 
 	"""
 	def __init__(self):
 		
@@ -988,7 +1008,7 @@ None
 
 #### Attributes
 
-- graph, graph data, see [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph) for details.
+- graph, graph data, see [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph) for details.
 
 - BLOCK, triple `(x,y,z)` denotes the structure of the threads during computation. tuple. optional.
 
@@ -1007,7 +1027,7 @@ None
 
      **Note that this parameter is only meaningful if `method` is specified as `dij`, `useCUDA` is `False`, and the problem being solved is `APSP` or `MSSP`. **
 
-- device, an instance of class Device. See [class Device](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-device) for details.
+- device, an instance of class Device. See [class Device](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-device) for details.
 
 - srclist, a collection of source points. int/list/None. can be of the following three types.
 
@@ -1144,7 +1164,7 @@ class Graph(object):
         reshape: convert data to numpy.int32.
 
     return: 
-        class, Graph object. (see 'SPoon/classes/graph.py/Graph')
+        class, Graph object. (see 'SParry/classes/graph.py/Graph')
     """
     
     def __init__(self, filename = None, directed = False):
@@ -1216,7 +1236,7 @@ class Graph(object):
 
 所谓工欲善其事必先利其器。
 
-`SPoon` 是一个**最短路径计算工具包**，封装了诸如：`Dijkstra` , `Bellman-Ford` , `Delta-Stepping` ,  `Edge-Based` 等主流的最短路径算法。它也提供了**基于CUDA的并行加速版本**，以提高开发效率。
+`SParry` 是一个**最短路径计算工具包**，封装了诸如：`Dijkstra` , `Bellman-Ford` , `Delta-Stepping` ,  `Edge-Based` 等主流的最短路径算法。它也提供了**基于CUDA的并行加速版本**，以提高开发效率。
 
 同时本工具还封装了自动分图计算方法的 `Dijkstra` 算法，可有效解决大规模图在 `GPU` 显存不足无法直接并行计算的问题。
 
@@ -1276,7 +1296,7 @@ class Graph(object):
 
 ## 流程图
 
-![image](https://raw.githubusercontent.com/LCX666/SPoon/main/chart.svg)
+![image](https://raw.githubusercontent.com/LCX666/SParry/main/chart.svg)
 
 
 
@@ -1286,15 +1306,31 @@ class Graph(object):
 
 ## 测试和效果
 
-我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上计算**单源最短路径问题(SSSP)和全源最短路径问题(APSP)**的用时情况和串并行加速比。下面展示了 `M=10*N` 的图中各个算法的运行效果图，更详细的数据请查阅 [SPoon/testResult](https://github.com/LCX666/SPoon/tree/main/testResult)。
+我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上计算**单源最短路径问题(SSSP)和全源最短路径问题(APSP)**的用时情况和串并行加速比。下面展示平均度为 4 时，各算法随结点数量变化的用时变化情况，更详细的数据请查阅 [SParry/testResult](https://github.com/LCX666/SParry/tree/main/testResult)。
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_cpu_timecost_by_N_M=10N.png" alt="spoon_cpu_timecost_by_N_M=10N" style="zoom: 50%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_gpu_timecost_by_N_M=10N.png" alt="spoon_gpu_timecost_by_N_M=10N" style="zoom:50%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_GPUoverCPU_by_N_M=10N.png" alt="spoon_speedUp_GPUoverCPU_by_N_M=10N" style="zoom:50%;" />
+![SSSPTimeConsumptionByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/SSSPTimeConsumptionByDegree4.png)
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N.png" alt="spoon_speedUp_CPU_Dij_over_8methods_by_N_M=10N" style="zoom:50%;" />
+<center>SSSP time consumption by degree=4</center>
+
+
+
+![SSSPSpeedupRatioByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/SSSPSppedupRatioByDegree4.png)
+
+<center>SSSP speedup ratio by degree=4</center>
+
+![APSPTimeConsumptionByDegreeAPSP4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/APSPTimeConsumptionByDegreeAPSP4.png)
+
+<center>APSP time consumption by degree=4</center>
+
+![APSPSpeedupRatioByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/APSPSpeedupRatioByDegree4.png)
+
+<center>APSP speedup ratio by degree=4</center>
+
+
+
+
 
 
 
@@ -1302,12 +1338,12 @@ class Graph(object):
 
 ## 快速入门教程
 
-本节是帮助 `SPoon` 新手快速上手的简介。
+本节是帮助 `SParry` 新手快速上手的简介。
 
 ### step1. cd 到当前根目录
 
 ```powershell
-cd XXX/SPoon/
+cd XXX/SParry/
 ```
 
 
@@ -1316,7 +1352,7 @@ cd XXX/SPoon/
 
 #### 内存数据-matrix
 
-当您的图数据在**内存**中并**符合[邻接矩阵数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)要求** 时，可以像下面一样导入您的数据，快速计算结果。
+当您的图数据在**内存**中并**符合[邻接矩阵数据](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)要求** 时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
@@ -1365,7 +1401,7 @@ array([0, 1, 2, 3], dtype=int32)
 
 #### 内存数据-CSR
 
-当您的图数据在**内存**中并**符合[CSR数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)要求** 时，可以像下面一样导入您的数据，快速计算结果。
+当您的图数据在**内存**中并**符合[CSR数据](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)要求** 时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
@@ -1410,7 +1446,7 @@ array([0, 1, 3, 5], dtype=int32)
 
 #### 内存数据-edgeSet
 
-当您的图数据在**内存**中并**符合[edgeSet数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset)要求** 时，可以像下面一样导入您的数据，快速计算结果。
+当您的图数据在**内存**中并**符合[edgeSet数据](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset)要求** 时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
@@ -1453,7 +1489,7 @@ array([         0,          1, 2139045759,          2], dtype=int32)
 
 #### 文件数据
 
-当您的图数据存储在**文件**中并**符合数据要求时** ([文件数据](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F))，您也可以传入文件来计算最短路径。
+当您的图数据存储在**文件**中并**符合数据要求时** ([文件数据](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F))，您也可以传入文件来计算最短路径。
 
 本例子中的文件如下， `test.txt` 。
 
@@ -1533,13 +1569,13 @@ array([0, 1, 2, 3], dtype=int32)
 
 #### func calc()
 
-该函数是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-calc-3) 。
+该函数是本工具的唯一计算接口，通过调用此方法可以直接计算得到图的最短路径。更多信息请参阅 [func calc()](https://github.com/LCX666/SParry/blob/main/tutorials.md#func-calc-3) 。
 
 
 
 #### func read()
 
-该函数是本工具中用于预处理图的函数，通过调用此方法可以将用户的各种图数据归一化为统一的类。更多信息请参阅 [func read()](https://github.com/LCX666/SPoon/blob/main/tutorials.md#func-read-3) 。
+该函数是本工具中用于预处理图的函数，通过调用此方法可以将用户的各种图数据归一化为统一的类。更多信息请参阅 [func read()](https://github.com/LCX666/SParry/blob/main/tutorials.md#func-read-3) 。
 
 
 
@@ -1560,7 +1596,7 @@ array([0, 1, 2, 3], dtype=int32)
 
 ### 图数据规范
 
-工具中接收的图数据有[**文件格式**](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F-file-format)和**内存格式**(三种类型：[邻接矩阵(matrix)](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)、[压缩邻接矩阵(CSR)](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)和[边集数组(edgeSet)](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset))。
+工具中接收的图数据有[**文件格式**](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F-file-format)和**内存格式**(三种类型：[邻接矩阵(matrix)](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)、[压缩邻接矩阵(CSR)](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)和[边集数组(edgeSet)](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset))。
 
 下图是一个普通的图例子：
 
@@ -1686,8 +1722,8 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
     """
     function: 
         convert a graph from [CSR/matrix/edgeSet/file] 
-            to Graph object(see the 'SPoon/classes/graph.py/Graph')
-            as the paremeter 'graph' of the func calc(see the 'SPoon/calc.py/calc')
+            to Graph object(see the 'SParry/classes/graph.py/Graph')
+            as the paremeter 'graph' of the func calc(see the 'SParry/calc.py/calc')
     
     parameters: 
         CSR: tuple, optional, a 3-tuple of integers as (V, E, W) about the CSR of graph data.
@@ -1714,16 +1750,16 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
                 CSR > matrix > edgeSet > filename.
 
     return:
-        class, Graph object. (see the 'SPoon/classes/graph.py/Graph')     
+        class, Graph object. (see the 'SParry/classes/graph.py/Graph')     
     """
 ```
 
 #### parameters
 
-- CSR，图数据，可选，满足 CSR 的数据格式，详见 [CSR 数据格式规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)。
-- matrix，图数据，可选，满足邻接矩阵的数据格式，详见 [matrix 数据格式规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)。
-- edgeSet，图数据，可选，满足边集数组的数据格式，详见 [edgeSet 数据格式规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset)。
-- filename，图文件名，可选，满足文件格式的数据格式，详见 [file 数据格式规范](https://github.com/LCX666/SPoon/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F-file-format)。
+- CSR，图数据，可选，满足 CSR 的数据格式，详见 [CSR 数据格式规范](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)。
+- matrix，图数据，可选，满足邻接矩阵的数据格式，详见 [matrix 数据格式规范](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)。
+- edgeSet，图数据，可选，满足边集数组的数据格式，详见 [edgeSet 数据格式规范](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset)。
+- filename，图文件名，可选，满足文件格式的数据格式，详见 [file 数据格式规范](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F-file-format)。
 - **注意！上述四个参数虽然都是可选，但是4者不能都为 None。同时优先级为：CSR > matrix > edgeSet > filename。**
 - method， 使用的最短路径计算方法，缺省为 'dij'。str。仅可以是以下类型：
   1. dij： 表示使用 `Dijkstra` 算法求解最短路径。
@@ -1736,7 +1772,7 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
 
 #### 返回值
 
-返回值是 `class Graph` 的一个实例。详细请参阅 [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。
+返回值是 `class Graph` 的一个实例。详细请参阅 [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。
 
 <br>
 
@@ -1744,7 +1780,7 @@ def read(CSR = None, matrix = None, edgeSet = None, filename = "", method = "dij
 
 #### 功能 
 
-该函数是 [SPoon](https://github.com/LCX666/SPoon) 的接口函数，通过该函数，用户可以传入一些必要的参数从而计算得到图的最短路径。
+该函数是 [SParry](https://github.com/LCX666/SParry) 的接口函数，通过该函数，用户可以传入一些必要的参数从而计算得到图的最短路径。
 
 #### 结构
 
@@ -1765,7 +1801,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
 
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SParry/classes/result.py/Result') 
     """
 ```
 
@@ -1773,7 +1809,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
 
 该方法是接口函数，各个参数意义如下：
 
-- graph， 图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。
+- graph， 图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。
 
 - useCUDA，是否使用 CUDA 加速，缺省为 True。bool。仅可以是以下类型：
   1. True： 表示使用 CUDA 进行加速。
@@ -1802,7 +1838,7 @@ def calc(graph = None, useCUDA = True, useMultiPro = False, pathRecordBool = Fal
 
 #### 返回值
 
-返回值是 `class Result` 的一个实例。详细请参阅  [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
+返回值是 `class Result` 的一个实例。详细请参阅  [class Result](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-result-1)。
 
 <br>
 
@@ -1832,7 +1868,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
         grid: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
     
     return:
-        class, Result object. (see the 'SPoon/classes/result.py/Result').
+        class, Result object. (see the 'SParry/classes/result.py/Result').
     """
 
    
@@ -1843,7 +1879,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
 
 该方法是接口函数承接的转入函数，各个参数意义都与接口函数一致，各个参数意义如下：
 
-- graph，图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。
+- graph，图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。
 - useCUDA，是否使用 CUDA 加速，缺省为 True。bool。仅可以是以下类型：
   1. True： 表示使用 CUDA 进行加速。
   2. False： 表示只使用 CPU 进行串行计算。
@@ -1867,7 +1903,7 @@ def dispatch(graph, useCUDA, useMultiPro, pathRecordBool, srclist, block, grid):
 
 #### 返回值
 
-返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
+返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-result-1)。
 
 <br>
 
@@ -1886,7 +1922,7 @@ def judge(para):
         determine whether the current graph needs to use graph segmentation.
     
     parameters: 
-        para: class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        para: class, Parameter object. (see the 'SParry/classes/parameter.py/Parameter') 
     
     return:
         bool, [0/1/2]. (more info please see the developer documentation).  
@@ -1895,7 +1931,7 @@ def judge(para):
 
 #### parameters
 
-- para，para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter-1)。类型固定。
+- para，para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-parameter-1)。类型固定。
 
 #### 返回值
 
@@ -1938,7 +1974,7 @@ def draw(path, s, graph):
 
 - path，最短路径的前驱数组，必填。list。
 - s，源点的编号，必填。int。
-- graph， 图数据，必填。[class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。 需要计算最短路径的图数据。
+- graph， 图数据，必填。[class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。 需要计算最短路径的图数据。
 
 #### 返回值
 
@@ -2001,21 +2037,21 @@ def dijkstra(para):
         use dijkstra algorithm in CPU to solve the SSSP. 
     
     parameters:  
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SParry/classes/parameter.py/Parameter') 
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SParry/classes/result.py/Result') 
 	"""
 	...
 ```
 
 #### parameters
 
-para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-parameter-1)。类型固定。
+para，函数间传递的参数类。`class Parameter` 的一个实例。详细请参阅 [class Parameter](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-parameter-1)。类型固定。
 
 #### 返回值
 
-返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-result-1)。
+返回值是 `class Result` 的一个实例。详细请参阅 [class Result](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-result-1)。
 
 
 
@@ -2053,7 +2089,7 @@ class Result(object):
             calc the path through the graph and dist.
     
     return: 
-        class, Result object. (see the 'SPoon/classes/result.py/Result') 
+        class, Result object. (see the 'SParry/classes/result.py/Result') 
 	"""
 	def __init__(self, 
                 dist = None, 
@@ -2107,7 +2143,7 @@ class Result(object):
 - dist, 最短路径计算的数组。numpy.ndarray。
 - timeCost, 计算最短路径用时。float。
 - ~~memoryCost， 计算过程中的内存占用。暂时无。~~
-- graph，图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。
+- graph，图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。
 
 #### 属性
 
@@ -2121,7 +2157,7 @@ class Result(object):
   3. 若是计算全源最短路径，则是 `n × n` 的二维数组，`path[i][j]` 即表示在源点 `i` 的单源最短路径问题中，源点 `i` 需要从结点 `path[i][j]` 到达到结点 `j` 。
 - timeCost, 时间花费。 float。表示计算最短路径问题花费的时间，单位是秒。
 - memoryCost， 空间花费。int。表示计算最短路径问题花费的空间，单位是字节。
-- graph，图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。
+- graph，图数据，必填，需要计算最短路径的图数据或者图数据存储文件。本函数接受的此参数必须是 [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。
 
 #### 方法
 
@@ -2162,7 +2198,7 @@ class Prameter(object):
         GRID: tuple, a 2-tuple of integers as (x, y), the grid size, to shape the kernal blocks.
         useCUDA: bool, use CUDA to speedup or not.
         useMultiPro, bool, use multiprocessing in CPU or not. only support dijkstra APSP and MSSP.
-        device: class, Device object. (see the 'SPoon/classes/device.py/Device') 
+        device: class, Device object. (see the 'SParry/classes/device.py/Device') 
         srclist: list/int, the source of shortest path problem.
         pathRecordBool: bool, record the path or not.
         part: int, the number of the edges that will put to GPU at a time.(divide algorithm)
@@ -2171,7 +2207,7 @@ class Prameter(object):
         None, but init.
             
     return 
-        class, Parameter object. (see the 'SPoon/classes/parameter.py/Parameter') 
+        class, Parameter object. (see the 'SParry/classes/parameter.py/Parameter') 
 	"""
 	def __init__(self):
 		
@@ -2184,7 +2220,7 @@ class Prameter(object):
 
 #### 属性
 
-- graph，图数据，详见 [class Graph](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-graph-1)。
+- graph，图数据，详见 [class Graph](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-graph-1)。
 
 - BLOCK,  三元组 `(x,y,z)` 表示计算过程中线程的结构。tuple。选填。
 
@@ -2202,7 +2238,7 @@ class Prameter(object):
 
      **需要注意的是，只有当 `method` 指定为 `dij` ， `useCUDA` 为 `False` ，解决的问题是 `APSP` 或者 `MSSP` 时，此参数才有意义。**
   
-- device，class Device 的一个实例。详情请见 [class Device](https://github.com/LCX666/SPoon/blob/main/tutorials.md#class-device-1)。
+- device，class Device 的一个实例。详情请见 [class Device](https://github.com/LCX666/SParry/blob/main/tutorials.md#class-device-1)。
 
 - srclist，源点的集合。int/list/None。可以是以下三种类型：
   1. int： 一个整数，表示图中的一个结点作为最短路径计算的源点。
@@ -2334,7 +2370,7 @@ class Graph(object):
         reshape: convert data to numpy.int32.
 
     return: 
-        class, Graph object. (see 'SPoon/classes/graph.py/Graph')
+        class, Graph object. (see 'SParry/classes/graph.py/Graph')
     """
     
     def __init__(self, filename = None, directed = False):
