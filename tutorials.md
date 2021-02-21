@@ -2,12 +2,13 @@
 
 ![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/sparry.png)
 
-**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
 [English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%AE%89%E8%A3%85)
 
+## Introduction
+
+**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+
 It's **developing**.
-
-
 
 ------
 
@@ -1231,6 +1232,16 @@ class Graph(object):
   2. return, None.
 
 
+
+------
+
+[English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%AE%89%E8%A3%85)
+
+## 简介
+
+**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+
+It's **developing**.
 
 ------
 

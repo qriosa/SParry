@@ -2,13 +2,13 @@
 
 ![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/sparry.png)
 
-**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
-
 [English Version](https://github.com/LCX666/SParry/blob/main/README.md)|[中文版](https://github.com/LCX666/SParry/blob/main/README_zh.md)
 
+## 简介
+
+**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+
 It's **developing**.
-
-
 
 ------
 
@@ -16,7 +16,7 @@ It's **developing**.
 
 `SParry` 是一个**最短路径计算工具包**，封装了诸如：`Dijkstra` , `Bellman-Ford` , `Delta-Stepping` ,  `Edge-Based` 等主流的最短路径算法。它也提供了**基于CUDA的并行加速版本**，以提高开发效率。
 
-同时本工具还封装了自动分图计算方法的 `Dijkstra` 算法，可有效解决大规模图在 `GPU` 显存不足无法直接并行计算的问题。
+同时 `SParry` 还封装了自动分图计算方法的 `Dijkstra` 算法，可有效解决大规模图在 `GPU` 显存不足无法直接并行计算的问题。
 
 
 
