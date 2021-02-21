@@ -1,3 +1,5 @@
+this folder contains the time consumption result compared with igraph and SParry to get the same shortest path.
+
 this test result is running on my personal PC.
 
 > a personal laptop with Intel i7-8550U CPU, 16G DDR4 2400MHz memory and Nvidia GeForce MX150 (2G video memory) was used for the external test.

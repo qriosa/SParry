@@ -2,7 +2,7 @@
 
 ![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/sparry.png)
 
-[English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%AE%89%E8%A3%85)
+[English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E7%AE%80%E4%BB%8B)
 
 ## Introduction
 
@@ -406,7 +406,7 @@ The above graph, when stored in a file, should be in the following format.
   - The second parameter represents the endvertex of the current side.
   - The third parameter represents the side weight of the current edge.
 - Sixth row(the last row): A blank line.
-  - **End of document with a blank line**
+  - **End of file with a blank line**
 
 
 
@@ -1235,7 +1235,7 @@ class Graph(object):
 
 ------
 
-[English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E5%AE%89%E8%A3%85)
+[English Version](https://github.com/LCX666/SParry/blob/main/tutorials.md#sparry)|[中文版](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E7%AE%80%E4%BB%8B)
 
 ## 简介
 

@@ -1,4 +1,4 @@
-,n,m,avgD,method,GPU_time_cost,dist:GPU(method)==singleCPU(dij)?,singleCPU_time_cost,dist:singleCPU(method)==singleCPU(dij)?,singleCPU_time_cost/GPU_time_cost
+id,n,m,avgD,method,GPU_time_cost(s),dist:GPU(method)==singleCPU(dij)?,singleCPU_time_cost(s),dist:singleCPU(method)==singleCPU(dij)?,singleCPU_time_cost/GPU_time_cost
 0,100,100,1,dij,0.0142,TRUE,0.3502,TRUE,24.66197183
 1,100,100,1,spfa,0.1379,TRUE,0.2505,TRUE,1.81653372
 2,100,100,1,delta,0.116,TRUE,0.3555,TRUE,3.064655172
