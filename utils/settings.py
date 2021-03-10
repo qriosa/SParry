@@ -7,7 +7,7 @@ debugger = 6
 INF = 0x7f7f3f7f
 
 # force divide debug
-# priority max, if True will not devide judge
+# priority max, if True will not go to func judge.
 noDivide = True
 # if True will enter devide
 forceDivide = False

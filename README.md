@@ -6,7 +6,7 @@
 
 ## Introduction
 
-**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+**SParry** is a shortest path calculating **Python** tool using some algorithms with **CUDA** to speedup.
 
 It's **developing**.
 
@@ -26,37 +26,27 @@ At the same time, `SParry` can divide the graph data into parts, and solve it mo
 
 The following is the environment that passed the test in the development experiment.
 
-**Window：**
+You can also see them in [requirements.txt.](https://github.com/LCX666/SParry/blob/main/requirements.txt)
 
-> python 3.6/3.7
->
-> pycuda 2019.1.2
->
-> numpy 1.18.2
->
-> CUDA Version  10.2.89
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+**Python Version**
 
-**Linux**
+> python3.6 
+>
+> python3.7
 
-> python 3.6
+**Plantform**
+
+> Windows
 >
-> pycuda 2019.1.2
->
-> numpy 1.19.2
->
-> CUDA Version 10.1.243
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+> Linux
+
+Requirements
+
+> cyaron\=\=0.4.2
+> networkx\=\=2.5
+> numpy\=\=1.19.4
+> pycuda\=\=2019.1.2
+> pynvml\=\=8.0.4
 
 <br>
 
@@ -64,7 +54,7 @@ The following is the environment that passed the test in the development experim
 
 Download the file package directly and run the `calc` interface function **in the main directory**.
 
-**It's not not a release version currently, so it cannot be installed with pip, and the development structure is not yet perfect. **
+**It's not a release version currently, so it cannot be installed with pip, and the development structure is not yet perfect. **
 
 
 
@@ -317,5 +307,7 @@ array([0, 1, 2, 3], dtype=int32)
 
 
 ### More.
+
+Pseudocodes can be found at: [pseudocode](https://github.com/LCX666/SParry/tree/main/pseudocode).
 
 Please see the [developer tutorials](https://github.com/LCX666/SParry/blob/main/tutorials.md#interface) for more information. 

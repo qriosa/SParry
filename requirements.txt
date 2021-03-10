@@ -1,0 +1,7 @@
+cyaron==0.4.2
+networkx==2.5
+numpy==1.19.4
+pycuda==2019.1.2
+pynvml==8.0.4
+
+

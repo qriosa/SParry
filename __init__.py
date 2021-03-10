@@ -1,2 +1,3 @@
-name = "name"
+name = "SParry"
+__version__ = "1.0.0"
 #

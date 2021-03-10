@@ -6,7 +6,7 @@
 
 ## Introduction
 
-**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+**SParry** is a shortest path calculating **Python** tool using some algorithms with **CUDA** to speedup.
 
 It's **developing**.
 
@@ -26,37 +26,27 @@ At the same time, it can divide the graph data into parts, and solve it more qui
 
 The following is the environment that passed the test in the development experiment.
 
-**Window：**
+You can also see them in [requirements.txt.](https://github.com/LCX666/SParry/blob/main/requirements.txt)
 
-> python 3.6/3.7
->
-> pycuda 2019.1.2
->
-> numpy 1.18.2
->
-> CUDA Version  10.2.89
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+**Python Version**
 
-**Linux**
+> python3.6 
+>
+> python3.7
 
-> python 3.6
+**Plantform**
+
+> Windows
 >
-> pycuda 2019.1.2
->
-> numpy 1.19.2
->
-> CUDA Version 10.1.243
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+> Linux
+
+Requirements
+
+> cyaron\=\=0.4.2
+> networkx\=\=2.5
+> numpy\=\=1.19.4
+> pycuda\=\=2019.1.2
+> pynvml\=\=8.0.4
 
 <br>
 
@@ -1259,39 +1249,27 @@ It's **developing**.
 
 ### 环境依赖
 
-下面是开发实验中通过测试的环境。
+下面是开发实验中通过测试的环境。也可以参阅 [requirements.txt.](https://github.com/LCX666/SParry/blob/main/requirements.txt) 。
 
-**Window：**
+**Python Version**
 
-> python 3.6/3.7
+> python3.6 
 >
-> pycuda 2019.1.2
->
-> numpy 1.18.2
->
-> CUDA Version  10.2.89
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+> python3.7
 
-**Linux**
+**Plantform**
 
-> python 3.6
+> Windows
 >
-> pycuda 2019.1.2
->
-> numpy 1.19.2
->
-> CUDA Version 10.1.243
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+> Linux
+
+Requirements
+
+> cyaron\=\=0.4.2
+> networkx\=\=2.5
+> numpy\=\=1.19.4
+> pycuda\=\=2019.1.2
+> pynvml\=\=8.0.4
 
 <br>
 

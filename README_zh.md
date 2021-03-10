@@ -6,7 +6,7 @@
 
 ## 简介
 
-**SParry** is a shortest path calculating tool using some algorithms with CUDA to speedup.
+**SParry** is a shortest path calculating **Python** tool using some algorithms with **CUDA** to speedup.
 
 It's **developing**.
 
@@ -26,39 +26,27 @@ It's **developing**.
 
 ### 环境依赖
 
-下面是开发实验中通过测试的环境。
+下面是开发实验中通过测试的环境。也可以参阅 [requirements.txt.](https://github.com/LCX666/SParry/blob/main/requirements.txt) 。
 
-**Window：**
+**Python Version**
 
-> python 3.6/3.7
+> python3.6 
 >
-> pycuda 2019.1.2
->
-> numpy 1.18.2
->
-> CUDA Version  10.2.89
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+> python3.7
 
-**Linux**
+**Plantform**
 
-> python 3.6
+> Windows
 >
-> pycuda 2019.1.2
->
-> numpy 1.19.2
->
-> CUDA Version 10.1.243
->
-> networkx 2.4
->
-> logging 0.5.1.2
->
-> pynvml 8.0.4
+> Linux
+
+Requirements
+
+> cyaron\=\=0.4.2
+> networkx\=\=2.5
+> numpy\=\=1.19.4
+> pycuda\=\=2019.1.2
+> pynvml\=\=8.0.4
 
 <br>
 
@@ -319,6 +307,8 @@ array([0, 1, 2, 3], dtype=int32)
 
 
 ### 更多
+
+关于伪代码请查阅这里 [pseudocode](https://github.com/LCX666/SParry/tree/main/pseudocode)。
 
 更多信息请参阅[开发者文档](https://github.com/LCX666/SParry/blob/main/tutorials.md#%E6%8E%A5%E5%8F%A3)。
 
