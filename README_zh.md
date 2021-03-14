@@ -131,7 +131,7 @@ array([[0, 1, 2, 3],
 ...              method = "dij", # 计算方法使用 Dijkstra
 ...              detail = True # 记录图中的详细信息
 ...             ) # 处理图数据
->>>
+>>> # 计算的最短路径
 >>> res = calc(graph = graph, # 传入图数据的类
 ...            useCUDA = True, # 使用 CUDA 加速
 ...            srclist = 0, # 设置源点为 0 号结点
@@ -179,12 +179,12 @@ array([array([0, 2, 3, 4, 4]), array([1, 2, 3, 1]), array([1, 3, 4, 5])],
 >>> graph = read(CSR = CSR, # 传入的数据类型是 CSR
 ...              method = "delta", # 使用的算法为 delta-stepping
 ...              detail = True) # 记录图中的详细信息
->>>
+>>> # 计算的最短路径
 >>> res = calc(graph = graph, # 传入的图数据类
 ...            useCUDA = True, # 使用 CUDA 并行加速
 ...            srclist = 0) # 源点为 0 号结点
 >>>
->>> res.dist # 计算的最短路径
+>>> res.dist
 array([0, 1, 3, 5], dtype=int32)
 >>>
 >>> print(res.display()) # 打印相关参数
@@ -223,11 +223,11 @@ array([0, 1, 3, 5], dtype=int32)
 >>>
 >>> graph = read(edgeSet = edgeSet, # 传入的图数据是 edgeSet
 ...              detail = True) # 需要记录图中的数据
->>>
+>>> # 计算的最短路径
 >>> res = calc(graph = graph, # 传入的图数据类
 ...            useCUDA = False, # 使用 CPU 串行计算
 ...            srclist = 0) # 源点为 0 号结点
->>> res.dist # 计算的最短路径
+>>> res.dist 
 array([         0,          1, 2139045759,          2], dtype=int32)
 >>>
 >>> print(res.display()) # 打印相关参数

@@ -97,7 +97,7 @@ We have conducted a lot of tests on this tool, and no errors occurred in the tes
 
 ## Quick start tutorial
 
-This section is an introduction to help beginners of `SParry` get started quickly.
+This section is an introduction to help beginners of `SParry` get started quickly. You can also see these in [demo.py](https://github.com/LCX666/SParry/blob/main/demo.py).
 
 ### step1. cd to the current root directory
 
@@ -179,12 +179,12 @@ array([array([0, 2, 3, 4, 4]), array([1, 2, 3, 1]), array([1, 3, 4, 5])],
 >>> graph = read(CSR = CSR, # The data type passed in is CSR
 ...              method = "delta", # The algorithm used is delta-stepping
 ...              detail = True) # record the details of the graph
->>>
+>>> # calculated shortest path
 >>> res = calc(graph = graph, # the incoming graph data class
 ...            useCUDA = True, # use CUDA parallel acceleration
 ...            srclist = 0) # source point is node 0
 >>>
->>> res.dist # calculated shortest path
+>>> res.dist # output shortest path
 array([0, 1, 3, 5], dtype=int32)
 >>>
 >>> print(res.display()) # print related parameters
@@ -223,11 +223,11 @@ When your graph data is in **memory** and **compliant with the [edgeSet data](ht
 >>>
 >>> graph = read(edgeSet = edgeSet, # the incoming graph data is edgeSet
 ...              detail = True) # need to record the data in the graph
->>>
+>>> # calculated shortest path
 >>> res = calc(graph = graph, # the incoming graph data class
 ...            useCUDA = False, # sse CPU serial computation
 ...            srclist = 0) # source point is node 0
->>> res.dist # calculated shortest path
+>>> res.dist # output shortest path
 array([         0,          1, 2139045759,          2], dtype=int32)
 >>>
 >>> print(res.display()) # print related parameters
@@ -277,12 +277,12 @@ code is below:
 ...              method = "spfa", # the algorithm used is spfa
 ...              detail = True, # record the details of the graph
 ...              directed = False) # the graph is an undirected graph
->>>
+>>> # calculated shortest path 
 >>> res = calc(graph = graph, # the incoming graph data class
 ...            useCUDA = True, # use CUDA parallel acceleration
 ...            srclist = 0) # source point is node 0
 >>>
->>> res.dist # calculated shortest path
+>>> res.dist # output shortest path
 array([0, 1, 2, 3], dtype=int32)
 >>>
 >>> print(res.display()) # print related parameters
