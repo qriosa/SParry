@@ -1,10 +1,10 @@
-# [SParry](https://github.com/LCX666/SParry)
+# SParry
 
-![image](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/sparry.png)
+![image](img/sparry.png)
 
-[English Version](https://github.com/LCX666/SParry/blob/main/README.md)|[中文版](https://github.com/LCX666/SParry/blob/main/README_zh.md)
+[中文版](README.md)|[English Version](README_en.md)
 
-## Introduction
+## 简介
 
 **SParry** is a shortest path calculating **Python** tool using some algorithms with **CUDA** to speedup.
 
@@ -12,21 +12,21 @@ It's **developing**.
 
 ------
 
-`SParry` is a **shortest path calculation toolkit**, the main shortest path algorithms, including `Dijkstra`, `Bellman-Ford`, `Delta-Stepping`, and `Edge-Based`, are encapsulated.  **A parallel accelerated version based on CUDA is provided** to improve development efficiency.
+所谓工欲善其事必先利其器。
 
-At the same time, `SParry` can divide the graph data into parts, and solve it more quickly than using the CPU when the graph is too large to put it in the GPU directly.
+`SParry` 是一个**最短路径计算工具包**，封装了诸如：`Dijkstra` , `Bellman-Ford` , `Delta-Stepping` ,  `Edge-Based` 等主流的最短路径算法。它也提供了**基于CUDA的并行加速版本**，以提高开发效率。
+
+同时 `SParry` 还封装了自动分图计算方法的 `Dijkstra` 算法，可有效解决大规模图在 `GPU` 显存不足无法直接并行计算的问题。
 
 
 
 ------
 
-## Installation
+## 安装
 
-### Environment & Dependence
+### 环境依赖
 
-The following is the environment that passed the test in the development experiment.
-
-You can also see them in [requirements.txt.](https://github.com/LCX666/SParry/blob/main/requirements.txt)
+下面是开发实验中通过测试的环境。也可以参阅 [requirements.txt.](requirements.txt) 。
 
 **Python Version**
 
@@ -50,56 +50,58 @@ Requirements
 
 <br>
 
-### Installation
+### 安装
 
-Download the file package directly and run the `calc` interface function **in the main directory**.
+直接下载文件包，即可在**主目录**中运行 `pretreat.py` 中的 `read()` 函数预处理数据，然后就可以放入 `calc()` 接口函数。
 
-**It's not a release version currently, so it cannot be installed with pip, and the development structure is not yet perfect. **
-
-
-
-------
-
-## flow chart
-
-![image](https://raw.githubusercontent.com/LCX666/SParry/main/chart.svg)
+**目前不是发行版本，故不可pip安装，开发结构尚不是很完善。**
 
 
 
 ------
 
-## Test&Result
+## 流程图
 
-We have conducted a lot of tests on this tool, and no errors occurred in the test results. We have counted the time consumption and serial-parallel speedup ratio of each algorithm on some graphs to solve the **single-source shortest path (SSSP) and all-pairs shortest path (APSP)**. The following shows the time variation of each algorithm with the number of nodes when the average degree is 4, please refer to [SParry/testResult](https://github.com/LCX666/SParry/tree/main/testResult) .
+![image](img/chart.svg)
 
-![SSSPTimeConsumptionByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/SSSPTimeConsumptionByDegree4.png)
+
+
+
+
+------
+
+## 测试和效果
+
+我们对此工具进行了大量的测试，在测试结果中无错误情况发生，统计了各个算法在部分图上计算**单源最短路径问题(SSSP)和全源最短路径问题(APSP)**的用时情况和串并行加速比。下面展示平均度为 4 时，各算法随结点数量变化的用时变化情况，更详细的数据请查阅 [SParry/testResult](testResult)。
+
+![SSSPTimeConsumptionByDegree4](img/SSSPTimeConsumptionByDegree4.png)
 
 <center>SSSP time consumption by degree=4</center>
 
-
-
-![SSSPSpeedupRatioByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/SSSPSppedupRatioByDegree4.png)
+![SSSPSpeedupRatioByDegree4](img/SSSPSppedupRatioByDegree4.png)
 
 <center>SSSP speedup ratio by degree=4</center>
 
-![APSPTimeConsumptionByDegreeAPSP4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/APSPTimeConsumptionByDegreeAPSP4.png)
+![APSPTimeConsumptionByDegreeAPSP4](img/APSPTimeConsumptionByDegreeAPSP4.png)
 
 <center>APSP time consumption by degree=4</center>
 
-![APSPSpeedupRatioByDegree4](https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/APSPSpeedupRatioByDegree4.png)
+![APSPSpeedupRatioByDegree4](img/APSPSpeedupRatioByDegree4.png)
 
 <center>APSP speedup ratio by degree=4</center>
 
 
 
 
+
+
 ------
 
-## Quick start tutorial
+## 快速入门教程
 
-This section is an introduction to help beginners of `SParry` get started quickly. You can also see these in [demo.py](https://github.com/LCX666/SParry/blob/main/demo.py).
+本节是帮助 `SParry` 新手快速上手的简介。同时你也可以查看[demo.py](demo.py)。
 
-### step1. cd to the current root directory
+### step1. cd 到当前根目录
 
 ```powershell
 cd XXX/SParry/
@@ -107,38 +109,38 @@ cd XXX/SParry/
 
 
 
-### step2. Import calculation interface
+### step2. 导入计算接口
 
-#### In Memory-matrix
+#### 内存数据-matrix
 
-When your graph data is in **memory** and **meets the [adjacency-matrix data](https://github.com/LCX666/SParry/blob/main/tutorials.md#adjacency-matrix)** requirements, you can import your data as below to quickly calculate the results.
+当您的图数据在**内存**中并**符合[邻接矩阵数据](tutorials.md#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-adjacency-matrix)要求** 时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
 >>> import numpy as np
 >>> from pretreat import read
 >>>
->>> matrix = np.array([[0,1,2,3],[1,0,2,3],[2,2,0,4],[3,3,4,0]], dtype = np.int32) # the data of the adjacency matrix
->>> matrix # simulate graph data that already has an adjacency matrix
+>>> matrix = np.array([[0,1,2,3],[1,0,2,3],[2,2,0,4],[3,3,4,0]], dtype = np.int32) # 邻接矩阵的数据
+>>> matrix # 模拟已经拥有了一个邻接矩阵的图数据
 array([[0, 1, 2, 3],
        [1, 0, 2, 3],
        [2, 2, 0, 4],
        [3, 3, 4, 0]], dtype=int32)
 >>>
->>> graph = read(matrix = matrix, # the data passed in is the adjacency matrix
-...              method = "dij", # the calculation method uses Dijkstra
-...              detail = True # record the details of the graph
-...             ) # process the graph data
->>>
->>> res = calc(graph = graph, # class to pass in graph data
-...            useCUDA = True, # use CUDA acceleration
-...            srclist = 0, # set source to node 0
+>>> graph = read(matrix = matrix, # 传入的数据是邻接矩阵
+...              method = "dij", # 计算方法使用 Dijkstra
+...              detail = True # 记录图中的详细信息
+...             ) # 处理图数据
+>>> # 计算的最短路径
+>>> res = calc(graph = graph, # 传入图数据的类
+...            useCUDA = True, # 使用 CUDA 加速
+...            srclist = 0, # 设置源点为 0 号结点
 ...            )
 >>>
->>> res.dist # output shortest path
+>>> res.dist # 输出最短路径
 array([0, 1, 2, 3], dtype=int32)
 >>>
->>> print(res.display()) # print related parameters
+>>> print(res.display()) # 打印相关参数
 
 [+] the number of vertices in the Graph:                n = 4,
 [+] the number of edges(directed) in the Graph:         m = 16,
@@ -153,16 +155,14 @@ array([0, 1, 2, 3], dtype=int32)
 
 [+] calc the shortest path timeCost = 0.017 sec
 >>>
->>> res.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
+>>> res.drawPath() # 红色的线表示此条边在最短路径上；橙色的点为源点；箭头表示边的方向；边上的数字表示边权。
 ```
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103113127.png" alt="image-20201104103113127"  />
+<img src="img/image-20201104103113127.png" alt="image-20201104103113127"  />
 
+#### 内存数据-CSR
 
-
-#### In Memory-CSR
-
-When your graph data is in **memory** and **compliant with the [CSR data](https://github.com/LCX666/SParry/blob/main/tutorials.md#csr) requirements**, you can import your data as below to quickly calculate the results.
+当您的图数据在**内存**中并**符合[CSR数据](tutorials.md#%E5%8E%8B%E7%BC%A9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-csr)要求** 时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
@@ -172,22 +172,22 @@ When your graph data is in **memory** and **compliant with the [CSR data](https:
 >>> CSR = np.array([np.array([0, 2, 3, 4, 4]), 
 ...                 np.array([1, 2, 3, 1]), 
 ...                 np.array([1, 3, 4, 5])])
->>> CSR # simulation already has CSR format is graph data
+>>> CSR # 模拟已经拥有了CSR格式是图数据
 array([array([0, 2, 3, 4, 4]), array([1, 2, 3, 1]), array([1, 3, 4, 5])],
       dtype=object)
 >>>
->>> graph = read(CSR = CSR, # The data type passed in is CSR
-...              method = "delta", # The algorithm used is delta-stepping
-...              detail = True) # record the details of the graph
->>> # calculated shortest path
->>> res = calc(graph = graph, # the incoming graph data class
-...            useCUDA = True, # use CUDA parallel acceleration
-...            srclist = 0) # source point is node 0
+>>> graph = read(CSR = CSR, # 传入的数据类型是 CSR
+...              method = "delta", # 使用的算法为 delta-stepping
+...              detail = True) # 记录图中的详细信息
+>>> # 计算的最短路径
+>>> res = calc(graph = graph, # 传入的图数据类
+...            useCUDA = True, # 使用 CUDA 并行加速
+...            srclist = 0) # 源点为 0 号结点
 >>>
->>> res.dist # output shortest path
+>>> res.dist
 array([0, 1, 3, 5], dtype=int32)
 >>>
->>> print(res.display()) # print related parameters
+>>> print(res.display()) # 打印相关参数
 
 [+] the number of vertices in the Graph:                n = 4,
 [+] the number of edges(directed) in the Graph:         m = 4,
@@ -205,32 +205,32 @@ array([0, 1, 3, 5], dtype=int32)
 
 
 
-#### In Memory-edgeSet
+#### 内存数据-edgeSet
 
-When your graph data is in **memory** and **compliant with the [edgeSet data](https://github.com/LCX666/SParry/blob/main/tutorials.md#edgeset)** requirements, you can import your data as below to quickly calculate the results.
+当您的图数据在**内存**中并**符合[edgeSet数据](tutorials.md#%E8%BE%B9%E9%9B%86%E6%95%B0%E7%BB%84-edgeset)要求** 时，可以像下面一样导入您的数据，快速计算结果。
 
 ```python
 >>> from calc import calc
 >>> import numpy as np
 >>> from pretreat import read
 >>>
->>> edgeSet = [[0, 0, 2, 1], # start point of each edge
-...            [1, 3, 1, 3], # the end point of each edge
-...            [1, 2, 5, 4]] # weights of each edge
+>>> edgeSet = [[0, 0, 2, 1], # 每条边的起始点
+...            [1, 3, 1, 3], # 每条边的结束点
+...            [1, 2, 5, 4]] # 每条边的权值
 >>>
->>> edgeSet # simulation already has edgeSet format is graph data
+>>> edgeSet # 模拟已经拥有了edgeSet格式是图数据
 [[0, 0, 2, 1], [1, 3, 1, 3], [1, 2, 5, 4]]
 >>>
->>> graph = read(edgeSet = edgeSet, # the incoming graph data is edgeSet
-...              detail = True) # need to record the data in the graph
->>> # calculated shortest path
->>> res = calc(graph = graph, # the incoming graph data class
-...            useCUDA = False, # sse CPU serial computation
-...            srclist = 0) # source point is node 0
->>> res.dist # output shortest path
+>>> graph = read(edgeSet = edgeSet, # 传入的图数据是 edgeSet
+...              detail = True) # 需要记录图中的数据
+>>> # 计算的最短路径
+>>> res = calc(graph = graph, # 传入的图数据类
+...            useCUDA = False, # 使用 CPU 串行计算
+...            srclist = 0) # 源点为 0 号结点
+>>> res.dist 
 array([         0,          1, 2139045759,          2], dtype=int32)
 >>>
->>> print(res.display()) # print related parameters
+>>> print(res.display()) # 打印相关参数
 
 [+] the number of vertices in the Graph:                n = 4,
 [+] the number of edges(directed) in the Graph:         m = 4,
@@ -248,11 +248,11 @@ array([         0,          1, 2139045759,          2], dtype=int32)
 
 
 
-#### In File
+#### 文件数据
 
-When your graph data is stored in a **file** and **meets the data requirements** ([file data](https://github.com/LCX666/SParry/blob/main/tutorials.md#file-format)) , you can also pass in a file to calculate the shortest path.
+当您的图数据存储在**文件**中并**符合数据要求时** ([文件数据](tutorials.md#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F))，您也可以传入文件来计算最短路径。
 
-The file in this example is as follows, `test.txt` .
+本例子中的文件如下， `test.txt` 。
 
 ```
 4 6
@@ -265,27 +265,27 @@ The file in this example is as follows, `test.txt` .
 
 ```
 
-code is below:
+代码如下：
 
 ```python
 >>> from calc import calc
 >>> import numpy as np
 >>> from pretreat import read
 >>>
->>> filename = "./data/test.txt" # the path to the file where the graph data is stored
->>> graph = read(filename = filename, # the data passed in is the file
-...              method = "spfa", # the algorithm used is spfa
-...              detail = True, # record the details of the graph
-...              directed = False) # the graph is an undirected graph
->>> # calculated shortest path 
->>> res = calc(graph = graph, # the incoming graph data class
-...            useCUDA = True, # use CUDA parallel acceleration
-...            srclist = 0) # source point is node 0
+>>> filename = "./data/test.txt" # 存储图数据的文件路径
+>>> graph = read(filename = filename, # 传入的数据是文件
+...              method = "spfa", # 使用的算法是 spfa
+...              detail = True, # 记录图中的细节
+...              directed = False) # 图为无向图
 >>>
->>> res.dist # output shortest path
+>>> res = calc(graph = graph, # 传入的图数据类
+...            useCUDA = True, # 使用 CUDA 并行加速
+...            srclist = 0) # 源点为 0 号结点
+>>>
+>>> res.dist # calculated shortest path
 array([0, 1, 2, 3], dtype=int32)
 >>>
->>> print(res.display()) # print related parameters
+>>> print(res.display()) # 打印相关参数
 
 [+] the number of vertices in the Graph:                n = 4,
 [+] the number of edges(directed) in the Graph:         m = 12,
@@ -299,15 +299,16 @@ array([0, 1, 2, 3], dtype=int32)
 
 
 [+] calc the shortest path timeCost = 0.002 sec
->>> res.drawPath() # The red line indicates that this edge is on the shortest path; the orange vertex is the source vertex; the arrow indicates the direction of the edge; and the number on the edge indicates the edge weight.
+>>> res.drawPath() # 红色的线表示此条边在最短路径上；橙色的点为源点；箭头表示边的方向；边上的数字表示边权。
 ```
 
-<img src="https://cdn.jsdelivr.net/gh/LCX666/picgo-blog/img/image-20201104103213127.png" alt="image-20201104113340700" style="zoom: 67%;" />
+<img src="img/image-20201104103213127.png" alt="image-20201104113340700" style="zoom: 67%;" />
 
 
 
-### More.
+### 更多
 
-Pseudocodes can be found at: [pseudocode](https://github.com/LCX666/SParry/tree/main/pseudocode).
+关于伪代码请查阅这里 [pseudocode](pseudocode)。
 
-Please see the [developer tutorials](https://github.com/LCX666/SParry/blob/main/tutorials.md#interface) for more information. 
+更多信息请参阅[开发者文档](tutorials.md#%E6%8E%A5%E5%8F%A3)。
+
